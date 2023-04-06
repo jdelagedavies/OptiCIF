@@ -1,5 +1,5 @@
 """
-This module contains the CSV file structure validator used by the CIF transformer.
+This module provides functionality for validating the structure of CSV files used in the CIF optimization process.
 """
 
 import csv

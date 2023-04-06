@@ -1,0 +1,16 @@
+name
+S2_EqualWater
+S2_Door_Sensor
+S2_Sewer_Sensor
+EmergencyStop
+S1_Sewer_Sensor
+S1_EqualWater
+S1_Door_Sensor
+S2_LampEntering
+S2_LampLeaving
+S2_Door_Acc
+S1_Sewer_Acc
+S2_Sewer_Acc
+S1_Door_Acc
+S1_LampLeaving
+S1_LampEntering

@@ -1,12 +1,12 @@
 """
-This module contains the CIF transformer which performs global optimization on a CIF specification.
+This module provides functionality for global optimization on CIF specifications.
 """
 
 import csv
 from pathlib import Path
 from typing import Union
 
-from validator import validate_csv_structure
+from opticif.validator import validate_csv_structure
 
 
 def do_global_optimization(
@@ -26,7 +26,7 @@ def do_global_optimization(
         csv_delimiter (str): The delimiter used in the CSV file. Defaults to ";".
 
     Returns:
-        None. The reordered CIF file is saved with "_seq" appended to the input file's name.
+        None. The reordered CIF file is saved with ".seq" appended to the input file's name.
     """
     # Convert inputs to Path objects
     csv_path = Path(csv_path)
@@ -96,9 +96,7 @@ def do_global_optimization(
     generated_dir.mkdir(exist_ok=True)
 
     # Write the output lines to the output file
-    output_file = generated_dir / f"{cif_path.stem}_seq.cif"
+    output_file = generated_dir / f"{cif_path.stem}.seq.cif"
 
     with open(output_file, "w") as f:
         f.writelines(output_lines)
-
-    print(f"Reordered CIF specification saved as {output_file}")

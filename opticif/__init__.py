@@ -6,6 +6,6 @@ by reordering plant instantiations according to a specified sequence.
 It includes a CIF transformer, a CSV validator, and a CSV converter.
 """
 
-from .cif_transformer import do_global_optimization
-from .validator import validate_csv_structure
-from .csv_converter import write_to_csv
+from opticif.cif_transformer import do_global_optimization
+from opticif.validator import validate_csv_structure
+from opticif.csv_converter import write_to_csv

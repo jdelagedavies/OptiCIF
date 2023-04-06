@@ -1,0 +1,186 @@
+plant def Lamp ():
+    controllable c_green, c_red;
+
+    location Red:
+        initial; marked;
+        edge c_green goto Green;
+    location Green:
+        edge c_red goto Red;
+end
+
+plant def Door_acc (uncontrollable event u_on_open, u_on_closed, u_off_open, u_off_closed):
+    controllable c_on_open, c_off_open, c_on_close, c_off_close;
+
+    location Rest:
+        initial; marked;
+        edge c_on_open goto Opening;
+        edge c_on_close goto Closing;
+    location Opening:
+        edge c_off_open goto Rest;
+        edge u_off_closed, u_on_open;
+    location Closing:
+        edge c_off_close goto Rest;
+        edge u_off_open, u_on_closed;
+end
+
+plant def Sewer_acc (uncontrollable event u_on, u_off):
+    controllable c_open, c_close;
+
+    location Close:
+        initial; marked;
+        edge c_open goto Open;
+        edge u_off;
+    location Open:
+        edge c_close goto Close;
+        edge u_on;
+end
+
+plant def Door_sensor ():
+    uncontrollable u_on_open, u_off_open, u_on_closed, u_off_closed;
+
+    location Closed:
+        initial; marked;
+        edge u_off_closed goto Midle;
+    location Midle:
+        edge u_on_closed goto Closed;
+        edge u_on_open goto Open;
+    location Open:
+        edge u_off_open goto Midle;
+end
+
+plant def EqualWater ():
+    uncontrollable u_on, u_off;
+
+    location Off:
+        initial; marked;
+        edge u_on goto On;
+    location On:
+        edge u_off goto Off;
+end
+
+plant def Sewer_sensor ():
+    uncontrollable u_on, u_off;
+
+    location Off:
+        initial; marked;
+        edge u_on goto On;
+    location On:
+        edge u_off goto Off;
+end
+
+plant def button():
+    uncontrollable u_pushed, u_released;
+    location released:
+        initial; marked;
+        edge u_pushed goto pushed;
+    location pushed:
+        edge u_released goto released;
+end
+
+S1_LampEntering : Lamp();
+S1_LampLeaving : Lamp();
+S1_Door_Acc : Door_acc(S1_Door_Sensor.u_on_open, S1_Door_Sensor.u_on_closed, S1_Door_Sensor.u_off_open, S1_Door_Sensor.u_off_closed);
+S1_Sewer_Acc : Sewer_acc(S1_Sewer_Sensor.u_on, S1_Sewer_Sensor.u_off);
+S1_Door_Sensor: Door_sensor();
+S1_Sewer_Sensor : Sewer_sensor();
+S1_EqualWater : EqualWater ();
+
+S2_LampEntering : Lamp();
+S2_LampLeaving : Lamp();
+S2_Door_Acc : Door_acc(S2_Door_Sensor.u_on_open, S2_Door_Sensor.u_on_closed, S2_Door_Sensor.u_off_open, S2_Door_Sensor.u_off_closed);
+S2_Sewer_Acc : Sewer_acc(S2_Sewer_Sensor.u_on, S2_Sewer_Sensor.u_off);
+S2_Door_Sensor: Door_sensor();
+S2_Sewer_Sensor : Sewer_sensor();
+S2_EqualWater : EqualWater ();
+
+EmergencyStop: button();
+
+
+requirement S1_Sewer_Sensor.On or S1_Sewer_Acc.Open
+        disables S2_Sewer_Acc.c_open;
+
+requirement not S1_Door_Sensor.Closed or S1_Door_Acc.Opening
+        disables S2_Sewer_Acc.c_open;
+
+requirement S1_EqualWater.Off
+        disables S1_Door_Acc.c_on_open;
+
+requirement S1_Sewer_Sensor.On or S1_Sewer_Acc.Open
+        disables S2_Door_Acc.c_on_open;
+
+requirement not S1_Door_Sensor.Closed or S1_Door_Acc.Opening
+        disables S2_Door_Acc.c_on_open;
+
+requirement S1_LampLeaving.Green
+        disables S1_LampEntering.c_green;
+
+requirement not S1_Door_Sensor.Open
+        disables S1_LampEntering.c_green;
+
+requirement not S1_Door_Acc.Rest
+        disables S1_LampEntering.c_green;
+
+requirement not S1_LampEntering.Red
+        disables {S1_Door_Acc.c_on_close, S1_Door_Acc.c_on_open};
+
+requirement not S1_LampLeaving.Red
+        disables {S1_Door_Acc.c_on_close, S1_Door_Acc.c_on_open};
+
+requirement S1_LampEntering.Green
+        disables S1_LampLeaving.c_green;
+
+requirement not S1_Door_Sensor.Open
+        disables S1_LampLeaving.c_green;
+
+requirement not S1_Door_Acc.Rest
+        disables S1_LampLeaving.c_green;
+
+requirement S2_Sewer_Sensor.On or S2_Sewer_Acc.Open
+        disables S1_Sewer_Acc.c_open;
+
+requirement not S2_Door_Sensor.Closed or S2_Door_Acc.Opening
+        disables S1_Sewer_Acc.c_open;
+
+requirement S2_EqualWater.Off
+        disables S2_Door_Acc.c_on_open;
+
+requirement S2_Sewer_Sensor.On or S2_Sewer_Acc.Open
+        disables S1_Door_Acc.c_on_open;
+
+requirement not S2_Door_Sensor.Closed or S2_Door_Acc.Opening
+        disables S1_Door_Acc.c_on_open;
+
+requirement S2_LampLeaving.Green
+        disables S2_LampEntering.c_green;
+
+requirement not S2_Door_Sensor.Open
+        disables S2_LampEntering.c_green;
+
+requirement not S2_Door_Acc.Rest
+        disables S2_LampEntering.c_green;
+
+requirement not S2_LampEntering.Red
+        disables {S2_Door_Acc.c_on_close, S2_Door_Acc.c_on_open};
+
+requirement not S2_LampLeaving.Red
+        disables {S2_Door_Acc.c_on_close, S2_Door_Acc.c_on_open};
+
+requirement S2_LampEntering.Green
+        disables S2_LampLeaving.c_green;
+
+requirement not S2_Door_Sensor.Open
+        disables S2_LampLeaving.c_green;
+
+requirement not S2_Door_Acc.Rest
+        disables S2_LampLeaving.c_green;
+
+requirement EmergencyStop.pushed
+		disables {
+			S1_LampEntering.c_green, S1_LampLeaving.c_green,
+			S1_Door_Acc.c_on_open, S1_Door_Acc.c_on_close,
+			S1_Sewer_Acc.c_open, S1_Sewer_Acc.c_close,
+
+			S2_LampEntering.c_green, S2_LampLeaving.c_green,
+			S2_Door_Acc.c_on_open, S2_Door_Acc.c_on_close,
+			S2_Sewer_Acc.c_open, S2_Sewer_Acc.c_close
+			};
