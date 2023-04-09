@@ -12,6 +12,7 @@ from opticif.validator import validate_csv_structure
 def do_global_optimization(
     csv_path: Union[str, Path],
     cif_path: Union[str, Path],
+    output_dir: Union[str, Path] = "generated",
     csv_delimiter: str = ";",
 ) -> None:
     """
@@ -23,10 +24,13 @@ def do_global_optimization(
                         header with a "name" column containing the nodes to be reordered.
         cif_path (Union[str, Path]): The path to the CIF specification containing the plant instantiations to be
                         reordered.
+        output_dir (Union[str, Path]): The path to the directory where the output files will be saved.
+                        Defaults to "generated".
         csv_delimiter (str): The delimiter used in the CSV file. Defaults to ";".
 
     Returns:
-        None. The reordered CIF file is saved with ".seq" appended to the input file's name.
+        None. The reordered CIF file is saved with ".seq" appended to the input file's name in the specified
+        output directory.
     """
     # Convert inputs to Path objects
     csv_path = Path(csv_path)
@@ -92,7 +96,7 @@ def do_global_optimization(
     )
 
     # Create the 'generated' directory if it doesn't exist
-    generated_dir = Path("generated")
+    generated_dir = Path(output_dir)
     generated_dir.mkdir(exist_ok=True)
 
     # Write the output lines to the output file

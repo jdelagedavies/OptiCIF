@@ -8,9 +8,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-jupyter = "^1.0.0"
 ragraph = "^1.17.0"
-black = "^23.3.0"
 
 
 [build-system]

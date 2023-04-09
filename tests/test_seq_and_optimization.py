@@ -1,6 +1,6 @@
 """
-This script demonstrates how to use the ragraph and opticif libraries to analyze
-and optimize a simple lock system. The script follows these steps:
+This script demonstrates how to use the ragraph and opticif packages to analyze
+and optimize CIF models. The script follows these steps:
 
 1. Loads nodes and edges from CSV files.
 2. Computes and prints initial metrics (feedback distance, feedback marks, and cycles).
@@ -9,7 +9,7 @@ and optimize a simple lock system. The script follows these steps:
 5. Computes and prints metrics for the sequenced system.
 6. Creates a sequenced DSM and saves it as an SVG image.
 7. Writes the new sequence to a CSV file.
-8. Performs global optimization using the opticif library.
+8. Performs global optimization using the opticif package.
 
 To customize the script for your own system, modify the input file paths and adjust
 the parameters as needed.
@@ -24,13 +24,15 @@ from ragraph.io.csv import from_csv
 
 from opticif import write_to_csv, do_global_optimization
 
-# Define input files
-test_nodes = "../model/simple_lock.nodes.csv"
-test_edges = "../model/simple_lock.edges.csv"
-test_cif_path = "../model/simple_lock.plants_and_requirements.cif"
+# Define input files and output directory
+input_dir = "./datasets/simple_lock"
+output_dir = "./datasets/simple_lock/generated"
+
+test_nodes = f"{input_dir}/simple_lock.nodes.csv"
+test_edges = f"{input_dir}/simple_lock.edges.csv"
+test_cif_path = f"{input_dir}/simple_lock.plants_and_requirements.cif"
 
 # Define parameters
-output_dir = "generated"
 n_chromosomes = 1000
 n_generations = 10000
 evaluator = "feedback_distance"
@@ -97,9 +99,11 @@ fig = plot.dsm(
 fig.write_image(f"{generated_dir}/dsm_sequenced.svg")
 
 # Write new sequence to CSV
-write_to_csv(seq, "output", csv_delimiter)
+write_to_csv(seq, "output", output_dir, csv_delimiter)
 
 # Perform global optimization
 print("Optimizing: Performing global optimization...")
-do_global_optimization(f"{generated_dir}/output.nodes.seq.csv", test_cif_path)
+do_global_optimization(
+    f"{generated_dir}/output.nodes.seq.csv", test_cif_path, output_dir, csv_delimiter
+)
 print("Optimization complete.")
