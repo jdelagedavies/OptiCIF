@@ -25,11 +25,11 @@ from ragraph.io.csv import from_csv
 from opticif import write_to_csv, do_global_optimization
 
 # Define input files and output directory
-input_dir = "models/simple_lock"
-output_dir = "models/simple_lock/generated"
+input_dir = "./models/simple_lock"
+output_dir = "./models/simple_lock/generated"
 
-test_nodes = f"{input_dir}/simple_lock.nodes.csv"
-test_edges = f"{input_dir}/simple_lock.edges.csv"
+test_nodes = f"{input_dir}/simple_lock.nodes.csv"  # Requires at least a name column
+test_edges = f"{input_dir}/simple_lock.edges.csv"  # Requires at least a source and target column
 test_cif_path = f"{input_dir}/simple_lock.plants_and_requirements.cif"
 
 # Define parameters
