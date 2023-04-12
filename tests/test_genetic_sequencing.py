@@ -1,6 +1,4 @@
-"""
-This script demonstrates how to use the ragraph and opticif packages to analyze
-and optimize CIF models. The script follows these steps:
+"""This script demonstrates how to use the ragraph and opticif packages to analyze and sequence plant models
 
 1. Loads nodes and edges from CSV files.
 2. Computes and prints initial metrics (feedback distance, feedback marks, and cycles).
@@ -8,10 +6,9 @@ and optimize CIF models. The script follows these steps:
 4. Performs a genetic algorithm-based sequencing to optimize the system.
 5. Computes and prints metrics for the sequenced system.
 6. Creates a sequenced DSM and saves it as an SVG image.
-7. Writes the new sequence to a CSV file.
-8. Performs global optimization using the opticif package.
+7. Writes the new sequence to a CSV file usable by opticif.
 
-To customize the script for your own system, modify the input file paths and adjust
+To customize the script for your own system, modify the file paths, directories, and adjust
 the parameters as needed.
 """
 from pathlib import Path
@@ -22,15 +19,18 @@ from ragraph.analysis.sequence._genetic import genetic
 from ragraph.analysis.sequence.metrics import feedback_distance, feedback_marks
 from ragraph.io.csv import from_csv
 
-from opticif import write_to_csv, do_global_optimization
+from opticif import write_to_csv
 
-# Define input files and output directory
+# Define input files and directories
 input_dir = "./models/simple_lock"
-output_dir = "./models/simple_lock/generated"
-
 test_nodes = f"{input_dir}/simple_lock.nodes.csv"  # Requires at least a name column
-test_edges = f"{input_dir}/simple_lock.edges.csv"  # Requires at least a source and target column
-test_cif_path = f"{input_dir}/simple_lock.plants_and_requirements.cif"
+test_edges = (
+    f"{input_dir}/simple_lock.edges.csv"  # Requires at least a source and target column
+)
+
+# Define output files and directories
+output_dir = "./models/simple_lock/generated"
+output_csv_stem_path = "genetic"  # Stem path of the CSV list of sequenced node names
 
 # Define parameters
 n_chromosomes = 1000
@@ -99,11 +99,4 @@ fig = plot.dsm(
 fig.write_image(f"{generated_dir}/dsm_sequenced.svg")
 
 # Write new sequence to CSV
-write_to_csv(seq, "output", output_dir, csv_delimiter)
-
-# Perform global optimization
-print("Optimizing: Performing global optimization...")
-do_global_optimization(
-    f"{generated_dir}/output.nodes.seq.csv", test_cif_path, output_dir, csv_delimiter
-)
-print("Optimization complete.")
+write_to_csv(seq, output_csv_stem_path, output_dir, csv_delimiter)
