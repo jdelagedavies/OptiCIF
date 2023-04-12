@@ -3,6 +3,7 @@ This module provides functionality for global optimization on CIF specifications
 """
 
 import csv
+import re
 from pathlib import Path
 from typing import Union
 
@@ -18,8 +19,6 @@ def do_global_optimization(
     """
     Performs global optimization on a CIF specification by reordering plant instantiations according to an input
     sequence. Reordered instantiations are placed at the end of the output file, preserving multiline instantiations.
-    Note that this code assumes that indented lines are part of the previous instantiation, and instantiations are
-    not nested.
 
     Args:
         csv_path (Union[str, Path]): The path to a CSV file containing the node sequence. The file should have a
@@ -47,6 +46,11 @@ def do_global_optimization(
             row["name"] for row in csv.DictReader(f, delimiter=csv_delimiter)
         ]
 
+    # Prepare a regex pattern for matching node names
+    node_name_pattern = re.compile(
+        r"^\s*(" + "|".join(re.escape(name) for name in node_sequence) + r")\s*:"
+    )
+
     # Read the CIF file
     with open(cif_path, "r") as f:
         cif_lines = f.readlines()
@@ -55,48 +59,38 @@ def do_global_optimization(
     instantiations_dict = {}
     non_instantiation_lines = []
     duplicates = set()
+
+    capturing_instantiation = False
     current_item = None
     current_item_lines = []
 
     for line in cif_lines:
-        stripped_line = line.strip()
+        if not capturing_instantiation:
+            match = node_name_pattern.match(line)
+            if match:
+                node_name = match.group(1)
+                capturing_instantiation = True
+                current_item = node_name
+                current_item_lines = [line]
 
-        node_name = next(
-            (
-                name
-                for name in node_sequence
-                if line.startswith(name + ":") or line.startswith(name + " :")
-            ),
-            None,
-        )
-
-        if node_name is not None:
-            # Found a new instantiation, save the previous one if any
-            if current_item is not None:
-                instantiations_dict[current_item] = current_item_lines
-
-            # Start a new instantiation
-            current_item = node_name
-            current_item_lines = [line]
-
-            if node_name in instantiations_dict:
-                duplicates.add(node_name)
-        else:
-            if current_item is not None and stripped_line and line.startswith(" "):
-                # Continue the current instantiation
-                current_item_lines.append(line)
+                if node_name in instantiations_dict:
+                    duplicates.add(node_name)
             else:
-                if current_item is not None:
-                    # Save the current instantiation before moving to a non-instantiation line
-                    instantiations_dict[current_item] = current_item_lines
-                    current_item = None
-                    current_item_lines = []
-
                 non_instantiation_lines.append(line)
+        else:
+            if line.strip():  # Skip empty lines
+                current_item_lines.append(line)
 
-    # Save the last instantiation if any
-    if current_item is not None:
+        if capturing_instantiation and ";" in line:
+            instantiations_dict[current_item] = current_item_lines
+            capturing_instantiation = False
+
+    # Store the last instantiation if any
+    if capturing_instantiation:
         instantiations_dict[current_item] = current_item_lines
+
+    if capturing_instantiation:
+        raise ValueError("Unclosed instantiation detected")
 
     if duplicates:
         raise ValueError(

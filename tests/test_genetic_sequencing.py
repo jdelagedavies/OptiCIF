@@ -11,6 +11,7 @@
 To customize the script for your own system, modify the file paths, directories, and adjust
 the parameters as needed.
 """
+import time
 from pathlib import Path
 
 from ragraph import plot
@@ -72,7 +73,11 @@ fig.write_image(f"{generated_dir}/dsm.svg")
 
 # Sequence using genetic algorithm
 print("Sequencing: Running genetic sequencing algorithm...")
+start_time = time.time()
 g, seq = genetic(g, n_chromosomes=1000, n_generations=10000, evaluator=evaluator)
+end_time = time.time()
+
+time_elapsed = end_time - start_time
 
 # Compute penalty scores and contribution of each cell in the matrix to the penalty scores
 score_dist_seq, contrib_dist_seq = feedback_distance(g.get_adjacency_matrix(nodes=seq))
@@ -82,7 +87,7 @@ score_marks_seq, contrib_marks_seq = feedback_marks(g.get_adjacency_matrix(nodes
 cycles_seq = list(johnson(g, names=True, nodes=seq))
 n_cycles_seq = len(cycles_seq)
 print(
-    f"Sequencing complete.\n"
+    f"Sequencing complete. Execution time: {time_elapsed:.2f} seconds.\n"
     f"Sequenced feedback distance: {score_dist_seq:.2f}\n"
     f"Sequenced feedback marks: {score_marks_seq}\n"
     f"Sequenced contribution to feedback distance:\n{contrib_dist_seq}\n"

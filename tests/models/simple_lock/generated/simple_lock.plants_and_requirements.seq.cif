@@ -171,18 +171,18 @@ requirement EmergencyStop.pushed
 			};
 
 // Reordered plant instantiations
-S2_Door_Sensor: Door_sensor();
-S1_Door_Sensor: Door_sensor();
-EmergencyStop: button();
-S1_EqualWater : EqualWater ();
-S2_EqualWater : EqualWater ();
-S2_Sewer_Sensor : Sewer_sensor();
 S1_Sewer_Sensor : Sewer_sensor();
-S2_LampLeaving : Lamp();
-S2_LampEntering : Lamp();
-S2_Door_Acc : Door_acc(S2_Door_Sensor.u_on_open, S2_Door_Sensor.u_on_closed, S2_Door_Sensor.u_off_open, S2_Door_Sensor.u_off_closed);
-S1_Sewer_Acc : Sewer_acc(S1_Sewer_Sensor.u_on, S1_Sewer_Sensor.u_off);
-S2_Sewer_Acc : Sewer_acc(S2_Sewer_Sensor.u_on, S2_Sewer_Sensor.u_off);
-S1_Door_Acc : Door_acc(S1_Door_Sensor.u_on_open, S1_Door_Sensor.u_on_closed, S1_Door_Sensor.u_off_open, S1_Door_Sensor.u_off_closed);
-S1_LampEntering : Lamp();
+S2_Door_Sensor: Door_sensor();
+EmergencyStop: button();
+S2_EqualWater : EqualWater ();
+S1_EqualWater : EqualWater ();
+S2_Sewer_Sensor : Sewer_sensor();
+S1_Door_Sensor: Door_sensor();
 S1_LampLeaving : Lamp();
+S1_LampEntering : Lamp();
+S1_Door_Acc : Door_acc(S1_Door_Sensor.u_on_open, S1_Door_Sensor.u_on_closed, S1_Door_Sensor.u_off_open, S1_Door_Sensor.u_off_closed);
+S2_Sewer_Acc : Sewer_acc(S2_Sewer_Sensor.u_on, S2_Sewer_Sensor.u_off);
+S1_Sewer_Acc : Sewer_acc(S1_Sewer_Sensor.u_on, S1_Sewer_Sensor.u_off);
+S2_Door_Acc : Door_acc(S2_Door_Sensor.u_on_open, S2_Door_Sensor.u_on_closed, S2_Door_Sensor.u_off_open, S2_Door_Sensor.u_off_closed);
+S2_LampEntering : Lamp();
+S2_LampLeaving : Lamp();

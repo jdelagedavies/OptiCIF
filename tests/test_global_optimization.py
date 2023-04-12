@@ -7,6 +7,8 @@
 
 To customize the script for your own system, modify the file paths, directories, and adjust the
 parameters as needed."""
+import time
+
 from opticif import do_global_optimization
 
 # Define input files and directories
@@ -22,5 +24,9 @@ csv_delimiter = ";"
 
 # Perform global optimization
 print("Optimizing: Performing global optimization...")
+start_time = time.time()
 do_global_optimization(test_sequenced_nodes, test_cif_path, output_dir, csv_delimiter)
-print("Optimization complete.")
+end_time = time.time()
+
+time_elapsed_ms = (end_time - start_time) * 1000
+print(f"Optimization complete. Execution time: {time_elapsed_ms:.2f} milliseconds.")
