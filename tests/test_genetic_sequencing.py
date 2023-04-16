@@ -23,10 +23,10 @@ from opticif import node_to_csv
 
 # Define input files and directories
 input_dir = "./models/swalmen_tunnel"
-test_nodes = f"{input_dir}/generated/genetic.nodes.seq.csv"  # Requires at least a name column
-test_edges = (
-    f"{input_dir}/generated/swalmen_tunnel.edges.csv"  # Requires at least a source and target column
+test_nodes = (
+    f"{input_dir}/swalmen_tunnel.nodes.csv"  # Requires at least a name column
 )
+test_edges = f"{input_dir}/generated/swalmen_tunnel.edges.csv"  # Requires at least a source and target column
 
 # Define output files and directories
 output_dir = "./models/swalmen_tunnel/generated"
@@ -68,7 +68,9 @@ fig.write_image(f"{generated_dir}/dsm.svg")
 # Sequence using genetic algorithm
 print("Sequencing: Running genetic sequencing algorithm...")
 start_time = time.time()
-g, seq = genetic(g, n_chromosomes=n_chromosomes, n_generations=n_generations, evaluator=evaluator)
+g, seq = genetic(
+    g, n_chromosomes=n_chromosomes, n_generations=n_generations, evaluator=evaluator
+)
 end_time = time.time()
 
 time_elapsed = end_time - start_time

@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 from typing import Union
 
-from opticif.validator import validate_csv_structure
+from opticif.validators import validate_node_csv_structure
 
 
 def do_global_optimization(
@@ -39,7 +39,7 @@ def do_global_optimization(
     output_dir = Path(output_dir)
 
     # Validate the CSV file structure
-    validate_csv_structure(csv_path, csv_delimiter)
+    validate_node_csv_structure(csv_path, csv_delimiter)
 
     # Read the CSV file and get the sequence
     with open(csv_path, "r") as f:

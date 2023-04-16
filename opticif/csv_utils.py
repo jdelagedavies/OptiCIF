@@ -1,5 +1,8 @@
 """
-This module provides functionality for converting a list of sequenced RaGraph node objects to a CSV file.
+This module provides functionality for working with CSV files in the context of the CIF optimization process and
+DSM matrix conversion. It contains functions for converting a list of sequenced RaGraph node objects to a CSV file
+and for converting a binary DSM matrix in CSV format to an edge list in CSV format, using node names from a
+separate CSV file.
 """
 
 import csv
@@ -8,12 +11,14 @@ from typing import List, Union
 
 from ragraph.graph import Node
 
+from opticif import validate_node_csv_structure, validate_matrix_csv_structure
+
 
 def node_to_csv(
-        nodes: List[Node],
-        stem_path: str,
-        output_dir: Union[str, Path] = "generated",
-        csv_delimiter: str = ";",
+    nodes: List[Node],
+    stem_path: str,
+    output_dir: Union[str, Path] = "generated",
+    csv_delimiter: str = ";",
 ) -> None:
     """
     Write a list of sequenced node names to a CSV file with the given stem path. The node objects are from the
@@ -50,11 +55,11 @@ def node_to_csv(
 
 
 def mat_to_csv(
-        matrix_path: Union[str, Path],
-        node_path: Union[str, Path],
-        stem_path: str,
-        output_dir: Union[str, Path] = "generated",
-        delimiter: str = ";",
+    matrix_path: Union[str, Path],
+    node_path: Union[str, Path],
+    stem_path: str,
+    output_dir: Union[str, Path] = "generated",
+    delimiter: str = ";",
 ) -> None:
     """
     Convert a binary DSM matrix in CSV format to an edge list in CSV format, using node names from a separate CSV file.
@@ -78,9 +83,15 @@ def mat_to_csv(
     matrix_path = Path(matrix_path)
     node_path = Path(node_path)
 
+    # Validate the node CSV structure
+    validate_node_csv_structure(node_path, delimiter)
+
     # Read node names from the CSV file
     with open(node_path, "r") as f:
         nodes = [row["name"] for row in csv.DictReader(f, delimiter=delimiter)]
+
+    # Validate the matrix CSV structure
+    validate_matrix_csv_structure(matrix_path, delimiter)
 
     # Read the matrix from the CSV file
     with open(matrix_path, "r") as f:

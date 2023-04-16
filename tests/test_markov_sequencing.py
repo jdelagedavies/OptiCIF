@@ -10,10 +10,10 @@ from opticif import node_to_csv
 
 # Define input files and directories
 input_dir = "./models/swalmen_tunnel"
-test_nodes = f"{input_dir}/generated/markov.nodes.seq.csv"  # Requires at least a name column
-test_edges = (
-    f"{input_dir}/generated/swalmen_tunnel.edges.csv"  # Requires at least a source and target column
+test_nodes = (
+    f"{input_dir}/generated/markov.nodes.seq.csv"  # Requires at least a name column
 )
+test_edges = f"{input_dir}/generated/swalmen_tunnel.edges.csv"  # Requires at least a source and target column
 
 # Define output files and directories
 output_dir = "./models/swalmen_tunnel/generated"
