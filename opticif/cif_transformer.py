@@ -36,6 +36,7 @@ def do_global_optimization(
     # Convert inputs to Path objects
     csv_path = Path(csv_path)
     cif_path = Path(cif_path)
+    output_dir = Path(output_dir)
 
     # Validate the CSV file structure
     validate_csv_structure(csv_path, csv_delimiter)

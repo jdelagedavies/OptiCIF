@@ -17,7 +17,7 @@ test_cif_path = f"{input_dir}/simple_lock.plants_and_requirements.cif"
 test_sequenced_nodes = f"{input_dir}/generated/genetic.nodes.seq.csv"
 
 # Define output files and directories
-output_dir = "./models/simple_lock/generated"
+output_dir = f"{input_dir}/generated"
 
 # Define parameters
 csv_delimiter = ";"

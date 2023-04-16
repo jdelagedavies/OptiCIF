@@ -20,7 +20,7 @@ from ragraph.analysis.sequence._genetic import genetic
 from ragraph.analysis.sequence.metrics import feedback_distance, feedback_marks
 from ragraph.io.csv import from_csv
 
-from opticif import write_to_csv
+from opticif import node_to_csv
 
 # Define input files and directories
 input_dir = "./models/simple_lock"
@@ -104,4 +104,4 @@ fig = plot.dsm(
 fig.write_image(f"{generated_dir}/dsm_sequenced.svg")
 
 # Write new sequence to CSV
-write_to_csv(seq, output_csv_stem_path, output_dir, csv_delimiter)
+node_to_csv(seq, output_csv_stem_path, output_dir, csv_delimiter)
