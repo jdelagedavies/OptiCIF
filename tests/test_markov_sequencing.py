@@ -1,21 +1,8 @@
-"""This script demonstrates how to use the ragraph and opticif packages to analyze and sequence plant models
-
-1. Loads nodes and edges from CSV files.
-2. Computes and prints initial metrics (feedback distance and feedback marks).
-3. Creates a design structure matrix (DSM) and saves it as an SVG image.
-4. Performs a genetic algorithm-based sequencing to optimize the system.
-5. Computes and prints metrics for the sequenced system.
-6. Creates a sequenced DSM and saves it as an SVG image.
-7. Writes the new sequence to a CSV file usable by opticif.
-
-To customize the script for your own system, modify the file paths, directories, and adjust
-the parameters as needed.
-"""
 import time
 from pathlib import Path
 
 from ragraph import plot
-from ragraph.analysis.sequence._genetic import genetic
+from ragraph.analysis.sequence import markov
 from ragraph.analysis.sequence.metrics import feedback_distance, feedback_marks
 from ragraph.io.csv import from_csv
 
@@ -23,20 +10,19 @@ from opticif import node_to_csv
 
 # Define input files and directories
 input_dir = "./models/swalmen_tunnel"
-test_nodes = f"{input_dir}/generated/genetic.nodes.seq.csv"  # Requires at least a name column
+test_nodes = f"{input_dir}/generated/markov.nodes.seq.csv"  # Requires at least a name column
 test_edges = (
     f"{input_dir}/generated/swalmen_tunnel.edges.csv"  # Requires at least a source and target column
 )
 
 # Define output files and directories
 output_dir = "./models/swalmen_tunnel/generated"
-output_csv_stem_path = "genetic"  # Stem path of the CSV list of sequenced node names
-output_sequenced_dsm_name = "dsm_genetic"
+output_csv_stem_path = "markov"  # Stem path of the CSV list of sequenced node names
+output_sequenced_dsm_name = "dsm_markov"
 
 # Define parameters
-n_chromosomes = 1000
-n_generations = 10000
-evaluator = "feedback_distance"  # One of "feedback_distance", "feedback_marks", or "lower_left_distance"
+inf = 0  # Weight of relative node influence when sorting
+dep = 10  # Weight of relative node dependency when sorting
 csv_delimiter = ";"
 
 # Create graph object from nodes and edges
@@ -66,9 +52,9 @@ fig = plot.dsm(
 fig.write_image(f"{generated_dir}/dsm.svg")
 
 # Sequence using genetic algorithm
-print("Sequencing: Running genetic sequencing algorithm...")
+print("Sequencing: Running Markov sequencing algorithm...")
 start_time = time.time()
-g, seq = genetic(g, n_chromosomes=n_chromosomes, n_generations=n_generations, evaluator=evaluator)
+g, seq = markov(g, inf=inf, dep=dep)
 end_time = time.time()
 
 time_elapsed = end_time - start_time
