@@ -94,7 +94,7 @@ def mat_to_csv(
     validate_matrix_csv_structure(matrix_path, delimiter)
 
     # Read the matrix from the CSV file
-    with open(matrix_path, "r") as f:
+    with open(matrix_path, "r", encoding="utf-8-sig") as f:
         matrix = list(csv.reader(f, delimiter=delimiter))
 
     # Create the 'generated' directory if it doesn't exist
