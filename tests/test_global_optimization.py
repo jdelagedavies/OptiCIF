@@ -14,7 +14,7 @@ from opticif import do_global_optimization
 # Define input files and directories
 input_dir = "./models/simple_lock"
 test_cif_path = f"{input_dir}/simple_lock.plants_and_requirements.cif"
-test_sequenced_nodes = f"{input_dir}/generated/genetic.nodes.seq.csv"
+test_sequenced_nodes = f"{input_dir}/generated/simple_lock.nodes.seq.csv"
 
 # Define output files and directories
 output_dir = f"{input_dir}/generated"

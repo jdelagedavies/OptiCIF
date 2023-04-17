@@ -27,15 +27,13 @@ def do_global_optimization(
                         reordered. Multiline instantiations are supported.
         output_dir (Union[str, Path]): The path to the directory where the output files will be saved.
                         Defaults to "generated".
-        csv_delimiter (str): The delimiter used in the CSV file. Defaults to ";".
+        csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ";".
 
     Returns:
         None. The reordered CIF file is saved with ".seq" appended to the input file's name in the specified
         output directory.
     """
-    # Convert inputs to Path objects
-    csv_path = Path(csv_path)
-    cif_path = Path(cif_path)
+    # Convert output_dir to Path object
     output_dir = Path(output_dir)
 
     # Validate the CSV file structure

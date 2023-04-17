@@ -21,7 +21,7 @@ def validate_node_csv_structure(
 
     Args:
         csv_path (Union[str, Path]): The path to the node CSV file to validate.
-        csv_delimiter (str): The delimiter used in the CSV file. Defaults to ";".
+        csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ";".
 
     Raises: CSVStructureError: If the node CSV file does not contain a "name" column, contains duplicate names,
     or contains empty values.
@@ -58,7 +58,7 @@ def validate_matrix_csv_structure(
 
     Args:
         matrix_path (Union[str, Path]): The path to the matrix CSV file to validate.
-        csv_delimiter (str): The delimiter used in the CSV file. Defaults to ";".
+        csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ";".
 
     Raises:
         CSVStructureError: If the matrix CSV file is not square, is not binary or has any formatting issues.
