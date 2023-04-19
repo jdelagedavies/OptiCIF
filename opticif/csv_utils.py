@@ -127,12 +127,17 @@ def plant_groups_to_csv(
     for line in group_lines:
         group_data = line.strip().split(",")
         group_id = int(group_data[0][1:])
-        plant_elements = group_data[1:]
+        plant_elements = [elem.strip() for elem in group_data[1:]]
         group_map[group_id] = plant_elements
 
-    # Load the group_sequence from the .mat file
+    # Load the group_sequence from the scheduleorder file
     mat_data = sio.loadmat(group_sequence_path)
     group_sequence = mat_data["scheduleorder"][0]
+
+    # Check if the length of both files matches
+    if len(group_map) != len(group_sequence):
+        raise ValueError(
+            f"The length of {group_map_path} does not match the length of {group_sequence_path}.")
 
     # Create the ordered list of node names based on the group_sequence
     ordered_node_names = []
