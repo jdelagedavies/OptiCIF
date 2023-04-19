@@ -6,6 +6,7 @@ separate CSV file.
 """
 
 import csv
+import scipy.io as sio
 from pathlib import Path
 from typing import List, Union
 
@@ -109,3 +110,44 @@ def mat_to_csv(
             for j, mark in enumerate(row):
                 if mark == "1":
                     writer.writerow([nodes[i], nodes[j]])
+
+
+def plant_groups_to_csv(
+    group_map_path: Union[str, Path],
+    group_sequence_path: Union[str, Path],
+    stem_path: str,
+    output_dir: Union[str, Path] = "generated",
+) -> None:
+    # Read the group information from the file
+    with open(group_map_path, "r") as f:
+        group_lines = f.readlines()
+
+    # Process the group information to create a dictionary mapping group IDs to plant elements
+    group_map = {}
+    for line in group_lines:
+        group_data = line.strip().split(",")
+        group_id = int(group_data[0][1:])
+        plant_elements = group_data[1:]
+        group_map[group_id] = plant_elements
+
+    # Load the group_sequence from the .mat file
+    mat_data = sio.loadmat(group_sequence_path)
+    group_sequence = mat_data["scheduleorder"][0]
+
+    # Create the ordered list of node names based on the group_sequence
+    ordered_node_names = []
+    for group_id in group_sequence:
+        ordered_node_names.extend(group_map[group_id])
+
+    # Create the 'generated' directory if it doesn't exist
+    generated_dir = Path(output_dir)
+    generated_dir.mkdir(exist_ok=True)
+
+    # Append ".nodes.seq.csv" to the stem path to create the filename
+    output_file = generated_dir / f"{stem_path}.nodes.seq.csv"
+
+    # Write the ordered node names to a CSV file with the header "name"
+    with open(output_file, "w") as f:
+        f.write("name\n")
+        for node_name in ordered_node_names:
+            f.write(node_name + "\n")

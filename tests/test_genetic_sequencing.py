@@ -22,12 +22,14 @@ from ragraph.io.csv import from_csv
 from opticif import node_to_csv
 
 # Define input files and directories
-input_dir = "./models/simple_lock"
+input_dir = "models/simple_lock"
 test_nodes = f"{input_dir}/simple_lock.nodes.csv"  # Requires at least a name column
-test_edges = f"{input_dir}/simple_lock.edges.csv"  # Requires at least a source and target column
+test_edges = (
+    f"{input_dir}/simple_lock.edges.csv"  # Requires at least a source and target column
+)
 
 # Define output files and directories
-output_dir = "./models/simple_lock/generated"
+output_dir = "models/simple_lock/generated"
 output_csv_stem_path = (
     "simple_lock"  # Stem path of the CSV list of sequenced node names
 )
