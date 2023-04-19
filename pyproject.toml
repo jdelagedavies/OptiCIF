@@ -1,14 +1,15 @@
 [tool.poetry]
 name = "OptiCIF"
-version = "0.1.0"
+version = "0.3.0"
 description = "Global optimization of CIF specifications in Python."
 authors = ["Jules Delage-Davies <j.r.d.delage.davies@student.tue.nl>"]
 readme = "README.md"
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10,<3.12"
 ragraph = "^1.17.0"
+scipy = "^1.10.1"
 
 
 [build-system]
