@@ -1,0 +1,11 @@
+G1,S1_LampEntering
+G2,S1_LampLeaving
+G3,S1_Door_Acc,S1_Door_Sensor
+G4,S1_Sewer_Acc,S1_Sewer_Sensor
+G5,S1_EqualWater
+G6,S2_LampEntering
+G7,S2_LampLeaving
+G8,S2_Door_Acc,S2_Door_Sensor
+G9,S2_Sewer_Acc,S2_Sewer_Sensor
+G10,S2_EqualWater
+G11,EmergencyStop

@@ -33,7 +33,8 @@ def do_global_optimization(
         None. The reordered CIF file is saved with ".seq" appended to the input file's name in the specified
         output directory.
     """
-    # Convert output_dir to Path object
+    # Convert parameters to Path objects
+    cif_path = Path(cif_path)
     output_dir = Path(output_dir)
 
     # Validate the CSV file structure
@@ -64,6 +65,9 @@ def do_global_optimization(
     current_item_lines = []
 
     for line in cif_lines:
+        if not line.strip() or line.strip().startswith("//"):  # Skip empty lines and comments
+            continue
+
         if not capturing_instantiation:
             match = node_name_pattern.match(line)
             if match:
@@ -107,20 +111,8 @@ def do_global_optimization(
         line for node_name in node_sequence for line in instantiations_dict[node_name]
     ]
 
-    # Check if the last line in non_instantiation_lines is empty
-    if non_instantiation_lines and not non_instantiation_lines[-1].rstrip():
-        # The last line is already an empty line
-        pass
-    else:
-        # Add an empty padding line
-        non_instantiation_lines.append("\n")
-
-    # Combine unmatched lines with reordered lines and add a marker
-    output_lines = (
-        non_instantiation_lines
-        + ["// Reordered plant instantiations\n"]
-        + reordered_lines
-    )
+    # Combine unmatched lines with reordered lines
+    output_lines = non_instantiation_lines + reordered_lines
 
     # Create the 'generated' directory if it doesn't exist
     generated_dir = Path(output_dir)

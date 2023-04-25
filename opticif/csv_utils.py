@@ -94,6 +94,11 @@ def mat_to_csv(
     with open(matrix_path, "r", encoding="utf-8-sig") as f:
         matrix = list(csv.reader(f, delimiter=csv_delimiter))
 
+    # Check if the length of both files matches
+    if len(matrix) != len(nodes):
+        raise ValueError(
+            f"The length of {matrix_path} does not match the length of {node_path}.")
+
     # Create the 'generated' directory if it doesn't exist
     generated_dir = Path(output_dir)
     generated_dir.mkdir(exist_ok=True)

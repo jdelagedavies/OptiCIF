@@ -95,6 +95,10 @@ S2_EqualWater : EqualWater ();
 
 EmergencyStop: button();
 
+// ======================================================================
+//
+// Requirements as logical expressions.
+//
 
 requirement S1_Sewer_Sensor.On or S1_Sewer_Acc.Open
         disables S2_Sewer_Acc.c_open;
@@ -134,6 +138,8 @@ requirement not S1_Door_Sensor.Open
 
 requirement not S1_Door_Acc.Rest
         disables S1_LampLeaving.c_green;
+
+
 
 requirement S2_Sewer_Sensor.On or S2_Sewer_Acc.Open
         disables S1_Sewer_Acc.c_open;
