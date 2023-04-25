@@ -64,6 +64,9 @@ def do_global_optimization(
     current_item_lines = []
 
     for line in cif_lines:
+        if not line.strip():  # Skip empty lines
+            continue
+
         if not capturing_instantiation:
             match = node_name_pattern.match(line)
             if match:
