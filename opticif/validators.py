@@ -12,6 +12,10 @@ class CSVStructureError(Exception):
     """Custom exception for CSV file structure errors."""
 
 
+class MATStructureError(Exception):
+    """Custom exception for MAT file structure errors."""
+
+
 def validate_node_csv_structure(
     csv_path: Union[str, Path], csv_delimiter: str = ";"
 ) -> None:
@@ -31,7 +35,7 @@ def validate_node_csv_structure(
         reader = csv.DictReader(f, delimiter=csv_delimiter)
         if "name" not in reader.fieldnames:
             raise CSVStructureError(
-                f"{csv_path} should have a header with a 'name' column."
+                f"'{csv_path}' should have a header with a 'name' column."
             )
 
         # Check if the "name" column contains duplicates or empty values
@@ -50,33 +54,32 @@ def validate_node_csv_structure(
             names.add(name)
 
 
-def validate_matrix_csv_structure(
-    matrix_path: Union[str, Path], csv_delimiter: str = ";"
+def validate_matrix_file_structure(
+    matrix_path: Union[str, Path]
 ) -> None:
     """
-    Checks if the matrix CSV file structure is valid, is square, and is binary (only uses 1s and 0s).
+    Checks if the matrix file structure is valid, is square, and is binary (only uses 1s and 0s).
 
     Args:
-        matrix_path (Union[str, Path]): The path to the matrix CSV file to validate.
-        csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ";".
+        matrix_path (Union[str, Path]): The path to the matrix file to validate.
 
     Raises:
-        CSVStructureError: If the matrix CSV file is not square, is not binary or has any formatting issues.
+        MATStructureError: If the matrix file is not square, is not binary or has any formatting issues.
     """
     with open(matrix_path, "r", encoding="utf-8-sig") as f:
-        matrix = list(csv.reader(f, delimiter=csv_delimiter))
+        matrix = [list(map(int, row.strip().split())) for row in f]
 
-    row_count = len(matrix)
+        row_count = len(matrix)
 
     for i, row in enumerate(matrix):
         if len(row) != row_count:
-            raise CSVStructureError(
+            raise MATStructureError(
                 f"The matrix in '{matrix_path}' is not square. Each row should have the same number of elements as "
                 f"the number of rows."
             )
 
         for j, element in enumerate(row):
-            if element not in ["0", "1"]:
-                raise CSVStructureError(
-                    f"The matrix in '{matrix_path}' is not binary. Found '{element}' at row {i+1}, column {j+1}."
+            if element not in [0, 1]:
+                raise MATStructureError(
+                    f"The matrix in '{matrix_path}' is not binary. Found '{element}' at row {i + 1}, column {j + 1}."
                 )
