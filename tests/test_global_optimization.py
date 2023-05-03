@@ -12,9 +12,9 @@ import time
 from opticif import do_global_optimization
 
 # Define input files and directories
-input_dir = "models/simple_lock"
-test_cif_path = f"{input_dir}/simple_lock.plants_and_requirements.cif"
-test_sequenced_nodes = f"{input_dir}/generated/simple_lock.nodes.seq.csv"
+input_dir = "models/swalmen_tunnel"
+test_cif_path = f"{input_dir}/swalmen_tunnel.plants_and_requirements.cif"
+test_sequenced_nodes = f"{input_dir}/generated/swalmen_tunnel.nodes.seq.csv"
 
 # Define output files and directories
 output_dir = f"{input_dir}/generated"
@@ -25,7 +25,7 @@ csv_delimiter = ";"
 # Perform global optimization
 print("Optimizing: Performing global optimization...")
 start_time = time.time()
-do_global_optimization(test_sequenced_nodes, test_cif_path, output_dir, csv_delimiter)
+do_global_optimization(test_sequenced_nodes, test_cif_path, output_dir, csv_delimiter, "automata")
 end_time = time.time()
 
 time_elapsed_ms = (end_time - start_time) * 1000

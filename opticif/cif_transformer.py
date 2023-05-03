@@ -15,104 +15,114 @@ def do_global_optimization(
     cif_path: Union[str, Path],
     output_dir: Union[str, Path] = "generated",
     csv_delimiter: str = ";",
+    mode: str = "instantiation",
 ) -> None:
     """
-    Performs global optimization on a CIF specification by reordering plant instantiations according to an input
-    sequence. Reordered instantiations are placed at the end of the output file, preserving multiline instantiations.
+    Performs global optimization on a CIF specification by reordering plant instantiations or explicit plant automaton
+    declarations according to an input sequence. Reordered items are placed at the end of the output file, preserving
+    multiline instantiations or automata declarations.
 
     Args:
         csv_path (Union[str, Path]): The path to a CSV file containing the node sequence. The file should have a
                         header with a "name" column containing the nodes to be reordered.
-        cif_path (Union[str, Path]): The path to the CIF specification containing the plant instantiations to be
-                        reordered. Multiline instantiations are supported.
+        cif_path (Union[str, Path]): The path to the CIF specification containing the plant instantiations or explicit
+                        plant automaton declarations to be reordered. Multiline items are supported.
         output_dir (Union[str, Path]): The path to the directory where the output files will be saved.
                         Defaults to "generated".
         csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ";".
+        mode (str): The optimization mode, either "instantiation" or "automata". Defaults to "instantiation".
+            - "instantiation": Reorder plant instantiations (e.g., "Node1: Plant;").
+            - "automata": Reorder explicit plant automaton declarations (e.g., "plant automaton Node1: ... end").
 
     Returns:
         None. The reordered CIF file is saved with ".seq" appended to the input file's name in the specified
         output directory.
     """
-    # Convert parameters to Path objects
-    cif_path = Path(cif_path)
+    if mode not in ["instantiation", "automata"]:
+        raise ValueError("Invalid mode specified. Choose either 'instantiation' or 'automata'")
+
+    # Convert to Path object
     output_dir = Path(output_dir)
+    cif_path = Path(cif_path)
 
     # Validate the CSV file structure
     validate_node_csv_structure(csv_path, csv_delimiter)
 
     # Read the CSV file and get the sequence
     with open(csv_path, "r") as f:
-        node_sequence = [
-            row["name"] for row in csv.DictReader(f, delimiter=csv_delimiter)
-        ]
+        csv_reader = csv.DictReader(f, delimiter=csv_delimiter)
+        node_sequence = [row['name'] for row in csv_reader]
 
     # Prepare a regex pattern for matching node names
-    node_name_pattern = re.compile(
-        r"^\s*(" + "|".join(re.escape(name) for name in node_sequence) + r")\s*:"
-    )
+    pattern = ""
+    if mode == "instantiation":
+        pattern = r"^\s*(" + "|".join(re.escape(name) for name in node_sequence) + r")\s*:"
+    elif mode == "automata":
+        pattern = r"^\s*plant\s+automaton\s+(" + "|".join(re.escape(name) for name in node_sequence) + r")\s*:"
+
+    node_name_pattern = re.compile(pattern)
 
     # Read the CIF file
     with open(cif_path, "r") as f:
         cif_lines = f.readlines()
 
     # Create a dictionary mapping the target lines to their contents and catch duplicates
-    instantiations_dict = {}
-    non_instantiation_lines = []
+    items_dict = {}
+    non_item_lines = []
     duplicates = set()
 
-    capturing_instantiation = False
+    capturing_item = False
     current_item = None
     current_item_lines = []
 
     for line in cif_lines:
-        if not line.strip() or line.strip().startswith("//"):  # Skip empty lines and comments
-            continue
-
-        if not capturing_instantiation:
+        if not capturing_item:
             match = node_name_pattern.match(line)
             if match:
                 node_name = match.group(1)
-                capturing_instantiation = True
+                capturing_item = True
                 current_item = node_name
                 current_item_lines = [line]
 
-                if node_name in instantiations_dict:
+                if node_name in items_dict:
                     duplicates.add(node_name)
             else:
-                non_instantiation_lines.append(line)
+                non_item_lines.append(line)
         else:
-            if line.strip():  # Skip empty lines
-                current_item_lines.append(line)
+            current_item_lines.append(line)
 
-        if capturing_instantiation and ";" in line:
-            instantiations_dict[current_item] = current_item_lines
-            capturing_instantiation = False
+            closing_condition = (
+                ";" in line if mode == "instantiation" else line.strip().split()[-1] == "end"
+            )
+            if capturing_item and closing_condition:
+                items_dict[current_item] = current_item_lines
+                capturing_item = False
 
-    # Store the last instantiation if any
-    if capturing_instantiation:
-        instantiations_dict[current_item] = current_item_lines
+    # Store the last item if any
+    if capturing_item:
+        items_dict[current_item] = current_item_lines
 
-    if capturing_instantiation:
-        raise ValueError("Unclosed instantiation detected")
+    if capturing_item:
+        raise ValueError(f"Unclosed {mode} detected")
 
     if duplicates:
         raise ValueError(
-            f"Duplicate instantiations found for nodes: {', '.join(sorted(duplicates))}"
+            f"Duplicate {mode}s found for nodes: {', '.join(sorted(duplicates))}"
         )
 
     # Reorder the target lines according to the sequence
-    missing_nodes = set(node_sequence) - set(instantiations_dict.keys())
+    missing_nodes = set(node_sequence) - set(items_dict.keys())
     if missing_nodes:
         raise KeyError(
             f"Nodes not found in the CIF specification '{cif_path}': {', '.join(sorted(missing_nodes))}"
         )
 
     reordered_lines = [
-        line for node_name in node_sequence for line in instantiations_dict[node_name]
+        line for node_name in node_sequence for line in items_dict[node_name]
     ]
 
     # Combine unmatched lines with reordered lines
-    output_lines = non_instantiation_lines + reordered_lines
+    output_lines = non_item_lines + reordered_lines
 
     # Create the 'generated' directory if it doesn't exist
     generated_dir = Path(output_dir)

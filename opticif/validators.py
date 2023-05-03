@@ -20,8 +20,8 @@ def validate_node_csv_structure(
     csv_path: Union[str, Path], csv_delimiter: str = ";"
 ) -> None:
     """
-    Checks if the node CSV file structure is valid and contains a non-empty "name" column with no duplicates and no empty
-    values.
+    Checks if the node CSV file structure is valid and contains a non-empty "name" column with no duplicates and no
+    empty values.
 
     Args:
         csv_path (Union[str, Path]): The path to the node CSV file to validate.

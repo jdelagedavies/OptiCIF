@@ -12,7 +12,7 @@ from typing import List, Union
 
 from ragraph.graph import Node
 
-from opticif import validate_node_csv_structure, validate_matrix_csv_structure
+from opticif import validate_node_csv_structure, validate_matrix_file_structure
 
 
 def node_to_csv(

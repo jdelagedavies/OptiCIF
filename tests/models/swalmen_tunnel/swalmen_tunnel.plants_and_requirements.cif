@@ -1,0 +1,4298 @@
+alg bool VB1_Ventilatie_setauto = VB1_SetAuto.setauto;
+alg bool VB1_Verlichting_setauto = VB1_SetAuto.setauto;
+alg bool VB1_Vluchtdeur_setauto = VB1_SetAuto.setauto;
+alg bool VB2_Ventilatie_setauto = VB2_SetAuto.setauto;
+alg bool VB2_Verlichting_setauto = VB2_SetAuto.setauto;
+alg bool VB2_Vluchtdeur_setauto = VB2_SetAuto.setauto;
+alg bool MTK_vluchtgereed = VB1_Stand.calamiteit or VB2_Stand.calamiteit;
+alg bool MTK_evacuatie = VB1_Stand.evacuatie or VB2_Stand.evacuatie;
+alg bool MTK_evacuatie_aflopend = (VB1_Stand.evacuatie or VB1_Stand.calamiteit) and not(VB2_Stand.evacuatie or VB2_Stand.calamiteit);
+alg bool MTK_evacuatie_oplopend = (VB2_Stand.evacuatie or VB2_Stand.calamiteit) and not(VB1_Stand.evacuatie or VB1_Stand.calamiteit);
+alg bool MTK_setauto = VB1_SetAuto.setauto or VB2_SetAuto.setauto;
+alg bool BBI_setauto = VB1_SetAuto.setauto or VB2_SetAuto.setauto;
+alg bool KelderSchoon_setauto = VB1_SetAuto.setauto or VB2_SetAuto.setauto;
+alg bool KelderSchoon_calamiteit = VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend or (VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend);
+alg bool KelderVuil_setauto = VB1_SetAuto.setauto or VB2_SetAuto.setauto;
+alg bool KelderVuil_calamiteit = VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend or (VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend);
+alg bool VB1Knoppen_VBOperationeel = VB1_Stand.operationeel;
+alg bool VB1Knoppen_VBCalamiteit = VB1_Stand.calamiteit;
+alg bool VB1Knoppen_VBHerstel = VB1_Stand.herstel;
+alg bool VB1Knoppen_VBEvacuatie = VB1_Stand.evacuatie;
+alg bool VB1Knoppen_VBOnderhoud = VB1_Stand.onderhoud;
+alg bool VB1Knoppen_VBStandby = VB1_Stand.standby;
+alg bool VB1Knoppen_VB2Ondersteunend = VB2_Stand.ondersteunend;
+alg bool VB1Knoppen_VB2Operationeel = VB2_Stand.operationeel;
+alg bool VB1Knoppen_VB2Standby = VB2_Stand.standby;
+alg bool VB1Knoppen_VB2Onderhoud = VB2_Stand.onderhoud;
+alg bool VB1Knoppen_VBKnopLos = VB2Knoppen_Waarnemer.los;
+alg bool VB1Knoppen_VB2Calamiteit = VB2_Stand.calamiteit;
+alg bool VB1Knoppen_VB2Herstel = VB2_Stand.herstel;
+alg bool VB1Knoppen_popupAan = VB1_PopUp_Venster.aan;
+alg bool VB1Knoppen_popupUit = VB1_PopUp_Venster.uit;
+alg bool VB1Knoppen_popupTimerAan = VB1_PopUp_Timer.lopend;
+alg bool VB1Knoppen_popupTimerUit = VB1_PopUp_Timer.uit;
+alg bool VB1Knoppen_popupUit2 = VB2_PopUp_Venster.uit;
+alg bool VB1Knoppen_popupTimerUit2 = VB2_PopUp_Timer.uit;
+alg bool VB2Knoppen_VBOperationeel = VB2_Stand.operationeel;
+alg bool VB2Knoppen_VBCalamiteit = VB2_Stand.calamiteit;
+alg bool VB2Knoppen_VBHerstel = VB2_Stand.herstel;
+alg bool VB2Knoppen_VBEvacuatie = VB2_Stand.evacuatie;
+alg bool VB2Knoppen_VBOnderhoud = VB2_Stand.onderhoud;
+alg bool VB2Knoppen_VBStandby = VB2_Stand.standby;
+alg bool VB2Knoppen_VB2Ondersteunend = VB1_Stand.ondersteunend;
+alg bool VB2Knoppen_VB2Operationeel = VB1_Stand.operationeel;
+alg bool VB2Knoppen_VB2Standby = VB1_Stand.standby;
+alg bool VB2Knoppen_VB2Onderhoud = VB1_Stand.onderhoud;
+alg bool VB2Knoppen_VBKnopLos = VB1Knoppen_Waarnemer.los;
+alg bool VB2Knoppen_VB2Calamiteit = VB1_Stand.calamiteit;
+alg bool VB2Knoppen_VB2Herstel = VB1_Stand.herstel;
+alg bool VB2Knoppen_popupAan = VB2_PopUp_Venster.aan;
+alg bool VB2Knoppen_popupUit = VB2_PopUp_Venster.uit;
+alg bool VB2Knoppen_popupTimerAan = VB2_PopUp_Timer.lopend;
+alg bool VB2Knoppen_popupTimerUit = VB2_PopUp_Timer.uit;
+alg bool VB2Knoppen_popupUit2 = VB1_PopUp_Venster.uit;
+alg bool VB2Knoppen_popupTimerUit2 = VB1_PopUp_Timer.uit;
+plant automaton VB1_PopUp_Venster:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB1_PopUp_Timer:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  controllable c_resetLopend;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge c_resetLopend goto uit;
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB1_Stand:
+  controllable c_operationeel;
+  controllable c_calamiteit;
+  controllable c_standby;
+  controllable c_ondersteunend;
+  controllable c_onderhoud;
+  controllable c_herstelUitCalimiteit;
+  controllable c_herstelUitOndersteunend;
+  controllable c_herstelUitOnderhoud;
+  controllable c_evacuatie;
+  location operationeel:
+    initial;
+    marked;
+    edge c_calamiteit goto calamiteit;
+    edge c_standby goto standby;
+    edge c_ondersteunend goto ondersteunend;
+    edge c_onderhoud goto onderhoud;
+  location standby:
+    edge c_operationeel goto operationeel;
+    edge c_calamiteit goto calamiteit;
+    edge c_ondersteunend goto ondersteunend;
+  location calamiteit:
+    edge c_herstelUitCalimiteit goto herstel;
+    edge c_evacuatie goto evacuatie;
+  location evacuatie:
+    edge c_calamiteit goto calamiteit;
+  location herstel:
+    edge c_operationeel goto operationeel;
+    edge c_calamiteit goto calamiteit;
+    edge c_ondersteunend goto ondersteunend;
+    edge c_onderhoud goto onderhoud;
+  location ondersteunend:
+    edge c_herstelUitOndersteunend goto herstel;
+  location onderhoud:
+    edge c_operationeel goto operationeel;
+    edge c_herstelUitOnderhoud goto herstel;
+    edge c_ondersteunend goto ondersteunend;
+    edge c_calamiteit goto calamiteit;
+end
+plant automaton VB1_SetAuto:
+  controllable c_klaar;
+  location normaal:
+    initial;
+    marked;
+    edge VB1_Stand.c_operationeel, VB1_Stand.c_standby, VB1_Stand.c_calamiteit, VB1_Stand.c_evacuatie, VB1_Stand.c_herstelUitCalimiteit, VB1_Stand.c_herstelUitOndersteunend, VB1_Stand.c_herstelUitOnderhoud, VB1_Stand.c_ondersteunend, VB1_Stand.c_onderhoud goto setauto;
+  location setauto:
+    edge c_klaar goto normaal;
+end
+plant automaton VB1_HPKA1_SensorOpen:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HPKA1_Noodtelefoon:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HPKA1_Handblusser:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HPKA1_Brandslang:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HPKC1_SensorOpen:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HPKC1_Noodtelefoon:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HPKC1_Handblusser:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_Rookdetectie:
+  uncontrollable u_0;
+  uncontrollable u_1;
+  uncontrollable u_2;
+  uncontrollable u_3;
+  uncontrollable u_4;
+  uncontrollable u_5;
+  uncontrollable u_6;
+  uncontrollable u_7;
+  uncontrollable u_8;
+  location stand0:
+    initial;
+    marked;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand1:
+    marked;
+    edge u_0 goto stand0;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand2:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand3:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand4:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand5:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand6:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand7:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_8 goto stand8;
+  location stand8:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+end
+plant automaton VB1_SOS:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_KnoppenVBafsluiter:
+  monitor u_primairVRIrood, u_primairVRIuit, u_primairVBdicht, u_primairVBopen, u_VRIrood, u_VRIknipper, u_VRIuit, u_ABstop, u_ABopen, u_ABsluit, u_ABsluitOnv, u_resetHD;
+  uncontrollable u_primairVRIrood;
+  uncontrollable u_primairVRIuit;
+  uncontrollable u_primairVBdicht;
+  uncontrollable u_primairVBopen;
+  uncontrollable u_VRIrood;
+  uncontrollable u_VRIknipper;
+  uncontrollable u_VRIuit;
+  uncontrollable u_ABstop;
+  uncontrollable u_ABopen;
+  uncontrollable u_ABsluit;
+  uncontrollable u_ABsluitOnv;
+  uncontrollable u_resetHD;
+  controllable c_primairVRIrood_klaar;
+  controllable c_primairVRIuit_klaar;
+  controllable c_primairVBdicht_klaar;
+  controllable c_primairVBopen_klaar;
+  controllable c_VRIrood_klaar;
+  controllable c_VRIknipper_klaar;
+  controllable c_VRIuit_klaar;
+  controllable c_ABstop_klaar;
+  controllable c_ABopen_klaar;
+  controllable c_ABsluit_klaar;
+  controllable c_ABsluitOnv_klaar;
+  controllable c_resetHD_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_primairVRIrood when VB1_BedieningVRI.auto and not VB1_PrimairVRI.rood goto primairVRIrood;
+    edge u_primairVRIuit when VB1_BedieningVRI.auto and not VB1_PrimairVRI.uit goto primairVRIuit;
+    edge u_primairVBdicht when VB1_BedieningVRI.auto and VB1_BedieningAB.auto and (not VB1_PrimairVRI.rood or not VB1_PrimairAB.dicht) goto primairVBdicht;
+    edge u_primairVBopen when VB1_BedieningVRI.auto and VB1_BedieningAB.auto and (not VB1_PrimairVRI.uit or not VB1_PrimairAB.open) goto primairVBopen;
+    edge u_VRIrood when VB1_BedieningVRI.hand goto VRIrood;
+    edge u_VRIknipper when VB1_BedieningVRI.hand goto VRIknipper;
+    edge u_VRIuit when VB1_BedieningVRI.hand goto VRIuit;
+    edge u_ABstop when VB1_BedieningAB.hand goto ABstop;
+    edge u_ABopen when VB1_BedieningAB.hand goto ABopen;
+    edge u_ABsluit when VB1_BedieningAB.hand goto ABsluit;
+    edge u_ABsluitOnv when VB1_BedieningAB.hand goto ABsluitOnv;
+    edge u_resetHD when VB1_HoogteDetectieRood_Lampen.aan and VB1_HoogteDetectieRood_Timer.afgelopen goto resetHD;
+  location primairVRIrood:
+    edge c_primairVRIrood_klaar when VB1_PrimairVRI.rood goto los;
+  location primairVRIuit:
+    edge c_primairVRIuit_klaar when VB1_PrimairVRI.uit goto los;
+  location primairVBdicht:
+    edge c_primairVBdicht_klaar when VB1_PrimairVRI.rood and VB1_PrimairAB.dicht goto los;
+  location primairVBopen:
+    edge c_primairVBopen_klaar when VB1_PrimairVRI.uit and VB1_PrimairAB.open goto los;
+  location VRIrood:
+    edge c_VRIrood_klaar when VB1_ToegangVRI.rood goto los;
+  location VRIknipper:
+    edge c_VRIknipper_klaar when VB1_ToegangVRI.knipper goto los;
+  location VRIuit:
+    edge c_VRIuit_klaar when VB1_ToegangVRI.uit goto los;
+  location ABstop:
+    edge c_ABstop_klaar when VB1_ToegangAB.stop goto los;
+  location ABopen:
+    edge c_ABopen_klaar when VB1_ToegangAB.op goto los;
+  location ABsluit:
+    edge c_ABsluit_klaar when VB1_ToegangAB.neer goto los;
+  location ABsluitOnv:
+    edge c_ABsluitOnv_klaar when VB1_ToegangAB.neeronvoorwaardelijk goto los;
+  location resetHD:
+    edge c_resetHD_klaar when VB1_HoogteDetectieRood_Lampen.uit goto los;
+end
+plant automaton VB1_PrimairVRI:
+  controllable c_uitauto;
+  controllable c_roodauto;
+  controllable c_uit;
+  controllable c_rood;
+  location auto:
+    initial;
+    marked;
+    edge c_uit goto uit;
+    edge c_rood goto rood;
+  location uit:
+    edge c_uitauto goto auto;
+    edge c_rood goto rood;
+  location rood:
+    edge c_roodauto goto auto;
+    edge c_uit goto uit;
+end
+plant automaton VB1_PrimairAB:
+  controllable c_auto;
+  controllable c_open;
+  controllable c_dicht;
+  location auto:
+    initial;
+    marked;
+    edge c_open goto open;
+    edge c_dicht goto dicht;
+  location open:
+    edge c_dicht goto dicht;
+    edge c_auto goto auto;
+  location dicht:
+    edge c_open goto open;
+    edge c_auto goto auto;
+end
+plant automaton VB1_HoogteDetectieAdvies_Sensor:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HoogteDetectieAdvies_Lampen:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB1_HoogteDetectieAdvies_Timer:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB1_HoogteDetectieToerit_Sensor:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HoogteDetectieToerit_Lampen:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB1_HoogteDetectieToerit_Timer:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB1_HoogteDetectieWaarschuwing_Sensor:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HoogteDetectieWaarschuwing_Lampen:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB1_HoogteDetectieWaarschuwing_Timer:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB1_HoogteDetectieRood_Sensor:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HoogteDetectieRood_Lampen:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB1_HoogteDetectieRood_Timer:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB1_J32_Stand:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB1_VRI_Stand:
+  controllable c_uit;
+  controllable c_geel;
+  controllable c_uitknipper;
+  controllable c_geelknipper;
+  controllable c_roodknipper;
+  controllable c_rood;
+  location uit:
+    initial;
+    marked;
+    edge c_uitknipper goto knipper;
+  location knipper:
+    edge c_uit goto uit;
+    edge c_geel goto geel;
+  location geel:
+    edge c_geelknipper goto knipper;
+    edge c_rood goto rood;
+  location rood:
+    edge c_roodknipper goto knipper;
+end
+plant automaton VB1_VRI_TimerVrijgaveAan:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB1_VRI_TimerVrijgaveGeel:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB1_VRI_TimerVrijgaveRood:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB1_VRI_TimerVrijgaveUit:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB1_VRI_Vrijgavesignaal:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_VRI_TimerVrijgavesignaal:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  controllable c_resetLopend;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge c_resetLopend goto uit;
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB1_VRI_Relatie:
+  location:
+    initial;
+    marked;
+    edge VB1_VRI_Vrijgavesignaal.u_aan when VB1_VRI_Stand.rood and VB1_VRI_TimerVrijgavesignaal.afgelopen;
+    edge VB1_VRI_Vrijgavesignaal.u_uit when not VB1_VRI_Stand.rood;
+end
+plant automaton VB1_ToegangVRI:
+  controllable c_uitrood;
+  controllable c_uitknipper;
+  controllable c_knipperrood;
+  controllable c_knipperuit;
+  controllable c_rooduit;
+  controllable c_roodknipper;
+  location uit:
+    initial;
+    marked;
+    edge c_uitrood goto rood;
+    edge c_uitknipper goto knipper;
+  location knipper:
+    edge c_knipperrood goto rood;
+    edge c_knipperuit goto uit;
+  location rood:
+    edge c_rooduit goto uit;
+    edge c_roodknipper goto knipper;
+end
+plant automaton VB1_BedieningVRI:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton VB1_KnoppenBedieningVRI:
+  monitor u_auto, u_hand;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+  location auto:
+    edge c_auto_klaar when VB1_BedieningVRI.auto goto los;
+  location hand:
+    edge c_hand_klaar when VB1_BedieningVRI.hand goto los;
+end
+plant automaton VB1_AB_Stand:
+  uncontrollable u_op;
+  uncontrollable u_opverlaten;
+  uncontrollable u_neer;
+  location op:
+    initial;
+    marked;
+    edge u_opverlaten goto opverlaten;
+  location opverlaten:
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location neer:
+    edge u_opverlaten goto opverlaten;
+end
+plant automaton VB1_AB_Beweging:
+  uncontrollable u_op;
+  uncontrollable u_neer;
+  uncontrollable u_geen;
+  location geen:
+    initial;
+    marked;
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location op:
+    edge u_neer goto neer;
+    edge u_geen goto geen;
+  location neer:
+    edge u_op goto op;
+    edge u_geen goto geen;
+end
+plant automaton VB1_AB_Commando:
+  controllable c_opneer;
+  controllable c_opstop;
+  controllable c_opneeronvoorwaardelijk;
+  controllable c_neerop;
+  controllable c_neerstop;
+  controllable c_neerneeronvoorwaardelijk;
+  controllable c_stopneer;
+  controllable c_stopop;
+  controllable c_stopneeronvoorwaardelijk;
+  controllable c_neeronvoorwaardelijkneer;
+  controllable c_neeronvoorwaardelijkstop;
+  controllable c_neeronvoorwaardelijkop;
+  location op:
+    initial;
+    marked;
+    edge c_opneer goto neer;
+    edge c_opstop goto stop;
+    edge c_opneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location neer:
+    edge c_neerop goto op;
+    edge c_neerstop goto stop;
+    edge c_neerneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location stop:
+    edge c_stopneer goto neer;
+    edge c_stopop goto op;
+    edge c_stopneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location neeronvoorwaardelijk:
+    edge c_neeronvoorwaardelijkneer goto neer;
+    edge c_neeronvoorwaardelijkstop goto stop;
+    edge c_neeronvoorwaardelijkop goto op;
+end
+plant automaton VB1_AB_ObstakelDetectie:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_ToegangAB:
+  controllable c_opneer;
+  controllable c_opstop;
+  controllable c_opneeronvoorwaardelijk;
+  controllable c_neerop;
+  controllable c_neerstop;
+  controllable c_neerneeronvoorwaardelijk;
+  controllable c_stopneer;
+  controllable c_stopop;
+  controllable c_stopneeronvoorwaardelijk;
+  controllable c_neeronvoorwaardelijkneer;
+  controllable c_neeronvoorwaardelijkstop;
+  controllable c_neeronvoorwaardelijkop;
+  location op:
+    initial;
+    marked;
+    edge c_opneer goto neer;
+    edge c_opstop goto stop;
+    edge c_opneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location neer:
+    edge c_neerop goto op;
+    edge c_neerstop goto stop;
+    edge c_neerneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location stop:
+    edge c_stopneer goto neer;
+    edge c_stopop goto op;
+    edge c_stopneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location neeronvoorwaardelijk:
+    edge c_neeronvoorwaardelijkneer goto neer;
+    edge c_neeronvoorwaardelijkstop goto stop;
+    edge c_neeronvoorwaardelijkop goto op;
+end
+plant automaton VB1_BedieningAB:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton VB1_KnoppenBedieningAB:
+  monitor u_auto, u_hand;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+  location auto:
+    edge c_auto_klaar when VB1_BedieningAB.auto goto los;
+  location hand:
+    edge c_hand_klaar when VB1_BedieningAB.hand goto los;
+end
+plant automaton VB1_Ventilatie_Bediening:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton VB1_Ventilatie_Knoppen:
+  monitor u_0, u_1, u_2, u_3, u_4, u_5, u_6, u_7, u_8, u_auto, u_hand, u_rijrichting, u_tegenRijrichting;
+  uncontrollable u_0;
+  uncontrollable u_1;
+  uncontrollable u_2;
+  uncontrollable u_3;
+  uncontrollable u_4;
+  uncontrollable u_5;
+  uncontrollable u_6;
+  uncontrollable u_7;
+  uncontrollable u_8;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  uncontrollable u_rijrichting;
+  uncontrollable u_tegenRijrichting;
+  controllable c_0_klaar;
+  controllable c_1_klaar;
+  controllable c_2_klaar;
+  controllable c_3_klaar;
+  controllable c_4_klaar;
+  controllable c_5_klaar;
+  controllable c_6_klaar;
+  controllable c_7_klaar;
+  controllable c_8_klaar;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  controllable c_rijrichting_klaar;
+  controllable c_tegenRijrichting_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_0 when VB1_Ventilatie_Bediening.hand goto s0;
+    edge u_1 when VB1_Ventilatie_Bediening.hand goto s1;
+    edge u_2 when VB1_Ventilatie_Bediening.hand goto s2;
+    edge u_3 when VB1_Ventilatie_Bediening.hand goto s3;
+    edge u_4 when VB1_Ventilatie_Bediening.hand goto s4;
+    edge u_5 when VB1_Ventilatie_Bediening.hand goto s5;
+    edge u_6 when VB1_Ventilatie_Bediening.hand goto s6;
+    edge u_7 when VB1_Ventilatie_Bediening.hand goto s7;
+    edge u_8 when VB1_Ventilatie_Bediening.hand goto s8;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+    edge u_rijrichting when VB1_Ventilatie_Bediening.hand goto rijrichting;
+    edge u_tegenRijrichting when VB1_Ventilatie_Bediening.hand goto tegenRijrichting;
+  location s0:
+    edge c_0_klaar when VB1_Ventilatie_Stand.s0 or VB1_Ventilatie_Bediening.auto goto los;
+  location s1:
+    edge c_1_klaar when VB1_Ventilatie_Stand.s1 or VB1_Ventilatie_Bediening.auto goto los;
+  location s2:
+    edge c_2_klaar when VB1_Ventilatie_Stand.s2 or VB1_Ventilatie_Bediening.auto goto los;
+  location s3:
+    edge c_3_klaar when VB1_Ventilatie_Stand.s3 or VB1_Ventilatie_Bediening.auto goto los;
+  location s4:
+    edge c_4_klaar when VB1_Ventilatie_Stand.s4 or VB1_Ventilatie_Bediening.auto goto los;
+  location s5:
+    edge c_5_klaar when VB1_Ventilatie_Stand.s5 or VB1_Ventilatie_Bediening.auto goto los;
+  location s6:
+    edge c_6_klaar when VB1_Ventilatie_Stand.s6 or VB1_Ventilatie_Bediening.auto goto los;
+  location s7:
+    edge c_7_klaar when VB1_Ventilatie_Stand.s7 or VB1_Ventilatie_Bediening.auto goto los;
+  location s8:
+    edge c_8_klaar when VB1_Ventilatie_Stand.s8 or VB1_Ventilatie_Bediening.auto goto los;
+  location auto:
+    edge c_auto_klaar when VB1_Ventilatie_Bediening.auto goto los;
+  location hand:
+    edge c_hand_klaar when VB1_Ventilatie_Bediening.hand goto los;
+  location rijrichting:
+    edge c_rijrichting_klaar when VB1_Ventilatie_Richting.rijrichting or VB1_Ventilatie_Bediening.auto goto los;
+  location tegenRijrichting:
+    edge c_tegenRijrichting_klaar when VB1_Ventilatie_Richting.tegenRijrichting or VB1_Ventilatie_Bediening.auto goto los;
+end
+plant automaton VB1_Ventilatie_Stand:
+  controllable c_0;
+  controllable c_1;
+  controllable c_2;
+  controllable c_3;
+  controllable c_4;
+  controllable c_5;
+  controllable c_6;
+  controllable c_7;
+  controllable c_8;
+  location s0:
+    initial;
+    marked;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s1:
+    marked;
+    edge c_0 goto s0;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s2:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s3:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s4:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s5:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s6:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s7:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_8 goto s8;
+  location s8:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+end
+plant automaton VB1_Ventilatie_Richting:
+  controllable c_rijrichting;
+  controllable c_tegenRijrichting;
+  location rijrichting:
+    initial;
+    marked;
+    edge c_tegenRijrichting goto tegenRijrichting;
+  location tegenRijrichting:
+    edge c_rijrichting goto rijrichting;
+end
+plant automaton VB1_Lichtsensor:
+  uncontrollable u_0;
+  uncontrollable u_1;
+  uncontrollable u_2;
+  uncontrollable u_3;
+  uncontrollable u_4;
+  uncontrollable u_5;
+  uncontrollable u_6;
+  uncontrollable u_7;
+  uncontrollable u_8;
+  location stand0:
+    initial;
+    marked;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand1:
+    marked;
+    edge u_0 goto stand0;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand2:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand3:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand4:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand5:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand6:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand7:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_8 goto stand8;
+  location stand8:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+end
+plant automaton VB1_Verlichting_Bediening:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton VB1_Verlichting_Knoppen:
+  monitor u_0, u_1, u_2, u_3, u_4, u_5, u_6, u_7, u_8, u_auto, u_hand;
+  uncontrollable u_0;
+  uncontrollable u_1;
+  uncontrollable u_2;
+  uncontrollable u_3;
+  uncontrollable u_4;
+  uncontrollable u_5;
+  uncontrollable u_6;
+  uncontrollable u_7;
+  uncontrollable u_8;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  controllable c_0_klaar;
+  controllable c_1_klaar;
+  controllable c_2_klaar;
+  controllable c_3_klaar;
+  controllable c_4_klaar;
+  controllable c_5_klaar;
+  controllable c_6_klaar;
+  controllable c_7_klaar;
+  controllable c_8_klaar;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_0 when VB1_Verlichting_Bediening.hand goto s0;
+    edge u_1 when VB1_Verlichting_Bediening.hand goto s1;
+    edge u_2 when VB1_Verlichting_Bediening.hand goto s2;
+    edge u_3 when VB1_Verlichting_Bediening.hand goto s3;
+    edge u_4 when VB1_Verlichting_Bediening.hand goto s4;
+    edge u_5 when VB1_Verlichting_Bediening.hand goto s5;
+    edge u_6 when VB1_Verlichting_Bediening.hand goto s6;
+    edge u_7 when VB1_Verlichting_Bediening.hand goto s7;
+    edge u_8 when VB1_Verlichting_Bediening.hand goto s8;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+  location s0:
+    edge c_0_klaar when VB1_Verlichting_Stand.s0 or VB1_Verlichting_Bediening.auto goto los;
+  location s1:
+    edge c_1_klaar when VB1_Verlichting_Stand.s1 or VB1_Verlichting_Bediening.auto goto los;
+  location s2:
+    edge c_2_klaar when VB1_Verlichting_Stand.s2 or VB1_Verlichting_Bediening.auto goto los;
+  location s3:
+    edge c_3_klaar when VB1_Verlichting_Stand.s3 or VB1_Verlichting_Bediening.auto goto los;
+  location s4:
+    edge c_4_klaar when VB1_Verlichting_Stand.s4 or VB1_Verlichting_Bediening.auto goto los;
+  location s5:
+    edge c_5_klaar when VB1_Verlichting_Stand.s5 or VB1_Verlichting_Bediening.auto goto los;
+  location s6:
+    edge c_6_klaar when VB1_Verlichting_Stand.s6 or VB1_Verlichting_Bediening.auto goto los;
+  location s7:
+    edge c_7_klaar when VB1_Verlichting_Stand.s7 or VB1_Verlichting_Bediening.auto goto los;
+  location s8:
+    edge c_8_klaar when VB1_Verlichting_Stand.s8 or VB1_Verlichting_Bediening.auto goto los;
+  location auto:
+    edge c_auto_klaar when VB1_Verlichting_Bediening.auto goto los;
+  location hand:
+    edge c_hand_klaar when VB1_Verlichting_Bediening.hand goto los;
+end
+plant automaton VB1_Verlichting_Stand:
+  controllable c_0;
+  controllable c_1;
+  controllable c_2;
+  controllable c_3;
+  controllable c_4;
+  controllable c_5;
+  controllable c_6;
+  controllable c_7;
+  controllable c_8;
+  location s0:
+    initial;
+    marked;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s1:
+    marked;
+    edge c_0 goto s0;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s2:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s3:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s4:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s5:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s6:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s7:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_8 goto s8;
+  location s8:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+end
+plant automaton VB1_CCTV_Schouwen:
+  controllable c_schouwen;
+  controllable c_schouwenHuidig;
+  controllable c_stop;
+  location uit:
+    initial;
+    marked;
+    edge c_schouwen goto schouwen;
+    edge c_schouwenHuidig goto schouwenHuidig;
+  location schouwen:
+    edge c_stop goto uit;
+  location schouwenHuidig:
+    edge c_stop goto uit;
+end
+plant automaton VB1_CCTV_Richting:
+  controllable c_mee;
+  controllable c_tegen;
+  location mee:
+    initial;
+    marked;
+    edge c_tegen goto tegen;
+  location tegen:
+    edge c_mee goto mee;
+end
+plant automaton VB1_CCTV_Selectie:
+  controllable c_rechts;
+  controllable c_links;
+  controllable c_klaar;
+  location geen:
+    initial;
+    marked;
+    edge c_rechts goto rechts;
+    edge c_links goto links;
+  location rechts:
+    edge c_klaar goto geen;
+  location links:
+    edge c_klaar goto geen;
+end
+plant automaton VB1_Beeldregistratie:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB1_KnoppenCCTV:
+  monitor u_schouwen, u_shouwenTegen, u_schouwenHuidig, u_schouwenHuidigTegen, u_schouwenStop, u_rechts, u_links;
+  uncontrollable u_schouwen;
+  uncontrollable u_shouwenTegen;
+  uncontrollable u_schouwenHuidig;
+  uncontrollable u_schouwenHuidigTegen;
+  uncontrollable u_schouwenStop;
+  uncontrollable u_rechts;
+  uncontrollable u_links;
+  controllable c_schouwen_klaar;
+  controllable c_shouwenTegen_klaar;
+  controllable c_schouwenHuidig_klaar;
+  controllable c_schouwenHuidigTegen_klaar;
+  controllable c_schouwenStop_klaar;
+  controllable c_rechts_klaar;
+  controllable c_links_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_schouwen goto schouwen;
+    edge u_shouwenTegen goto schouwenTegen;
+    edge u_schouwenHuidig goto schouwenHuidig;
+    edge u_schouwenHuidigTegen goto schouwenHuidigTegen;
+    edge u_schouwenStop goto schouwenStop;
+    edge u_rechts goto rechts;
+    edge u_links goto links;
+  location schouwen:
+    edge c_schouwen_klaar when VB1_CCTV_Schouwen.schouwen and VB1_CCTV_Richting.mee goto los;
+  location schouwenTegen:
+    edge c_shouwenTegen_klaar when VB1_CCTV_Schouwen.schouwen and VB1_CCTV_Richting.tegen goto los;
+  location schouwenHuidig:
+    edge c_schouwenHuidig_klaar when VB1_CCTV_Schouwen.schouwenHuidig and VB1_CCTV_Richting.mee goto los;
+  location schouwenHuidigTegen:
+    edge c_schouwenHuidigTegen_klaar when VB1_CCTV_Schouwen.schouwenHuidig and VB1_CCTV_Richting.tegen goto los;
+  location schouwenStop:
+    edge c_schouwenStop_klaar when VB1_CCTV_Schouwen.uit goto los;
+  location rechts:
+    edge c_rechts_klaar when VB1_CCTV_Selectie.rechts and VB1_CCTV_Schouwen.uit goto los;
+  location links:
+    edge c_links_klaar when VB1_CCTV_Selectie.links and VB1_CCTV_Schouwen.uit goto los;
+end
+plant automaton VB1_Omroep_Modus:
+  controllable c_startlive;
+  controllable c_stoplive;
+  controllable c_startboodschap;
+  controllable c_stopboodschap;
+  location uit:
+    initial;
+    marked;
+    edge c_startlive goto live;
+    edge c_startboodschap goto boodschap;
+  location live:
+    edge c_stoplive goto uit;
+    edge c_startboodschap goto boodschap;
+  location boodschap:
+    edge c_startlive goto live;
+    edge c_stopboodschap goto uit;
+end
+plant automaton VB1_Omroep_Gebied:
+  controllable c_buis;
+  controllable c_sectie;
+  location buis:
+    initial;
+    marked;
+    edge c_sectie goto sectie;
+  location sectie:
+    edge c_buis goto buis;
+end
+plant automaton VB1_Omroep_Knoppen:
+  monitor u_startLive, u_stopLive, u_startBoodschap, u_stopBoodschap, u_buis, u_sectie;
+  uncontrollable u_startLive;
+  uncontrollable u_stopLive;
+  uncontrollable u_startBoodschap;
+  uncontrollable u_stopBoodschap;
+  uncontrollable u_buis;
+  uncontrollable u_sectie;
+  controllable c_startLive_klaar;
+  controllable c_stopLive_klaar;
+  controllable c_startBoodschap_klaar;
+  controllable c_stopBoodschap_klaar;
+  controllable c_buis_klaar;
+  controllable c_sectie_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_startLive goto startLive;
+    edge u_stopLive goto stopLive;
+    edge u_startBoodschap goto startBoodschap;
+    edge u_stopBoodschap goto stopBoodschap;
+    edge u_buis goto buis;
+    edge u_sectie goto sectie;
+  location startLive:
+    edge c_startLive_klaar when VB1_Omroep_Modus.live goto los;
+  location stopLive:
+    edge c_stopLive_klaar when VB1_Omroep_Modus.uit goto los;
+  location startBoodschap:
+    edge c_startBoodschap_klaar when VB1_Omroep_Modus.boodschap goto los;
+  location stopBoodschap:
+    edge c_stopBoodschap_klaar when VB1_Omroep_Modus.uit goto los;
+  location buis:
+    edge c_buis_klaar when VB1_Omroep_Gebied.buis goto los;
+  location sectie:
+    edge c_sectie_klaar when VB1_Omroep_Gebied.sectie goto los;
+end
+plant automaton VB1_Vluchtdeur_SensorOpen:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_Vluchtdeur_Geluidsbaken:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB1_Vluchtdeur_BedieningGeluidsbaken:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton VB1_Vluchtdeur_KnoppenGeluidsbaken:
+  monitor u_auto, u_hand, u_aan, u_uit;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  controllable c_aan_klaar;
+  controllable c_uit_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+    edge u_aan goto aan;
+    edge u_uit goto uit;
+  location auto:
+    edge c_auto_klaar when VB1_Vluchtdeur_BedieningGeluidsbaken.auto goto los;
+  location hand:
+    edge c_hand_klaar when VB1_Vluchtdeur_BedieningGeluidsbaken.hand goto los;
+  location aan:
+    edge c_aan_klaar when VB1_Vluchtdeur_Geluidsbaken.aan goto los;
+  location uit:
+    edge c_uit_klaar when VB1_Vluchtdeur_Geluidsbaken.uit goto los;
+end
+plant automaton VB1_Vluchtdeur_ContourVerlichting:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB1_Vluchtdeur_BedieningContourVerlichting:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton VB1_Vluchtdeur_KnoppenContourVerlichting:
+  monitor u_auto, u_hand, u_aan, u_uit;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  controllable c_aan_klaar;
+  controllable c_uit_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+    edge u_aan goto aan;
+    edge u_uit goto uit;
+  location auto:
+    edge c_auto_klaar when VB1_Vluchtdeur_BedieningContourVerlichting.auto goto los;
+  location hand:
+    edge c_hand_klaar when VB1_Vluchtdeur_BedieningContourVerlichting.hand goto los;
+  location aan:
+    edge c_aan_klaar when VB1_Vluchtdeur_ContourVerlichting.aan goto los;
+  location uit:
+    edge c_uit_klaar when VB1_Vluchtdeur_ContourVerlichting.uit goto los;
+end
+plant automaton VB2_PopUp_Venster:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB2_PopUp_Timer:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  controllable c_resetLopend;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge c_resetLopend goto uit;
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB2_Stand:
+  controllable c_operationeel;
+  controllable c_calamiteit;
+  controllable c_standby;
+  controllable c_ondersteunend;
+  controllable c_onderhoud;
+  controllable c_herstelUitCalimiteit;
+  controllable c_herstelUitOndersteunend;
+  controllable c_herstelUitOnderhoud;
+  controllable c_evacuatie;
+  location operationeel:
+    initial;
+    marked;
+    edge c_calamiteit goto calamiteit;
+    edge c_standby goto standby;
+    edge c_ondersteunend goto ondersteunend;
+    edge c_onderhoud goto onderhoud;
+  location standby:
+    edge c_operationeel goto operationeel;
+    edge c_calamiteit goto calamiteit;
+    edge c_ondersteunend goto ondersteunend;
+  location calamiteit:
+    edge c_herstelUitCalimiteit goto herstel;
+    edge c_evacuatie goto evacuatie;
+  location evacuatie:
+    edge c_calamiteit goto calamiteit;
+  location herstel:
+    edge c_operationeel goto operationeel;
+    edge c_calamiteit goto calamiteit;
+    edge c_ondersteunend goto ondersteunend;
+    edge c_onderhoud goto onderhoud;
+  location ondersteunend:
+    edge c_herstelUitOndersteunend goto herstel;
+  location onderhoud:
+    edge c_operationeel goto operationeel;
+    edge c_herstelUitOnderhoud goto herstel;
+    edge c_ondersteunend goto ondersteunend;
+    edge c_calamiteit goto calamiteit;
+end
+plant automaton VB2_SetAuto:
+  controllable c_klaar;
+  location normaal:
+    initial;
+    marked;
+    edge VB2_Stand.c_operationeel, VB2_Stand.c_standby, VB2_Stand.c_calamiteit, VB2_Stand.c_evacuatie, VB2_Stand.c_herstelUitCalimiteit, VB2_Stand.c_herstelUitOndersteunend, VB2_Stand.c_herstelUitOnderhoud, VB2_Stand.c_ondersteunend, VB2_Stand.c_onderhoud goto setauto;
+  location setauto:
+    edge c_klaar goto normaal;
+end
+plant automaton VB2_HPKA1_SensorOpen:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HPKA1_Noodtelefoon:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HPKA1_Handblusser:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HPKA1_Brandslang:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HPKC1_SensorOpen:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HPKC1_Noodtelefoon:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HPKC1_Handblusser:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_Rookdetectie:
+  uncontrollable u_0;
+  uncontrollable u_1;
+  uncontrollable u_2;
+  uncontrollable u_3;
+  uncontrollable u_4;
+  uncontrollable u_5;
+  uncontrollable u_6;
+  uncontrollable u_7;
+  uncontrollable u_8;
+  location stand0:
+    initial;
+    marked;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand1:
+    marked;
+    edge u_0 goto stand0;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand2:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand3:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand4:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand5:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand6:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand7:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_8 goto stand8;
+  location stand8:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+end
+plant automaton VB2_SOS:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_KnoppenVBafsluiter:
+  monitor u_primairVRIrood, u_primairVRIuit, u_primairVBdicht, u_primairVBopen, u_VRIrood, u_VRIknipper, u_VRIuit, u_ABstop, u_ABopen, u_ABsluit, u_ABsluitOnv;
+  uncontrollable u_primairVRIrood;
+  uncontrollable u_primairVRIuit;
+  uncontrollable u_primairVBdicht;
+  uncontrollable u_primairVBopen;
+  uncontrollable u_VRIrood;
+  uncontrollable u_VRIknipper;
+  uncontrollable u_VRIuit;
+  uncontrollable u_ABstop;
+  uncontrollable u_ABopen;
+  uncontrollable u_ABsluit;
+  uncontrollable u_ABsluitOnv;
+  controllable c_primairVRIrood_klaar;
+  controllable c_primairVRIuit_klaar;
+  controllable c_primairVBdicht_klaar;
+  controllable c_primairVBopen_klaar;
+  controllable c_VRIrood_klaar;
+  controllable c_VRIknipper_klaar;
+  controllable c_VRIuit_klaar;
+  controllable c_ABstop_klaar;
+  controllable c_ABopen_klaar;
+  controllable c_ABsluit_klaar;
+  controllable c_ABsluitOnv_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_primairVRIrood when VB2_BedieningVRI.auto and (not VB2_ToegangVRI.rood or not VB2_PrimairVRI.rood) goto primairVRIrood;
+    edge u_primairVRIuit when VB2_BedieningVRI.auto and (not VB2_ToegangVRI.uit or not VB2_PrimairVRI.uit) goto primairVRIuit;
+    edge u_primairVBdicht when VB2_BedieningVRI.auto and VB2_BedieningAB.auto and (not VB2_PrimairVRI.rood or not VB2_PrimairAB.dicht) goto primairVBdicht;
+    edge u_primairVBopen when VB2_BedieningVRI.auto and VB2_BedieningAB.auto and (not VB2_PrimairVRI.uit or not VB2_PrimairAB.open) goto primairVBopen;
+    edge u_VRIrood when VB2_BedieningVRI.hand goto VRIrood;
+    edge u_VRIknipper when VB2_BedieningVRI.hand goto VRIknipper;
+    edge u_VRIuit when VB2_BedieningVRI.hand goto VRIuit;
+    edge u_ABstop when VB2_BedieningAB.hand goto ABstop;
+    edge u_ABopen when VB2_BedieningAB.hand goto ABopen;
+    edge u_ABsluit when VB2_BedieningAB.hand goto ABsluit;
+    edge u_ABsluitOnv when VB2_BedieningAB.hand goto ABsluitOnv;
+  location primairVRIrood:
+    edge c_primairVRIrood_klaar when VB2_PrimairVRI.rood goto los;
+  location primairVRIuit:
+    edge c_primairVRIuit_klaar when VB2_PrimairVRI.uit goto los;
+  location primairVBdicht:
+    edge c_primairVBdicht_klaar when VB2_PrimairVRI.rood and VB2_PrimairAB.dicht goto los;
+  location primairVBopen:
+    edge c_primairVBopen_klaar when VB2_PrimairVRI.uit and VB2_PrimairAB.open goto los;
+  location VRIrood:
+    edge c_VRIrood_klaar when VB2_ToegangVRI.rood goto los;
+  location VRIknipper:
+    edge c_VRIknipper_klaar when VB2_ToegangVRI.knipper goto los;
+  location VRIuit:
+    edge c_VRIuit_klaar when VB2_ToegangVRI.uit goto los;
+  location ABstop:
+    edge c_ABstop_klaar when VB2_ToegangAB.stop goto los;
+  location ABopen:
+    edge c_ABopen_klaar when VB2_ToegangAB.op goto los;
+  location ABsluit:
+    edge c_ABsluit_klaar when VB2_ToegangAB.neer goto los;
+  location ABsluitOnv:
+    edge c_ABsluitOnv_klaar when VB2_ToegangAB.neeronvoorwaardelijk goto los;
+end
+plant automaton VB2_PrimairVRI:
+  controllable c_uitauto;
+  controllable c_roodauto;
+  controllable c_uit;
+  controllable c_rood;
+  location auto:
+    initial;
+    marked;
+    edge c_uit goto uit;
+    edge c_rood goto rood;
+  location uit:
+    edge c_uitauto goto auto;
+    edge c_rood goto rood;
+  location rood:
+    edge c_roodauto goto auto;
+    edge c_uit goto uit;
+end
+plant automaton VB2_PrimairAB:
+  controllable c_auto;
+  controllable c_open;
+  controllable c_dicht;
+  location auto:
+    initial;
+    marked;
+    edge c_open goto open;
+    edge c_dicht goto dicht;
+  location open:
+    edge c_dicht goto dicht;
+    edge c_auto goto auto;
+  location dicht:
+    edge c_open goto open;
+    edge c_auto goto auto;
+end
+plant automaton VB2_HoogteDetectieToerit_Sensor:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HoogteDetectieToerit_Lampen:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB2_HoogteDetectieToerit_Timer:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB2_J32_Stand:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB2_VRI_Stand:
+  controllable c_uit;
+  controllable c_geel;
+  controllable c_uitknipper;
+  controllable c_geelknipper;
+  controllable c_roodknipper;
+  controllable c_rood;
+  location uit:
+    initial;
+    marked;
+    edge c_uitknipper goto knipper;
+  location knipper:
+    edge c_uit goto uit;
+    edge c_geel goto geel;
+  location geel:
+    edge c_geelknipper goto knipper;
+    edge c_rood goto rood;
+  location rood:
+    edge c_roodknipper goto knipper;
+end
+plant automaton VB2_VRI_TimerVrijgaveAan:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB2_VRI_TimerVrijgaveGeel:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB2_VRI_TimerVrijgaveRood:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB2_VRI_TimerVrijgaveUit:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB2_VRI_Vrijgavesignaal:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_VRI_TimerVrijgavesignaal:
+  controllable c_aan;
+  controllable c_resetAfgelopen;
+  controllable c_resetLopend;
+  uncontrollable u_timeout;
+  location uit:
+    initial;
+    marked;
+    edge c_aan goto lopend;
+  location lopend:
+    edge c_resetLopend goto uit;
+    edge u_timeout goto afgelopen;
+  location afgelopen:
+    edge c_resetAfgelopen goto uit;
+end
+plant automaton VB2_VRI_Relatie:
+  location:
+    initial;
+    marked;
+    edge VB2_VRI_Vrijgavesignaal.u_aan when VB2_VRI_Stand.rood and VB2_VRI_TimerVrijgavesignaal.afgelopen;
+    edge VB2_VRI_Vrijgavesignaal.u_uit when not VB2_VRI_Stand.rood;
+end
+plant automaton VB2_ToegangVRI:
+  controllable c_uitrood;
+  controllable c_uitknipper;
+  controllable c_knipperrood;
+  controllable c_knipperuit;
+  controllable c_rooduit;
+  controllable c_roodknipper;
+  location uit:
+    initial;
+    marked;
+    edge c_uitrood goto rood;
+    edge c_uitknipper goto knipper;
+  location knipper:
+    edge c_knipperrood goto rood;
+    edge c_knipperuit goto uit;
+  location rood:
+    edge c_rooduit goto uit;
+    edge c_roodknipper goto knipper;
+end
+plant automaton VB2_BedieningVRI:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton VB2_KnoppenBedieningVRI:
+  monitor u_auto, u_hand;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+  location auto:
+    edge c_auto_klaar when VB2_BedieningVRI.auto goto los;
+  location hand:
+    edge c_hand_klaar when VB2_BedieningVRI.hand goto los;
+end
+plant automaton VB2_AB_Stand:
+  uncontrollable u_op;
+  uncontrollable u_opverlaten;
+  uncontrollable u_neer;
+  location op:
+    initial;
+    marked;
+    edge u_opverlaten goto opverlaten;
+  location opverlaten:
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location neer:
+    edge u_opverlaten goto opverlaten;
+end
+plant automaton VB2_AB_Beweging:
+  uncontrollable u_op;
+  uncontrollable u_neer;
+  uncontrollable u_geen;
+  location geen:
+    initial;
+    marked;
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location op:
+    edge u_neer goto neer;
+    edge u_geen goto geen;
+  location neer:
+    edge u_op goto op;
+    edge u_geen goto geen;
+end
+plant automaton VB2_AB_Commando:
+  controllable c_opneer;
+  controllable c_opstop;
+  controllable c_opneeronvoorwaardelijk;
+  controllable c_neerop;
+  controllable c_neerstop;
+  controllable c_neerneeronvoorwaardelijk;
+  controllable c_stopneer;
+  controllable c_stopop;
+  controllable c_stopneeronvoorwaardelijk;
+  controllable c_neeronvoorwaardelijkneer;
+  controllable c_neeronvoorwaardelijkstop;
+  controllable c_neeronvoorwaardelijkop;
+  location op:
+    initial;
+    marked;
+    edge c_opneer goto neer;
+    edge c_opstop goto stop;
+    edge c_opneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location neer:
+    edge c_neerop goto op;
+    edge c_neerstop goto stop;
+    edge c_neerneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location stop:
+    edge c_stopneer goto neer;
+    edge c_stopop goto op;
+    edge c_stopneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location neeronvoorwaardelijk:
+    edge c_neeronvoorwaardelijkneer goto neer;
+    edge c_neeronvoorwaardelijkstop goto stop;
+    edge c_neeronvoorwaardelijkop goto op;
+end
+plant automaton VB2_AB_ObstakelDetectie:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_ToegangAB:
+  controllable c_opneer;
+  controllable c_opstop;
+  controllable c_opneeronvoorwaardelijk;
+  controllable c_neerop;
+  controllable c_neerstop;
+  controllable c_neerneeronvoorwaardelijk;
+  controllable c_stopneer;
+  controllable c_stopop;
+  controllable c_stopneeronvoorwaardelijk;
+  controllable c_neeronvoorwaardelijkneer;
+  controllable c_neeronvoorwaardelijkstop;
+  controllable c_neeronvoorwaardelijkop;
+  location op:
+    initial;
+    marked;
+    edge c_opneer goto neer;
+    edge c_opstop goto stop;
+    edge c_opneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location neer:
+    edge c_neerop goto op;
+    edge c_neerstop goto stop;
+    edge c_neerneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location stop:
+    edge c_stopneer goto neer;
+    edge c_stopop goto op;
+    edge c_stopneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location neeronvoorwaardelijk:
+    edge c_neeronvoorwaardelijkneer goto neer;
+    edge c_neeronvoorwaardelijkstop goto stop;
+    edge c_neeronvoorwaardelijkop goto op;
+end
+plant automaton VB2_BedieningAB:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton VB2_KnoppenBedieningAB:
+  monitor u_auto, u_hand;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+  location auto:
+    edge c_auto_klaar when VB2_BedieningAB.auto goto los;
+  location hand:
+    edge c_hand_klaar when VB2_BedieningAB.hand goto los;
+end
+plant automaton VB2_Ventilatie_Bediening:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton VB2_Ventilatie_Knoppen:
+  monitor u_0, u_1, u_2, u_3, u_4, u_5, u_6, u_7, u_8, u_auto, u_hand, u_rijrichting, u_tegenRijrichting;
+  uncontrollable u_0;
+  uncontrollable u_1;
+  uncontrollable u_2;
+  uncontrollable u_3;
+  uncontrollable u_4;
+  uncontrollable u_5;
+  uncontrollable u_6;
+  uncontrollable u_7;
+  uncontrollable u_8;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  uncontrollable u_rijrichting;
+  uncontrollable u_tegenRijrichting;
+  controllable c_0_klaar;
+  controllable c_1_klaar;
+  controllable c_2_klaar;
+  controllable c_3_klaar;
+  controllable c_4_klaar;
+  controllable c_5_klaar;
+  controllable c_6_klaar;
+  controllable c_7_klaar;
+  controllable c_8_klaar;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  controllable c_rijrichting_klaar;
+  controllable c_tegenRijrichting_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_0 when VB2_Ventilatie_Bediening.hand goto s0;
+    edge u_1 when VB2_Ventilatie_Bediening.hand goto s1;
+    edge u_2 when VB2_Ventilatie_Bediening.hand goto s2;
+    edge u_3 when VB2_Ventilatie_Bediening.hand goto s3;
+    edge u_4 when VB2_Ventilatie_Bediening.hand goto s4;
+    edge u_5 when VB2_Ventilatie_Bediening.hand goto s5;
+    edge u_6 when VB2_Ventilatie_Bediening.hand goto s6;
+    edge u_7 when VB2_Ventilatie_Bediening.hand goto s7;
+    edge u_8 when VB2_Ventilatie_Bediening.hand goto s8;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+    edge u_rijrichting when VB2_Ventilatie_Bediening.hand goto rijrichting;
+    edge u_tegenRijrichting when VB2_Ventilatie_Bediening.hand goto tegenRijrichting;
+  location s0:
+    edge c_0_klaar when VB2_Ventilatie_Stand.s0 or VB2_Ventilatie_Bediening.auto goto los;
+  location s1:
+    edge c_1_klaar when VB2_Ventilatie_Stand.s1 or VB2_Ventilatie_Bediening.auto goto los;
+  location s2:
+    edge c_2_klaar when VB2_Ventilatie_Stand.s2 or VB2_Ventilatie_Bediening.auto goto los;
+  location s3:
+    edge c_3_klaar when VB2_Ventilatie_Stand.s3 or VB2_Ventilatie_Bediening.auto goto los;
+  location s4:
+    edge c_4_klaar when VB2_Ventilatie_Stand.s4 or VB2_Ventilatie_Bediening.auto goto los;
+  location s5:
+    edge c_5_klaar when VB2_Ventilatie_Stand.s5 or VB2_Ventilatie_Bediening.auto goto los;
+  location s6:
+    edge c_6_klaar when VB2_Ventilatie_Stand.s6 or VB2_Ventilatie_Bediening.auto goto los;
+  location s7:
+    edge c_7_klaar when VB2_Ventilatie_Stand.s7 or VB2_Ventilatie_Bediening.auto goto los;
+  location s8:
+    edge c_8_klaar when VB2_Ventilatie_Stand.s8 or VB2_Ventilatie_Bediening.auto goto los;
+  location auto:
+    edge c_auto_klaar when VB2_Ventilatie_Bediening.auto goto los;
+  location hand:
+    edge c_hand_klaar when VB2_Ventilatie_Bediening.hand goto los;
+  location rijrichting:
+    edge c_rijrichting_klaar when VB2_Ventilatie_Richting.rijrichting or VB2_Ventilatie_Bediening.auto goto los;
+  location tegenRijrichting:
+    edge c_tegenRijrichting_klaar when VB2_Ventilatie_Richting.tegenRijrichting or VB2_Ventilatie_Bediening.auto goto los;
+end
+plant automaton VB2_Ventilatie_Stand:
+  controllable c_0;
+  controllable c_1;
+  controllable c_2;
+  controllable c_3;
+  controllable c_4;
+  controllable c_5;
+  controllable c_6;
+  controllable c_7;
+  controllable c_8;
+  location s0:
+    initial;
+    marked;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s1:
+    marked;
+    edge c_0 goto s0;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s2:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s3:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s4:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s5:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s6:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s7:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_8 goto s8;
+  location s8:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+end
+plant automaton VB2_Ventilatie_Richting:
+  controllable c_rijrichting;
+  controllable c_tegenRijrichting;
+  location rijrichting:
+    initial;
+    marked;
+    edge c_tegenRijrichting goto tegenRijrichting;
+  location tegenRijrichting:
+    edge c_rijrichting goto rijrichting;
+end
+plant automaton VB2_Lichtsensor:
+  uncontrollable u_0;
+  uncontrollable u_1;
+  uncontrollable u_2;
+  uncontrollable u_3;
+  uncontrollable u_4;
+  uncontrollable u_5;
+  uncontrollable u_6;
+  uncontrollable u_7;
+  uncontrollable u_8;
+  location stand0:
+    initial;
+    marked;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand1:
+    marked;
+    edge u_0 goto stand0;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand2:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand3:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand4:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand5:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand6:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand7:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_8 goto stand8;
+  location stand8:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+end
+plant automaton VB2_Verlichting_Bediening:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton VB2_Verlichting_Knoppen:
+  monitor u_0, u_1, u_2, u_3, u_4, u_5, u_6, u_7, u_8, u_auto, u_hand;
+  uncontrollable u_0;
+  uncontrollable u_1;
+  uncontrollable u_2;
+  uncontrollable u_3;
+  uncontrollable u_4;
+  uncontrollable u_5;
+  uncontrollable u_6;
+  uncontrollable u_7;
+  uncontrollable u_8;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  controllable c_0_klaar;
+  controllable c_1_klaar;
+  controllable c_2_klaar;
+  controllable c_3_klaar;
+  controllable c_4_klaar;
+  controllable c_5_klaar;
+  controllable c_6_klaar;
+  controllable c_7_klaar;
+  controllable c_8_klaar;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_0 when VB2_Verlichting_Bediening.hand goto s0;
+    edge u_1 when VB2_Verlichting_Bediening.hand goto s1;
+    edge u_2 when VB2_Verlichting_Bediening.hand goto s2;
+    edge u_3 when VB2_Verlichting_Bediening.hand goto s3;
+    edge u_4 when VB2_Verlichting_Bediening.hand goto s4;
+    edge u_5 when VB2_Verlichting_Bediening.hand goto s5;
+    edge u_6 when VB2_Verlichting_Bediening.hand goto s6;
+    edge u_7 when VB2_Verlichting_Bediening.hand goto s7;
+    edge u_8 when VB2_Verlichting_Bediening.hand goto s8;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+  location s0:
+    edge c_0_klaar when VB2_Verlichting_Stand.s0 or VB2_Verlichting_Bediening.auto goto los;
+  location s1:
+    edge c_1_klaar when VB2_Verlichting_Stand.s1 or VB2_Verlichting_Bediening.auto goto los;
+  location s2:
+    edge c_2_klaar when VB2_Verlichting_Stand.s2 or VB2_Verlichting_Bediening.auto goto los;
+  location s3:
+    edge c_3_klaar when VB2_Verlichting_Stand.s3 or VB2_Verlichting_Bediening.auto goto los;
+  location s4:
+    edge c_4_klaar when VB2_Verlichting_Stand.s4 or VB2_Verlichting_Bediening.auto goto los;
+  location s5:
+    edge c_5_klaar when VB2_Verlichting_Stand.s5 or VB2_Verlichting_Bediening.auto goto los;
+  location s6:
+    edge c_6_klaar when VB2_Verlichting_Stand.s6 or VB2_Verlichting_Bediening.auto goto los;
+  location s7:
+    edge c_7_klaar when VB2_Verlichting_Stand.s7 or VB2_Verlichting_Bediening.auto goto los;
+  location s8:
+    edge c_8_klaar when VB2_Verlichting_Stand.s8 or VB2_Verlichting_Bediening.auto goto los;
+  location auto:
+    edge c_auto_klaar when VB2_Verlichting_Bediening.auto goto los;
+  location hand:
+    edge c_hand_klaar when VB2_Verlichting_Bediening.hand goto los;
+end
+plant automaton VB2_Verlichting_Stand:
+  controllable c_0;
+  controllable c_1;
+  controllable c_2;
+  controllable c_3;
+  controllable c_4;
+  controllable c_5;
+  controllable c_6;
+  controllable c_7;
+  controllable c_8;
+  location s0:
+    initial;
+    marked;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s1:
+    marked;
+    edge c_0 goto s0;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s2:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s3:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s4:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s5:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s6:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_7 goto s7;
+    edge c_8 goto s8;
+  location s7:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_8 goto s8;
+  location s8:
+    marked;
+    edge c_0 goto s0;
+    edge c_1 goto s1;
+    edge c_2 goto s2;
+    edge c_3 goto s3;
+    edge c_4 goto s4;
+    edge c_5 goto s5;
+    edge c_6 goto s6;
+    edge c_7 goto s7;
+end
+plant automaton VB2_CCTV_Schouwen:
+  controllable c_schouwen;
+  controllable c_schouwenHuidig;
+  controllable c_stop;
+  location uit:
+    initial;
+    marked;
+    edge c_schouwen goto schouwen;
+    edge c_schouwenHuidig goto schouwenHuidig;
+  location schouwen:
+    edge c_stop goto uit;
+  location schouwenHuidig:
+    edge c_stop goto uit;
+end
+plant automaton VB2_CCTV_Richting:
+  controllable c_mee;
+  controllable c_tegen;
+  location mee:
+    initial;
+    marked;
+    edge c_tegen goto tegen;
+  location tegen:
+    edge c_mee goto mee;
+end
+plant automaton VB2_CCTV_Selectie:
+  controllable c_rechts;
+  controllable c_links;
+  controllable c_klaar;
+  location geen:
+    initial;
+    marked;
+    edge c_rechts goto rechts;
+    edge c_links goto links;
+  location rechts:
+    edge c_klaar goto geen;
+  location links:
+    edge c_klaar goto geen;
+end
+plant automaton VB2_Beeldregistratie:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB2_KnoppenCCTV:
+  monitor u_schouwen, u_shouwenTegen, u_schouwenHuidig, u_schouwenHuidigTegen, u_schouwenStop, u_rechts, u_links;
+  uncontrollable u_schouwen;
+  uncontrollable u_shouwenTegen;
+  uncontrollable u_schouwenHuidig;
+  uncontrollable u_schouwenHuidigTegen;
+  uncontrollable u_schouwenStop;
+  uncontrollable u_rechts;
+  uncontrollable u_links;
+  controllable c_schouwen_klaar;
+  controllable c_shouwenTegen_klaar;
+  controllable c_schouwenHuidig_klaar;
+  controllable c_schouwenHuidigTegen_klaar;
+  controllable c_schouwenStop_klaar;
+  controllable c_rechts_klaar;
+  controllable c_links_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_schouwen goto schouwen;
+    edge u_shouwenTegen goto schouwenTegen;
+    edge u_schouwenHuidig goto schouwenHuidig;
+    edge u_schouwenHuidigTegen goto schouwenHuidigTegen;
+    edge u_schouwenStop goto schouwenStop;
+    edge u_rechts goto rechts;
+    edge u_links goto links;
+  location schouwen:
+    edge c_schouwen_klaar when VB2_CCTV_Schouwen.schouwen and VB2_CCTV_Richting.mee goto los;
+  location schouwenTegen:
+    edge c_shouwenTegen_klaar when VB2_CCTV_Schouwen.schouwen and VB2_CCTV_Richting.tegen goto los;
+  location schouwenHuidig:
+    edge c_schouwenHuidig_klaar when VB2_CCTV_Schouwen.schouwenHuidig and VB2_CCTV_Richting.mee goto los;
+  location schouwenHuidigTegen:
+    edge c_schouwenHuidigTegen_klaar when VB2_CCTV_Schouwen.schouwenHuidig and VB2_CCTV_Richting.tegen goto los;
+  location schouwenStop:
+    edge c_schouwenStop_klaar when VB2_CCTV_Schouwen.uit goto los;
+  location rechts:
+    edge c_rechts_klaar when VB2_CCTV_Selectie.rechts and VB2_CCTV_Schouwen.uit goto los;
+  location links:
+    edge c_links_klaar when VB2_CCTV_Selectie.links and VB2_CCTV_Schouwen.uit goto los;
+end
+plant automaton VB2_Omroep_Modus:
+  controllable c_startlive;
+  controllable c_stoplive;
+  controllable c_startboodschap;
+  controllable c_stopboodschap;
+  location uit:
+    initial;
+    marked;
+    edge c_startlive goto live;
+    edge c_startboodschap goto boodschap;
+  location live:
+    edge c_stoplive goto uit;
+    edge c_startboodschap goto boodschap;
+  location boodschap:
+    edge c_startlive goto live;
+    edge c_stopboodschap goto uit;
+end
+plant automaton VB2_Omroep_Gebied:
+  controllable c_buis;
+  controllable c_sectie;
+  location buis:
+    initial;
+    marked;
+    edge c_sectie goto sectie;
+  location sectie:
+    edge c_buis goto buis;
+end
+plant automaton VB2_Omroep_Knoppen:
+  monitor u_startLive, u_stopLive, u_startBoodschap, u_stopBoodschap, u_buis, u_sectie;
+  uncontrollable u_startLive;
+  uncontrollable u_stopLive;
+  uncontrollable u_startBoodschap;
+  uncontrollable u_stopBoodschap;
+  uncontrollable u_buis;
+  uncontrollable u_sectie;
+  controllable c_startLive_klaar;
+  controllable c_stopLive_klaar;
+  controllable c_startBoodschap_klaar;
+  controllable c_stopBoodschap_klaar;
+  controllable c_buis_klaar;
+  controllable c_sectie_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_startLive goto startLive;
+    edge u_stopLive goto stopLive;
+    edge u_startBoodschap goto startBoodschap;
+    edge u_stopBoodschap goto stopBoodschap;
+    edge u_buis goto buis;
+    edge u_sectie goto sectie;
+  location startLive:
+    edge c_startLive_klaar when VB2_Omroep_Modus.live goto los;
+  location stopLive:
+    edge c_stopLive_klaar when VB2_Omroep_Modus.uit goto los;
+  location startBoodschap:
+    edge c_startBoodschap_klaar when VB2_Omroep_Modus.boodschap goto los;
+  location stopBoodschap:
+    edge c_stopBoodschap_klaar when VB2_Omroep_Modus.uit goto los;
+  location buis:
+    edge c_buis_klaar when VB2_Omroep_Gebied.buis goto los;
+  location sectie:
+    edge c_sectie_klaar when VB2_Omroep_Gebied.sectie goto los;
+end
+plant automaton VB2_Vluchtdeur_SensorOpen:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_Vluchtdeur_Geluidsbaken:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB2_Vluchtdeur_BedieningGeluidsbaken:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton VB2_Vluchtdeur_KnoppenGeluidsbaken:
+  monitor u_auto, u_hand, u_aan, u_uit;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  controllable c_aan_klaar;
+  controllable c_uit_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+    edge u_aan goto aan;
+    edge u_uit goto uit;
+  location auto:
+    edge c_auto_klaar when VB2_Vluchtdeur_BedieningGeluidsbaken.auto goto los;
+  location hand:
+    edge c_hand_klaar when VB2_Vluchtdeur_BedieningGeluidsbaken.hand goto los;
+  location aan:
+    edge c_aan_klaar when VB2_Vluchtdeur_Geluidsbaken.aan goto los;
+  location uit:
+    edge c_uit_klaar when VB2_Vluchtdeur_Geluidsbaken.uit goto los;
+end
+plant automaton VB2_Vluchtdeur_ContourVerlichting:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB2_Vluchtdeur_BedieningContourVerlichting:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton VB2_Vluchtdeur_KnoppenContourVerlichting:
+  monitor u_auto, u_hand, u_aan, u_uit;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  controllable c_aan_klaar;
+  controllable c_uit_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+    edge u_aan goto aan;
+    edge u_uit goto uit;
+  location auto:
+    edge c_auto_klaar when VB2_Vluchtdeur_BedieningContourVerlichting.auto goto los;
+  location hand:
+    edge c_hand_klaar when VB2_Vluchtdeur_BedieningContourVerlichting.hand goto los;
+  location aan:
+    edge c_aan_klaar when VB2_Vluchtdeur_ContourVerlichting.aan goto los;
+  location uit:
+    edge c_uit_klaar when VB2_Vluchtdeur_ContourVerlichting.uit goto los;
+end
+plant automaton MTK_Verlichting:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton MTK_BedieningVerlichting:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton MTK_KnoppenVerlichting:
+  monitor u_auto, u_hand, u_aan, u_uit;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  controllable c_aan_klaar;
+  controllable c_uit_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+    edge u_aan goto aan;
+    edge u_uit goto uit;
+  location auto:
+    edge c_auto_klaar when MTK_BedieningVerlichting.auto goto los;
+  location hand:
+    edge c_hand_klaar when MTK_BedieningVerlichting.hand goto los;
+  location aan:
+    edge c_aan_klaar when MTK_Verlichting.aan goto los;
+  location uit:
+    edge c_uit_klaar when MTK_Verlichting.uit goto los;
+end
+plant automaton MTK_Overdruk:
+  controllable c_uit;
+  controllable c_links;
+  controllable c_rechts;
+  location uit:
+    initial;
+    marked;
+    edge c_links goto links;
+    edge c_rechts goto rechts;
+  location links:
+    edge c_uit goto uit;
+    edge c_rechts goto rechts;
+  location rechts:
+    edge c_uit goto uit;
+    edge c_links goto links;
+end
+plant automaton MTK_BedieningOverdruk:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton MTK_KnoppenOverdruk:
+  monitor u_auto, u_hand, u_links, u_rechts, u_uit;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  uncontrollable u_links;
+  uncontrollable u_rechts;
+  uncontrollable u_uit;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  controllable c_links_klaar;
+  controllable c_rechts_klaar;
+  controllable c_uit_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+    edge u_links goto links;
+    edge u_rechts goto rechts;
+    edge u_uit goto uit;
+  location auto:
+    edge c_auto_klaar when MTK_BedieningOverdruk.auto goto los;
+  location hand:
+    edge c_hand_klaar when MTK_BedieningOverdruk.hand goto los;
+  location links:
+    edge c_links_klaar when MTK_Overdruk.links goto los;
+  location rechts:
+    edge c_rechts_klaar when MTK_Overdruk.rechts goto los;
+  location uit:
+    edge c_uit_klaar when MTK_Overdruk.uit goto los;
+end
+plant automaton MTK_DVI:
+  controllable c_uit;
+  controllable c_oplopend;
+  controllable c_aflopend;
+  location uit:
+    initial;
+    marked;
+    edge c_oplopend goto oplopend;
+    edge c_aflopend goto aflopend;
+  location oplopend:
+    edge c_uit goto uit;
+    edge c_aflopend goto aflopend;
+  location aflopend:
+    edge c_uit goto uit;
+    edge c_oplopend goto oplopend;
+end
+plant automaton MTK_BedieningDVI:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton MTK_KnoppenDVI:
+  monitor u_auto, u_hand, u_oplopend, u_aflopend, u_uit;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  uncontrollable u_oplopend;
+  uncontrollable u_aflopend;
+  uncontrollable u_uit;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  controllable c_oplopend_klaar;
+  controllable c_aflopend_klaar;
+  controllable c_uit_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+    edge u_oplopend goto oplopend;
+    edge u_aflopend goto aflopend;
+    edge u_uit goto uit;
+  location auto:
+    edge c_auto_klaar when MTK_BedieningOverdruk.auto goto los;
+  location hand:
+    edge c_hand_klaar when MTK_BedieningOverdruk.hand goto los;
+  location oplopend:
+    edge c_oplopend_klaar when MTK_DVI.oplopend goto los;
+  location aflopend:
+    edge c_aflopend_klaar when MTK_DVI.aflopend goto los;
+  location uit:
+    edge c_uit_klaar when MTK_Overdruk.uit goto los;
+end
+plant automaton MTK_Omroep_Modus:
+  controllable c_startlive;
+  controllable c_stoplive;
+  controllable c_startboodschap;
+  controllable c_stopboodschap;
+  location uit:
+    initial;
+    marked;
+    edge c_startlive goto live;
+    edge c_startboodschap goto boodschap;
+  location live:
+    edge c_stoplive goto uit;
+    edge c_startboodschap goto boodschap;
+  location boodschap:
+    edge c_startlive goto live;
+    edge c_stopboodschap goto uit;
+end
+plant automaton MTK_Omroep_Knoppen:
+  monitor u_startLive, u_stopLive, u_startBoodschap, u_stopBoodschap;
+  uncontrollable u_startLive;
+  uncontrollable u_stopLive;
+  uncontrollable u_startBoodschap;
+  uncontrollable u_stopBoodschap;
+  controllable c_startLive_klaar;
+  controllable c_stopLive_klaar;
+  controllable c_startBoodschap_klaar;
+  controllable c_stopBoodschap_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_startLive goto startLive;
+    edge u_stopLive goto stopLive;
+    edge u_startBoodschap goto startBoodschap;
+    edge u_stopBoodschap goto stopBoodschap;
+  location startLive:
+    edge c_startLive_klaar when MTK_Omroep_Modus.live goto los;
+  location stopLive:
+    edge c_stopLive_klaar when MTK_Omroep_Modus.uit goto los;
+  location startBoodschap:
+    edge c_startBoodschap_klaar when MTK_Omroep_Modus.boodschap goto los;
+  location stopBoodschap:
+    edge c_stopBoodschap_klaar when MTK_Omroep_Modus.uit goto los;
+end
+plant automaton BBI_Pomp:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton BBI_Sensors:
+  uncontrollable u_laag_aan;
+  uncontrollable u_laag_uit;
+  uncontrollable u_hoog_aan;
+  uncontrollable u_hoog_uit;
+  location laag:
+    initial;
+    marked;
+    edge u_laag_uit goto tussen;
+  location tussen:
+    edge u_laag_aan goto laag;
+    edge u_hoog_aan goto hoog;
+  location hoog:
+    edge u_hoog_uit goto tussen;
+end
+plant automaton BBI_Regime:
+  controllable c_bewaken;
+  controllable c_blussen;
+  location bewaken:
+    initial;
+    marked;
+    edge c_blussen goto blussen;
+  location blussen:
+    edge c_bewaken goto bewaken;
+end
+plant automaton BBI_Bediening:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton BBI_Knoppen:
+  monitor u_auto, u_hand, u_blussen, u_bewaken;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  uncontrollable u_blussen;
+  uncontrollable u_bewaken;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  controllable c_blussen_klaar;
+  controllable c_bewaken_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+    edge u_blussen goto blussen;
+    edge u_bewaken goto bewaken;
+  location auto:
+    edge c_auto_klaar when BBI_Bediening.auto goto los;
+  location hand:
+    edge c_hand_klaar when BBI_Bediening.hand goto los;
+  location blussen:
+    edge c_blussen_klaar when BBI_Regime.blussen goto los;
+  location bewaken:
+    edge c_bewaken_klaar when BBI_Regime.bewaken goto los;
+end
+plant automaton KelderSchoon_Sensors:
+  uncontrollable u_S1aan;
+  uncontrollable u_S1uit;
+  uncontrollable u_S2aan;
+  uncontrollable u_S2uit;
+  uncontrollable u_S3aan;
+  uncontrollable u_S3uit;
+  uncontrollable u_S4aan;
+  uncontrollable u_S4uit;
+  uncontrollable u_S5aan;
+  uncontrollable u_S5uit;
+  location Leeg:
+    initial;
+    marked;
+    edge u_S1aan goto Laagwater;
+  location Laagwater:
+    edge u_S1uit when KelderSchoon_Pomp.aan goto Leeg;
+    edge u_S2aan goto Startwater;
+  location Startwater:
+    edge u_S2uit when KelderSchoon_Pomp.aan goto Laagwater;
+    edge u_S3aan goto Maxstartwater;
+  location Maxstartwater:
+    edge u_S3uit when KelderSchoon_Pomp.aan goto Startwater;
+    edge u_S4aan goto Laaghoogwater;
+  location Laaghoogwater:
+    edge u_S4uit when KelderSchoon_Pomp.aan goto Maxstartwater;
+    edge u_S5aan goto Hooghoogwater;
+  location Hooghoogwater:
+    edge u_S5uit when KelderSchoon_Pomp.aan goto Laaghoogwater;
+end
+plant automaton KelderSchoon_Pomp:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton KelderSchoon_Regime:
+  controllable c_bergen;
+  controllable c_leeghouden;
+  controllable c_uit;
+  location leeghouden:
+    initial;
+    marked;
+    edge c_bergen goto bergen;
+    edge c_uit goto uit;
+  location bergen:
+    edge c_leeghouden goto leeghouden;
+    edge c_uit goto uit;
+  location uit:
+    edge c_bergen goto bergen;
+    edge c_leeghouden goto leeghouden;
+end
+plant automaton KelderSchoon_Bediening:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton KelderSchoon_Knoppen:
+  monitor u_auto, u_hand, u_leeghouden, u_bergen, u_uit;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  uncontrollable u_leeghouden;
+  uncontrollable u_bergen;
+  uncontrollable u_uit;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  controllable c_leeghouden_klaar;
+  controllable c_bergen_klaar;
+  controllable c_uit_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+    edge u_leeghouden goto leeghouden;
+    edge u_bergen goto bergen;
+    edge u_uit goto uit;
+  location auto:
+    edge c_auto_klaar when KelderSchoon_Bediening.auto goto los;
+  location hand:
+    edge c_hand_klaar when KelderSchoon_Bediening.hand goto los;
+  location leeghouden:
+    edge c_leeghouden_klaar when KelderSchoon_Regime.leeghouden goto los;
+  location bergen:
+    edge c_bergen_klaar when KelderSchoon_Regime.bergen goto los;
+  location uit:
+    edge c_uit_klaar when KelderSchoon_Regime.uit goto los;
+end
+plant automaton KelderVuil_SensorLaagwater:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton KelderVuil_Pomp:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton KelderVuil_Regime:
+  controllable c_lozen;
+  controllable c_uit;
+  location lozen:
+    initial;
+    marked;
+    edge c_uit goto uit;
+  location uit:
+    edge c_lozen goto lozen;
+end
+plant automaton KelderVuil_Bediening:
+  controllable c_auto;
+  controllable c_hand;
+  location auto:
+    initial;
+    marked;
+    edge c_hand goto hand;
+  location hand:
+    edge c_auto goto auto;
+end
+plant automaton KelderVuil_Knoppen:
+  monitor u_auto, u_hand, u_lozen, u_uit;
+  uncontrollable u_auto;
+  uncontrollable u_hand;
+  uncontrollable u_lozen;
+  uncontrollable u_uit;
+  controllable c_auto_klaar;
+  controllable c_hand_klaar;
+  controllable c_lozen_klaar;
+  controllable c_uit_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_auto goto auto;
+    edge u_hand goto hand;
+    edge u_lozen goto lozen;
+    edge u_uit goto uit;
+  location auto:
+    edge c_auto_klaar when KelderVuil_Bediening.auto goto los;
+  location hand:
+    edge c_hand_klaar when KelderVuil_Bediening.hand goto los;
+  location lozen:
+    edge c_lozen_klaar when KelderVuil_Regime.lozen goto los;
+  location uit:
+    edge c_uit_klaar when KelderVuil_Regime.uit goto los;
+end
+plant automaton VB1Knoppen_KnopOperationeel:
+  uncontrollable u_indrukken;
+  location:
+    initial;
+    marked;
+    edge u_indrukken;
+end
+plant automaton VB1Knoppen_KnopCalamiteit:
+  uncontrollable u_indrukken;
+  location:
+    initial;
+    marked;
+    edge u_indrukken;
+end
+plant automaton VB1Knoppen_KnopHerstel:
+  uncontrollable u_indrukken;
+  location:
+    initial;
+    marked;
+    edge u_indrukken;
+end
+plant automaton VB1Knoppen_KnopEvacuatie:
+  uncontrollable u_indrukken;
+  location:
+    initial;
+    marked;
+    edge u_indrukken;
+end
+plant automaton VB1Knoppen_KnopOnderhoud:
+  uncontrollable u_indrukken;
+  location:
+    initial;
+    marked;
+    edge u_indrukken;
+end
+plant automaton VB1Knoppen_KnopBevestigen:
+  uncontrollable u_indrukken;
+  location:
+    initial;
+    marked;
+    edge u_indrukken;
+end
+plant automaton VB1Knoppen_KnopAfwijzen:
+  uncontrollable u_indrukken;
+  location:
+    initial;
+    marked;
+    edge u_indrukken;
+end
+plant automaton VB1Knoppen_Waarnemer:
+  monitor VB1Knoppen_KnopOperationeel.u_indrukken, VB1Knoppen_KnopCalamiteit.u_indrukken, VB1Knoppen_KnopHerstel.u_indrukken, VB1Knoppen_KnopEvacuatie.u_indrukken, VB1Knoppen_KnopOnderhoud.u_indrukken, VB1Knoppen_KnopBevestigen.u_indrukken, VB1Knoppen_KnopAfwijzen.u_indrukken;
+  controllable c_operationeelKlaar;
+  controllable c_calamiteitPopUpKlaar;
+  controllable c_calamiteitEvacuatieKlaar;
+  controllable c_herstelKlaar;
+  controllable c_evacuatieKlaar;
+  controllable c_onderhoudKlaar;
+  controllable c_BevestigenKlaar;
+  controllable c_AfwijzenKlaar;
+  location los:
+    initial;
+    marked;
+    edge VB1Knoppen_KnopOperationeel.u_indrukken when (VB1Knoppen_VBHerstel or VB1Knoppen_VBOnderhoud or VB1Knoppen_VBStandby) and VB1Knoppen_popupUit and VB1Knoppen_popupUit2 and VB1Knoppen_popupTimerUit and VB1Knoppen_popupTimerUit2 and VB1Knoppen_VBKnopLos goto operationeel;
+    edge VB1Knoppen_KnopCalamiteit.u_indrukken when (VB1Knoppen_VBOperationeel or VB1Knoppen_VBHerstel or VB1Knoppen_VBOnderhoud or VB1Knoppen_VBStandby) and not VB1Knoppen_VB2Calamiteit and VB1Knoppen_popupUit and VB1Knoppen_popupUit2 and VB1Knoppen_popupTimerUit and VB1Knoppen_popupTimerUit2 and VB1Knoppen_VBKnopLos goto calamiteitPopUp;
+    edge VB1Knoppen_KnopCalamiteit.u_indrukken when VB1Knoppen_VBEvacuatie and VB1Knoppen_popupUit and VB1Knoppen_popupUit2 and VB1Knoppen_popupTimerUit and VB1Knoppen_popupTimerUit2 and VB1Knoppen_VBKnopLos goto calamiteitEvacuatie;
+    edge VB1Knoppen_KnopHerstel.u_indrukken when (VB1Knoppen_VBCalamiteit and VB1Knoppen_VB2Ondersteunend or VB1Knoppen_VBOnderhoud) and VB1Knoppen_popupUit and VB1Knoppen_popupUit2 and VB1Knoppen_popupTimerUit and VB1Knoppen_popupTimerUit2 and VB1Knoppen_VBKnopLos goto herstel;
+    edge VB1Knoppen_KnopEvacuatie.u_indrukken when VB1Knoppen_VBCalamiteit and VB1Knoppen_VB2Ondersteunend and VB1Knoppen_popupUit and VB1Knoppen_popupUit2 and VB1Knoppen_popupTimerUit and VB1Knoppen_popupTimerUit2 and VB1Knoppen_VBKnopLos goto evacuatie;
+    edge VB1Knoppen_KnopOnderhoud.u_indrukken when (VB1Knoppen_VBOperationeel or VB1Knoppen_VBHerstel) and VB1Knoppen_popupUit and VB1Knoppen_popupUit2 and VB1Knoppen_popupTimerUit and VB1Knoppen_popupTimerUit2 and VB1Knoppen_VBKnopLos goto onderhoud;
+    edge VB1Knoppen_KnopBevestigen.u_indrukken when VB1Knoppen_popupAan and VB1Knoppen_popupTimerAan and VB1Knoppen_VBKnopLos goto bevestigen;
+    edge VB1Knoppen_KnopAfwijzen.u_indrukken when VB1Knoppen_popupAan and VB1Knoppen_popupTimerAan and VB1Knoppen_VBKnopLos goto afwijzen;
+  location operationeel:
+    edge c_operationeelKlaar when VB1Knoppen_VBOperationeel goto los;
+  location calamiteitPopUp:
+    edge c_calamiteitPopUpKlaar when VB1Knoppen_popupAan goto los;
+  location calamiteitEvacuatie:
+    edge c_calamiteitEvacuatieKlaar when VB1Knoppen_VBCalamiteit goto los;
+  location herstel:
+    edge c_herstelKlaar when VB1Knoppen_VBHerstel and (VB1Knoppen_VB2Herstel or VB1Knoppen_VB2Operationeel or VB1Knoppen_VB2Onderhoud or VB1Knoppen_VB2Standby) goto los;
+  location evacuatie:
+    edge c_evacuatieKlaar when VB1Knoppen_VBEvacuatie goto los;
+  location onderhoud:
+    edge c_onderhoudKlaar when VB1Knoppen_VBOnderhoud goto los;
+  location bevestigen:
+    edge c_BevestigenKlaar when VB1Knoppen_popupUit and VB1Knoppen_VBCalamiteit and VB1Knoppen_VB2Ondersteunend and VB1Knoppen_popupTimerUit goto los;
+  location afwijzen:
+    edge c_AfwijzenKlaar when VB1Knoppen_popupUit and VB1Knoppen_popupTimerUit goto los;
+end
+plant automaton VB2Knoppen_KnopOperationeel:
+  uncontrollable u_indrukken;
+  location:
+    initial;
+    marked;
+    edge u_indrukken;
+end
+plant automaton VB2Knoppen_KnopCalamiteit:
+  uncontrollable u_indrukken;
+  location:
+    initial;
+    marked;
+    edge u_indrukken;
+end
+plant automaton VB2Knoppen_KnopHerstel:
+  uncontrollable u_indrukken;
+  location:
+    initial;
+    marked;
+    edge u_indrukken;
+end
+plant automaton VB2Knoppen_KnopEvacuatie:
+  uncontrollable u_indrukken;
+  location:
+    initial;
+    marked;
+    edge u_indrukken;
+end
+plant automaton VB2Knoppen_KnopOnderhoud:
+  uncontrollable u_indrukken;
+  location:
+    initial;
+    marked;
+    edge u_indrukken;
+end
+plant automaton VB2Knoppen_KnopBevestigen:
+  uncontrollable u_indrukken;
+  location:
+    initial;
+    marked;
+    edge u_indrukken;
+end
+plant automaton VB2Knoppen_KnopAfwijzen:
+  uncontrollable u_indrukken;
+  location:
+    initial;
+    marked;
+    edge u_indrukken;
+end
+plant automaton VB2Knoppen_Waarnemer:
+  monitor VB2Knoppen_KnopOperationeel.u_indrukken, VB2Knoppen_KnopCalamiteit.u_indrukken, VB2Knoppen_KnopHerstel.u_indrukken, VB2Knoppen_KnopEvacuatie.u_indrukken, VB2Knoppen_KnopOnderhoud.u_indrukken, VB2Knoppen_KnopBevestigen.u_indrukken, VB2Knoppen_KnopAfwijzen.u_indrukken;
+  controllable c_operationeelKlaar;
+  controllable c_calamiteitPopUpKlaar;
+  controllable c_calamiteitEvacuatieKlaar;
+  controllable c_herstelKlaar;
+  controllable c_evacuatieKlaar;
+  controllable c_onderhoudKlaar;
+  controllable c_BevestigenKlaar;
+  controllable c_AfwijzenKlaar;
+  location los:
+    initial;
+    marked;
+    edge VB2Knoppen_KnopOperationeel.u_indrukken when (VB2Knoppen_VBHerstel or VB2Knoppen_VBOnderhoud or VB2Knoppen_VBStandby) and VB2Knoppen_popupUit and VB2Knoppen_popupUit2 and VB2Knoppen_popupTimerUit and VB2Knoppen_popupTimerUit2 and VB2Knoppen_VBKnopLos goto operationeel;
+    edge VB2Knoppen_KnopCalamiteit.u_indrukken when (VB2Knoppen_VBOperationeel or VB2Knoppen_VBHerstel or VB2Knoppen_VBOnderhoud or VB2Knoppen_VBStandby) and not VB2Knoppen_VB2Calamiteit and VB2Knoppen_popupUit and VB2Knoppen_popupUit2 and VB2Knoppen_popupTimerUit and VB2Knoppen_popupTimerUit2 and VB2Knoppen_VBKnopLos goto calamiteitPopUp;
+    edge VB2Knoppen_KnopCalamiteit.u_indrukken when VB2Knoppen_VBEvacuatie and VB2Knoppen_popupUit and VB2Knoppen_popupUit2 and VB2Knoppen_popupTimerUit and VB2Knoppen_popupTimerUit2 and VB2Knoppen_VBKnopLos goto calamiteitEvacuatie;
+    edge VB2Knoppen_KnopHerstel.u_indrukken when (VB2Knoppen_VBCalamiteit and VB2Knoppen_VB2Ondersteunend or VB2Knoppen_VBOnderhoud) and VB2Knoppen_popupUit and VB2Knoppen_popupUit2 and VB2Knoppen_popupTimerUit and VB2Knoppen_popupTimerUit2 and VB2Knoppen_VBKnopLos goto herstel;
+    edge VB2Knoppen_KnopEvacuatie.u_indrukken when VB2Knoppen_VBCalamiteit and VB2Knoppen_VB2Ondersteunend and VB2Knoppen_popupUit and VB2Knoppen_popupUit2 and VB2Knoppen_popupTimerUit and VB2Knoppen_popupTimerUit2 and VB2Knoppen_VBKnopLos goto evacuatie;
+    edge VB2Knoppen_KnopOnderhoud.u_indrukken when (VB2Knoppen_VBOperationeel or VB2Knoppen_VBHerstel) and VB2Knoppen_popupUit and VB2Knoppen_popupUit2 and VB2Knoppen_popupTimerUit and VB2Knoppen_popupTimerUit2 and VB2Knoppen_VBKnopLos goto onderhoud;
+    edge VB2Knoppen_KnopBevestigen.u_indrukken when VB2Knoppen_popupAan and VB2Knoppen_popupTimerAan and VB2Knoppen_VBKnopLos goto bevestigen;
+    edge VB2Knoppen_KnopAfwijzen.u_indrukken when VB2Knoppen_popupAan and VB2Knoppen_popupTimerAan and VB2Knoppen_VBKnopLos goto afwijzen;
+  location operationeel:
+    edge c_operationeelKlaar when VB2Knoppen_VBOperationeel goto los;
+  location calamiteitPopUp:
+    edge c_calamiteitPopUpKlaar when VB2Knoppen_popupAan goto los;
+  location calamiteitEvacuatie:
+    edge c_calamiteitEvacuatieKlaar when VB2Knoppen_VBCalamiteit goto los;
+  location herstel:
+    edge c_herstelKlaar when VB2Knoppen_VBHerstel and (VB2Knoppen_VB2Herstel or VB2Knoppen_VB2Operationeel or VB2Knoppen_VB2Onderhoud or VB2Knoppen_VB2Standby) goto los;
+  location evacuatie:
+    edge c_evacuatieKlaar when VB2Knoppen_VBEvacuatie goto los;
+  location onderhoud:
+    edge c_onderhoudKlaar when VB2Knoppen_VBOnderhoud goto los;
+  location bevestigen:
+    edge c_BevestigenKlaar when VB2Knoppen_popupUit and VB2Knoppen_VBCalamiteit and VB2Knoppen_VB2Ondersteunend and VB2Knoppen_popupTimerUit goto los;
+  location afwijzen:
+    edge c_AfwijzenKlaar when VB2Knoppen_popupUit and VB2Knoppen_popupTimerUit goto los;
+end
+plant automaton CaDoNoord_Stand:
+  uncontrollable u_op;
+  uncontrollable u_opverlaten;
+  uncontrollable u_neer;
+  location op:
+    initial;
+    marked;
+    edge u_opverlaten goto opverlaten;
+  location opverlaten:
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location neer:
+    edge u_opverlaten goto opverlaten;
+end
+plant automaton CaDoNoord_Beweging:
+  uncontrollable u_op;
+  uncontrollable u_neer;
+  uncontrollable u_geen;
+  location geen:
+    initial;
+    marked;
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location op:
+    edge u_neer goto neer;
+    edge u_geen goto geen;
+  location neer:
+    edge u_op goto op;
+    edge u_geen goto geen;
+end
+plant automaton CaDoNoord_Commando:
+  controllable c_opneer;
+  controllable c_opstop;
+  controllable c_neerop;
+  controllable c_neerstop;
+  controllable c_stopneer;
+  controllable c_stopop;
+  location op:
+    initial;
+    marked;
+    edge c_opneer goto neer;
+    edge c_opstop goto stop;
+  location neer:
+    edge c_neerop goto op;
+    edge c_neerstop goto stop;
+  location stop:
+    edge c_stopneer goto neer;
+    edge c_stopop goto op;
+end
+plant automaton KnoppenCaDo:
+  monitor u_noordOpen, u_noordSluit, u_noordStop, u_zuidOpen, u_zuidSluit, u_zuidStop;
+  uncontrollable u_noordOpen;
+  uncontrollable u_noordSluit;
+  uncontrollable u_noordStop;
+  uncontrollable u_zuidOpen;
+  uncontrollable u_zuidSluit;
+  uncontrollable u_zuidStop;
+  controllable c_noordOpen_klaar;
+  controllable c_noordSluit_klaar;
+  controllable c_noordStop_klaar;
+  controllable c_zuidOpen_klaar;
+  controllable c_zuidSluit_klaar;
+  controllable c_zuidStop_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_noordOpen goto noordOpen;
+    edge u_noordSluit goto noordSluit;
+    edge u_noordStop goto noordStop;
+    edge u_zuidOpen goto zuidOpen;
+    edge u_zuidSluit goto zuidSluit;
+    edge u_zuidStop goto zuidStop;
+  location noordOpen:
+    edge c_noordOpen_klaar goto los;
+  location noordSluit:
+    edge c_noordSluit_klaar goto los;
+  location noordStop:
+    edge c_noordStop_klaar goto los;
+  location zuidOpen:
+    edge c_zuidOpen_klaar goto los;
+  location zuidSluit:
+    edge c_zuidSluit_klaar goto los;
+  location zuidStop:
+    edge c_zuidStop_klaar goto los;
+end
+plant automaton CaDoZuid_Stand:
+  uncontrollable u_op;
+  uncontrollable u_opverlaten;
+  uncontrollable u_neer;
+  location op:
+    initial;
+    marked;
+    edge u_opverlaten goto opverlaten;
+  location opverlaten:
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location neer:
+    edge u_opverlaten goto opverlaten;
+end
+plant automaton CaDoZuid_Beweging:
+  uncontrollable u_op;
+  uncontrollable u_neer;
+  uncontrollable u_geen;
+  location geen:
+    initial;
+    marked;
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location op:
+    edge u_neer goto neer;
+    edge u_geen goto geen;
+  location neer:
+    edge u_op goto op;
+    edge u_geen goto geen;
+end
+plant automaton CaDoZuid_Commando:
+  controllable c_opneer;
+  controllable c_opstop;
+  controllable c_neerop;
+  controllable c_neerstop;
+  controllable c_stopneer;
+  controllable c_stopop;
+  location op:
+    initial;
+    marked;
+    edge c_opneer goto neer;
+    edge c_opstop goto stop;
+  location neer:
+    edge c_neerop goto op;
+    edge c_neerstop goto stop;
+  location stop:
+    edge c_stopneer goto neer;
+    edge c_stopop goto op;
+end
+requirement invariant VB1_Stand.c_operationeel needs VB1Knoppen_Waarnemer.operationeel;
+requirement invariant VB2_Stand.c_operationeel needs VB2Knoppen_Waarnemer.operationeel;
+requirement invariant VB1_Stand.c_standby needs (VB1_Rookdetectie.stand4 or VB1_Rookdetectie.stand5 or VB1_Rookdetectie.stand6 or VB1_Rookdetectie.stand7 or VB1_Rookdetectie.stand8 or VB1_HPKA1_SensorOpen.aan and (VB1_HPKA1_Handblusser.aan or VB1_HPKA1_Brandslang.aan) or VB1_HPKC1_SensorOpen.aan and VB1_HPKC1_Handblusser.aan) and VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los and not VB1_Stand.calamiteit;
+requirement invariant VB2_Stand.c_standby needs (VB2_Rookdetectie.stand4 or VB2_Rookdetectie.stand5 or VB2_Rookdetectie.stand6 or VB2_Rookdetectie.stand7 or VB2_Rookdetectie.stand8 or VB2_HPKA1_SensorOpen.aan and (VB2_HPKA1_Handblusser.aan or VB2_HPKA1_Brandslang.aan) or VB2_HPKC1_SensorOpen.aan and VB2_HPKC1_Handblusser.aan) and VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los and not VB2_Stand.calamiteit;
+requirement invariant VB1_Stand.c_calamiteit needs VB1Knoppen_Waarnemer.bevestigen and VB2Knoppen_Waarnemer.los or VB1_PopUp_Timer.afgelopen and VB2Knoppen_Waarnemer.los and VB1Knoppen_Waarnemer.los or VB1_Stand.evacuatie and VB1Knoppen_Waarnemer.calamiteitEvacuatie and VB2Knoppen_Waarnemer.los;
+requirement invariant VB2_Stand.c_calamiteit needs VB2Knoppen_Waarnemer.bevestigen and VB1Knoppen_Waarnemer.los or VB2_PopUp_Timer.afgelopen and VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los or VB2_Stand.evacuatie and VB2Knoppen_Waarnemer.calamiteitEvacuatie and VB1Knoppen_Waarnemer.los;
+requirement invariant VB1_Stand.c_calamiteit needs not VB2_Stand.calamiteit;
+requirement invariant VB2_Stand.c_calamiteit needs not VB1_Stand.calamiteit;
+requirement invariant VB1_Stand.c_evacuatie needs VB1Knoppen_Waarnemer.evacuatie;
+requirement invariant VB2_Stand.c_evacuatie needs VB2Knoppen_Waarnemer.evacuatie;
+requirement invariant VB1_Stand.c_evacuatie needs VB1_PopUp_Venster.uit and VB1_PopUp_Timer.uit;
+requirement invariant VB2_Stand.c_evacuatie needs VB2_PopUp_Venster.uit and VB2_PopUp_Timer.uit;
+requirement invariant VB1_Stand.c_ondersteunend needs VB2_Stand.calamiteit and VB2Knoppen_Waarnemer.bevestigen and VB1Knoppen_Waarnemer.los or VB2_Stand.calamiteit and VB2_PopUp_Timer.afgelopen and VB2Knoppen_Waarnemer.los;
+requirement invariant VB2_Stand.c_ondersteunend needs VB1_Stand.calamiteit and VB1Knoppen_Waarnemer.bevestigen and VB2Knoppen_Waarnemer.los or VB1_Stand.calamiteit and VB1_PopUp_Timer.afgelopen and VB1Knoppen_Waarnemer.los;
+requirement invariant VB1_Stand.c_ondersteunend needs VB1Knoppen_Waarnemer.los;
+requirement invariant VB2_Stand.c_ondersteunend needs VB2Knoppen_Waarnemer.los;
+requirement invariant VB1_Stand.c_herstelUitCalimiteit needs VB1Knoppen_Waarnemer.herstel;
+requirement invariant VB2_Stand.c_herstelUitCalimiteit needs VB2Knoppen_Waarnemer.herstel;
+requirement invariant VB1_Stand.c_herstelUitCalimiteit needs VB1_PopUp_Venster.uit and VB1_PopUp_Timer.uit;
+requirement invariant VB2_Stand.c_herstelUitCalimiteit needs VB2_PopUp_Venster.uit and VB2_PopUp_Timer.uit;
+requirement invariant VB1_Stand.c_herstelUitOndersteunend needs VB2_Stand.herstel and (VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.herstel);
+requirement invariant VB2_Stand.c_herstelUitOndersteunend needs VB1_Stand.herstel and (VB2Knoppen_Waarnemer.los and VB1Knoppen_Waarnemer.herstel);
+requirement invariant VB1_Stand.c_herstelUitOnderhoud needs VB1Knoppen_Waarnemer.herstel;
+requirement invariant VB2_Stand.c_herstelUitOnderhoud needs VB2Knoppen_Waarnemer.herstel;
+requirement invariant VB1_Stand.c_onderhoud needs VB1Knoppen_Waarnemer.onderhoud;
+requirement invariant VB2_Stand.c_onderhoud needs VB2Knoppen_Waarnemer.onderhoud;
+requirement invariant VB1_SetAuto.c_klaar needs MTK_BedieningVerlichting.auto and MTK_BedieningOverdruk.auto and MTK_BedieningDVI.auto and BBI_Bediening.auto and KelderSchoon_Bediening.auto and KelderVuil_Bediening.auto;
+requirement invariant VB2_SetAuto.c_klaar needs MTK_BedieningVerlichting.auto and MTK_BedieningOverdruk.auto and MTK_BedieningDVI.auto and BBI_Bediening.auto and KelderSchoon_Bediening.auto and KelderVuil_Bediening.auto;
+requirement invariant VB1_PopUp_Venster.c_aan needs VB1Knoppen_Waarnemer.calamiteitPopUp and VB2Knoppen_Waarnemer.los or VB1_Stand.standby and VB1_SOS.aan and (VB1_Rookdetectie.stand4 or VB1_Rookdetectie.stand5 or VB1_Rookdetectie.stand6 or VB1_Rookdetectie.stand7 or VB1_Rookdetectie.stand8) and (VB1_HPKA1_SensorOpen.aan and (VB1_HPKA1_Handblusser.aan or VB1_HPKA1_Brandslang.aan or VB1_HPKA1_Noodtelefoon.aan) or VB1_HPKC1_SensorOpen.aan and (VB1_HPKC1_Handblusser.aan or VB1_HPKC1_Noodtelefoon.aan)) and VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los and VB2_PopUp_Venster.uit;
+requirement invariant VB2_PopUp_Venster.c_aan needs VB2Knoppen_Waarnemer.calamiteitPopUp and VB1Knoppen_Waarnemer.los or VB2_Stand.standby and VB2_SOS.aan and (VB2_Rookdetectie.stand4 or VB2_Rookdetectie.stand5 or VB2_Rookdetectie.stand6 or VB2_Rookdetectie.stand7 or VB2_Rookdetectie.stand8) and (VB2_HPKA1_SensorOpen.aan and (VB2_HPKA1_Handblusser.aan or VB2_HPKA1_Brandslang.aan or VB2_HPKA1_Noodtelefoon.aan) or VB2_HPKC1_SensorOpen.aan and (VB2_HPKC1_Handblusser.aan or VB2_HPKC1_Noodtelefoon.aan)) and VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los and VB1_PopUp_Venster.uit;
+requirement invariant VB1_PopUp_Venster.c_aan needs not VB2_Stand.calamiteit;
+requirement invariant VB2_PopUp_Venster.c_aan needs not VB1_Stand.calamiteit;
+requirement invariant VB1_PopUp_Venster.c_aan needs VB2_PopUp_Timer.uit;
+requirement invariant VB2_PopUp_Venster.c_aan needs VB1_PopUp_Timer.uit;
+requirement invariant VB1_PopUp_Venster.c_uit needs VB1Knoppen_Waarnemer.afwijzen or (VB1Knoppen_Waarnemer.bevestigen or VB1_PopUp_Timer.afgelopen) and VB1_Stand.calamiteit and VB2_Stand.ondersteunend and not VB1Knoppen_Waarnemer.calamiteitPopUp;
+requirement invariant VB2_PopUp_Venster.c_uit needs VB2Knoppen_Waarnemer.afwijzen or (VB2Knoppen_Waarnemer.bevestigen or VB2_PopUp_Timer.afgelopen) and VB2_Stand.calamiteit and VB1_Stand.ondersteunend and not VB2Knoppen_Waarnemer.calamiteitPopUp;
+requirement invariant VB1_PopUp_Timer.c_aan needs VB2Knoppen_Waarnemer.los and VB1Knoppen_Waarnemer.los;
+requirement invariant VB2_PopUp_Timer.c_aan needs VB2Knoppen_Waarnemer.los and VB1Knoppen_Waarnemer.los;
+requirement invariant VB1_PopUp_Timer.c_resetAfgelopen needs VB1_PopUp_Venster.uit;
+requirement invariant VB1_PopUp_Timer.c_resetLopend needs VB1Knoppen_Waarnemer.afwijzen or VB1Knoppen_Waarnemer.bevestigen;
+requirement invariant VB2_PopUp_Timer.c_resetAfgelopen needs VB2_PopUp_Venster.uit;
+requirement invariant VB2_PopUp_Timer.c_resetLopend needs VB2Knoppen_Waarnemer.afwijzen or VB2Knoppen_Waarnemer.bevestigen;
+requirement invariant VB1_SOS.aan and (VB1_Rookdetectie.stand4 or VB1_Rookdetectie.stand5 or VB1_Rookdetectie.stand6 or VB1_Rookdetectie.stand7 or VB1_Rookdetectie.stand8) and (VB1_HPKA1_SensorOpen.aan and (VB1_HPKA1_Handblusser.aan or VB1_HPKA1_Brandslang.aan or VB1_HPKA1_Noodtelefoon.aan) or VB1_HPKC1_SensorOpen.aan and (VB1_HPKC1_Handblusser.aan or VB1_HPKC1_Noodtelefoon.aan)) disables VB2_PopUp_Venster.c_aan;
+requirement invariant VB1_Ventilatie_Stand.c_0 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB1_Ventilatie_Stand.c_1 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB1_Ventilatie_Stand.c_2 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB1_Ventilatie_Stand.c_3 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB1_Ventilatie_Stand.c_4 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB1_Ventilatie_Stand.c_5 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB1_Ventilatie_Stand.c_6 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB1_Ventilatie_Stand.c_7 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB1_Ventilatie_Stand.c_8 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB2_Ventilatie_Stand.c_0 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB2_Ventilatie_Stand.c_1 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB2_Ventilatie_Stand.c_2 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB2_Ventilatie_Stand.c_3 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB2_Ventilatie_Stand.c_4 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB2_Ventilatie_Stand.c_5 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB2_Ventilatie_Stand.c_6 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB2_Ventilatie_Stand.c_7 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant VB2_Ventilatie_Stand.c_8 needs VB1Knoppen_Waarnemer.los and VB2Knoppen_Waarnemer.los;
+requirement invariant BBI_Regime.c_blussen needs BBI_Bediening.auto and (VB1_HPKA1_Brandslang.aan or VB2_HPKA1_Brandslang.aan or VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend or VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend) or BBI_Bediening.hand and BBI_Knoppen.blussen;
+requirement invariant BBI_Regime.c_bewaken needs BBI_Bediening.auto and VB1_HPKA1_Brandslang.uit and VB2_HPKA1_Brandslang.uit and not(VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend) and not(VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend) or BBI_Bediening.hand and BBI_Knoppen.bewaken;
+requirement invariant MTK_Omroep_Modus.c_startlive needs MTK_Omroep_Knoppen.startLive;
+requirement invariant MTK_Omroep_Modus.c_stoplive needs MTK_Omroep_Knoppen.stopLive;
+requirement invariant MTK_Omroep_Modus.c_startboodschap needs MTK_Omroep_Knoppen.startBoodschap or (VB1_Stand.evacuatie or VB2_Stand.evacuatie) and MTK_Omroep_Knoppen.los;
+requirement invariant MTK_Omroep_Modus.c_stopboodschap needs MTK_Omroep_Knoppen.stopBoodschap;
+requirement invariant CaDoNoord_Commando.c_neerop needs KnoppenCaDo.noordOpen;
+requirement invariant CaDoNoord_Commando.c_stopop needs KnoppenCaDo.noordOpen;
+requirement invariant CaDoNoord_Commando.c_opneer needs KnoppenCaDo.noordSluit;
+requirement invariant CaDoNoord_Commando.c_stopneer needs KnoppenCaDo.noordSluit;
+requirement invariant CaDoNoord_Commando.c_opstop needs KnoppenCaDo.noordStop;
+requirement invariant CaDoNoord_Commando.c_neerstop needs KnoppenCaDo.noordStop;
+requirement invariant CaDoZuid_Commando.c_neerop needs KnoppenCaDo.zuidOpen;
+requirement invariant CaDoZuid_Commando.c_stopop needs KnoppenCaDo.zuidOpen;
+requirement invariant CaDoZuid_Commando.c_opneer needs KnoppenCaDo.zuidSluit;
+requirement invariant CaDoZuid_Commando.c_stopneer needs KnoppenCaDo.zuidSluit;
+requirement invariant CaDoZuid_Commando.c_opstop needs KnoppenCaDo.zuidStop;
+requirement invariant CaDoZuid_Commando.c_neerstop needs KnoppenCaDo.zuidStop;
+requirement invariant VB1_SetAuto.c_klaar needs VB1_Ventilatie_Bediening.auto and VB1_BedieningAB.auto and VB1_BedieningVRI.auto and VB1_Verlichting_Bediening.auto and VB1_Vluchtdeur_BedieningGeluidsbaken.auto and VB1_Vluchtdeur_BedieningContourVerlichting.auto;
+requirement invariant VB1_PrimairVRI.c_roodauto needs VB1_SetAuto.setauto;
+requirement invariant VB1_PrimairVRI.c_uitauto needs VB1_SetAuto.setauto or VB1_HoogteDetectieRood_Sensor.aan and VB1_KnoppenVBafsluiter.los;
+requirement invariant VB1_PrimairVRI.c_rood needs (VB1_KnoppenVBafsluiter.primairVRIrood or VB1_KnoppenVBafsluiter.primairVBdicht) and not VB1_SetAuto.setauto;
+requirement invariant VB1_PrimairVRI.c_uit needs (VB1_KnoppenVBafsluiter.primairVRIuit or VB1_KnoppenVBafsluiter.primairVBopen) and not VB1_SetAuto.setauto;
+requirement invariant VB1_PrimairAB.c_auto needs VB1_SetAuto.setauto;
+requirement invariant VB1_PrimairAB.c_dicht needs VB1_KnoppenVBafsluiter.primairVBdicht and not VB1_SetAuto.setauto;
+requirement invariant VB1_PrimairAB.c_open needs VB1_KnoppenVBafsluiter.primairVBopen and not VB1_SetAuto.setauto;
+requirement invariant VB1_HoogteDetectieRood_Lampen.c_uit needs VB1_KnoppenVBafsluiter.resetHD;
+requirement invariant VB1_J32_Stand.c_aan needs not VB1_VRI_Stand.uit or VB1_VRI_TimerVrijgaveAan.lopend;
+requirement invariant VB1_J32_Stand.c_uit needs VB1_VRI_Stand.uit and VB1_VRI_TimerVrijgaveAan.uit;
+requirement invariant VB1_BedieningVRI.c_hand needs VB1_KnoppenBedieningVRI.hand and not VB1_SetAuto.setauto;
+requirement invariant VB1_BedieningVRI.c_auto needs VB1_KnoppenBedieningVRI.auto or VB1_SetAuto.setauto;
+requirement invariant VB1_ToegangVRI.c_uitrood needs VB1_BedieningVRI.auto and VB1_PrimairVRI.rood or VB1_BedieningVRI.hand and VB1_KnoppenVBafsluiter.VRIrood or VB1_BedieningVRI.auto and (VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend) and not VB1_PrimairVRI.uit or VB1_BedieningVRI.auto and VB1_HoogteDetectieRood_Sensor.aan;
+requirement invariant VB1_ToegangVRI.c_knipperrood needs VB1_BedieningVRI.auto and VB1_PrimairVRI.rood or VB1_BedieningVRI.hand and VB1_KnoppenVBafsluiter.VRIrood or VB1_BedieningVRI.auto and (VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend) and not VB1_PrimairVRI.uit or VB1_BedieningVRI.auto and VB1_HoogteDetectieRood_Sensor.aan;
+requirement invariant VB1_ToegangVRI.c_knipperuit needs VB1_BedieningVRI.auto and VB1_PrimairVRI.uit and VB1_HoogteDetectieWaarschuwing_Sensor.uit and VB1_HoogteDetectieRood_Sensor.uit or VB1_BedieningVRI.hand and VB1_KnoppenVBafsluiter.VRIuit or VB1_BedieningVRI.auto and not VB1_PrimairVRI.rood and not(VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend) and VB1_HoogteDetectieWaarschuwing_Sensor.uit and VB1_HoogteDetectieWaarschuwing_Timer.uit and VB1_HoogteDetectieRood_Sensor.uit;
+requirement invariant VB1_ToegangVRI.c_rooduit needs VB1_BedieningVRI.auto and VB1_PrimairVRI.uit and VB1_HoogteDetectieWaarschuwing_Sensor.uit and VB1_HoogteDetectieRood_Sensor.uit and VB1_HoogteDetectieRood_Timer.uit or VB1_BedieningVRI.hand and VB1_KnoppenVBafsluiter.VRIuit or VB1_BedieningVRI.auto and not VB1_PrimairVRI.rood and not(VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend) and VB1_HoogteDetectieWaarschuwing_Sensor.uit and VB1_HoogteDetectieRood_Sensor.uit and VB1_HoogteDetectieRood_Timer.uit;
+requirement invariant VB1_ToegangVRI.c_uitknipper needs VB1_BedieningVRI.hand and VB1_KnoppenVBafsluiter.VRIknipper or VB1_BedieningVRI.auto and VB1_HoogteDetectieWaarschuwing_Sensor.aan and not(VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend) and VB1_HoogteDetectieRood_Sensor.uit and VB1_KnoppenVBafsluiter.los and not VB1_PrimairVRI.rood;
+requirement invariant VB1_ToegangVRI.c_roodknipper needs VB1_BedieningVRI.hand and VB1_KnoppenVBafsluiter.VRIknipper or VB1_BedieningVRI.auto and VB1_HoogteDetectieWaarschuwing_Sensor.aan and not(VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend) and VB1_HoogteDetectieRood_Sensor.uit and VB1_KnoppenVBafsluiter.los and not VB1_PrimairVRI.rood;
+requirement invariant VB1_VRI_TimerVrijgaveAan.c_aan needs not VB1_ToegangVRI.uit;
+requirement invariant VB1_VRI_Stand.c_uitknipper needs not VB1_ToegangVRI.uit and (VB1_VRI_TimerVrijgaveAan.afgelopen or VB1_HoogteDetectieRood_Lampen.aan and VB1_BedieningVRI.auto);
+requirement invariant VB1_VRI_Stand.c_geel needs VB1_VRI_TimerVrijgaveGeel.afgelopen and VB1_ToegangVRI.rood or VB1_HoogteDetectieRood_Lampen.aan and VB1_BedieningVRI.auto;
+requirement invariant VB1_VRI_Stand.c_rood needs VB1_ToegangVRI.rood;
+requirement invariant VB1_VRI_Stand.c_uit needs VB1_ToegangVRI.uit and (VB1_HoogteDetectieRood_Lampen.uit or VB1_BedieningVRI.hand);
+requirement invariant VB1_VRI_Stand.c_geelknipper needs VB1_ToegangVRI.knipper and (VB1_HoogteDetectieRood_Lampen.uit or VB1_BedieningVRI.hand);
+requirement invariant VB1_VRI_Stand.c_roodknipper needs not VB1_ToegangVRI.rood;
+requirement invariant VB1_BedieningAB.c_hand needs VB1_KnoppenBedieningAB.hand and not VB1_SetAuto.setauto;
+requirement invariant VB1_BedieningAB.c_auto needs VB1_KnoppenBedieningAB.auto or VB1_SetAuto.setauto;
+requirement invariant VB1_ToegangAB.c_neerop needs VB1_BedieningAB.auto and VB1_PrimairAB.open or VB1_BedieningAB.hand and VB1_KnoppenVBafsluiter.ABopen or VB1_BedieningAB.auto and not(VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend) and not VB1_PrimairAB.dicht;
+requirement invariant VB1_ToegangAB.c_stopop needs VB1_BedieningAB.auto and VB1_PrimairAB.open or VB1_BedieningAB.hand and VB1_KnoppenVBafsluiter.ABopen or VB1_BedieningAB.auto and not(VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend) and not VB1_PrimairAB.dicht;
+requirement invariant VB1_ToegangAB.c_neeronvoorwaardelijkop needs VB1_BedieningAB.auto and VB1_PrimairAB.open or VB1_BedieningAB.hand and VB1_KnoppenVBafsluiter.ABopen or VB1_BedieningAB.auto and not(VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend) and not VB1_PrimairAB.dicht;
+requirement invariant VB1_ToegangAB.c_opneer needs VB1_BedieningAB.auto and VB1_PrimairAB.dicht or VB1_BedieningAB.hand and VB1_KnoppenVBafsluiter.ABsluit or VB1_BedieningAB.auto and (VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend) and not VB1_PrimairAB.open;
+requirement invariant VB1_ToegangAB.c_stopneer needs VB1_BedieningAB.auto and VB1_PrimairAB.dicht or VB1_BedieningAB.hand and VB1_KnoppenVBafsluiter.ABsluit or VB1_BedieningAB.auto and (VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend) and not VB1_PrimairAB.open;
+requirement invariant VB1_ToegangAB.c_neeronvoorwaardelijkneer needs VB1_BedieningAB.auto and VB1_PrimairAB.dicht or VB1_BedieningAB.hand and VB1_KnoppenVBafsluiter.ABsluit or VB1_BedieningAB.auto and (VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend) and not VB1_PrimairAB.open;
+requirement invariant VB1_ToegangAB.c_opstop needs VB1_BedieningAB.hand and VB1_KnoppenVBafsluiter.ABstop;
+requirement invariant VB1_ToegangAB.c_neerstop needs VB1_BedieningAB.hand and VB1_KnoppenVBafsluiter.ABstop;
+requirement invariant VB1_ToegangAB.c_neeronvoorwaardelijkstop needs VB1_BedieningAB.hand and VB1_KnoppenVBafsluiter.ABstop;
+requirement invariant VB1_ToegangAB.c_opneeronvoorwaardelijk needs VB1_BedieningAB.hand and VB1_KnoppenVBafsluiter.ABsluitOnv;
+requirement invariant VB1_ToegangAB.c_neerneeronvoorwaardelijk needs VB1_BedieningAB.hand and VB1_KnoppenVBafsluiter.ABsluitOnv;
+requirement invariant VB1_ToegangAB.c_stopneeronvoorwaardelijk needs VB1_BedieningAB.hand and VB1_KnoppenVBafsluiter.ABsluitOnv;
+requirement invariant VB1_AB_Commando.c_neerop needs VB1_ToegangAB.op;
+requirement invariant VB1_AB_Commando.c_stopop needs VB1_ToegangAB.op;
+requirement invariant VB1_AB_Commando.c_neeronvoorwaardelijkop needs VB1_ToegangAB.op;
+requirement invariant VB1_AB_Commando.c_opneer needs VB1_ToegangAB.neer and VB1_VRI_Stand.rood and not VB1_AB_ObstakelDetectie.aan and VB1_VRI_TimerVrijgavesignaal.afgelopen;
+requirement invariant VB1_AB_Commando.c_stopneer needs VB1_ToegangAB.neer and VB1_VRI_Stand.rood and not VB1_AB_ObstakelDetectie.aan and VB1_VRI_TimerVrijgavesignaal.afgelopen;
+requirement invariant VB1_AB_Commando.c_neeronvoorwaardelijkneer needs VB1_ToegangAB.neer and VB1_VRI_Stand.rood and not VB1_AB_ObstakelDetectie.aan and VB1_VRI_TimerVrijgavesignaal.afgelopen;
+requirement invariant VB1_AB_Commando.c_opstop needs VB1_ToegangAB.stop;
+requirement invariant VB1_AB_Commando.c_neerstop needs VB1_ToegangAB.stop;
+requirement invariant VB1_AB_Commando.c_neeronvoorwaardelijkstop needs VB1_ToegangAB.stop;
+requirement invariant VB1_AB_Commando.c_opneeronvoorwaardelijk needs VB1_ToegangAB.neeronvoorwaardelijk;
+requirement invariant VB1_AB_Commando.c_neerneeronvoorwaardelijk needs VB1_ToegangAB.neeronvoorwaardelijk;
+requirement invariant VB1_AB_Commando.c_stopneeronvoorwaardelijk needs VB1_ToegangAB.neeronvoorwaardelijk;
+requirement invariant VB1_Ventilatie_Richting.c_rijrichting needs VB1_Ventilatie_Bediening.hand and VB1_Ventilatie_Knoppen.rijrichting or VB1_Ventilatie_Bediening.auto and not VB1_Stand.ondersteunend;
+requirement invariant VB1_Ventilatie_Richting.c_tegenRijrichting needs VB1_Ventilatie_Bediening.hand and VB1_Ventilatie_Knoppen.tegenRijrichting or VB1_Ventilatie_Bediening.auto and VB1_Stand.ondersteunend;
+requirement invariant VB1_Ventilatie_Stand.c_0 needs VB1_Ventilatie_Bediening.auto and (VB1_Stand.operationeel and VB1_Rookdetectie.stand0) or VB1_Ventilatie_Bediening.hand and VB1_Ventilatie_Knoppen.s0;
+requirement invariant VB1_Ventilatie_Stand.c_1 needs VB1_Ventilatie_Bediening.auto and (VB1_Stand.operationeel and VB1_Rookdetectie.stand1) or VB1_Ventilatie_Bediening.hand and VB1_Ventilatie_Knoppen.s1;
+requirement invariant VB1_Ventilatie_Stand.c_2 needs VB1_Ventilatie_Bediening.auto and (VB1_Stand.operationeel and VB1_Rookdetectie.stand2 or (VB1_Stand.onderhoud or VB1_Stand.herstel) and (VB1_Rookdetectie.stand0 or VB1_Rookdetectie.stand1 or VB1_Rookdetectie.stand2)) or VB1_Ventilatie_Bediening.hand and VB1_Ventilatie_Knoppen.s2;
+requirement invariant VB1_Ventilatie_Stand.c_3 needs VB1_Ventilatie_Bediening.auto and ((VB1_Stand.operationeel or VB1_Stand.onderhoud or VB1_Stand.herstel) and VB1_Rookdetectie.stand3) or VB1_Ventilatie_Bediening.hand and VB1_Ventilatie_Knoppen.s3;
+requirement invariant VB1_Ventilatie_Stand.c_4 needs VB1_Ventilatie_Bediening.auto and ((VB1_Stand.operationeel or VB1_Stand.onderhoud or VB1_Stand.herstel) and VB1_Rookdetectie.stand4 or (VB1_Stand.standby or VB1_Stand.ondersteunend) and (VB1_Rookdetectie.stand0 or VB1_Rookdetectie.stand1 or VB1_Rookdetectie.stand2 or VB1_Rookdetectie.stand3 or VB1_Rookdetectie.stand4)) or VB1_Ventilatie_Bediening.hand and VB1_Ventilatie_Knoppen.s4;
+requirement invariant VB1_Ventilatie_Stand.c_5 needs VB1_Ventilatie_Bediening.auto and ((VB1_Stand.operationeel or VB1_Stand.onderhoud or VB1_Stand.herstel or VB1_Stand.standby or VB1_Stand.ondersteunend) and VB1_Rookdetectie.stand5) or VB1_Ventilatie_Bediening.hand and VB1_Ventilatie_Knoppen.s5;
+requirement invariant VB1_Ventilatie_Stand.c_6 needs VB1_Ventilatie_Bediening.auto and ((VB1_Stand.operationeel or VB1_Stand.onderhoud or VB1_Stand.herstel or VB1_Stand.standby or VB1_Stand.ondersteunend) and VB1_Rookdetectie.stand6) or VB1_Ventilatie_Bediening.hand and VB1_Ventilatie_Knoppen.s6;
+requirement invariant VB1_Ventilatie_Stand.c_7 needs VB1_Ventilatie_Bediening.auto and ((VB1_Stand.operationeel or VB1_Stand.onderhoud or VB1_Stand.herstel or VB1_Stand.standby or VB1_Stand.ondersteunend) and VB1_Rookdetectie.stand7) or VB1_Ventilatie_Bediening.hand and VB1_Ventilatie_Knoppen.s7;
+requirement invariant VB1_Ventilatie_Stand.c_8 needs VB1_Ventilatie_Bediening.auto and ((VB1_Stand.operationeel or VB1_Stand.onderhoud or VB1_Stand.herstel or VB1_Stand.standby or VB1_Stand.ondersteunend) and VB1_Rookdetectie.stand8 or VB1_Stand.calamiteit or VB1_Stand.evacuatie) or VB1_Ventilatie_Bediening.hand and VB1_Ventilatie_Knoppen.s8;
+requirement invariant VB1_Verlichting_Stand.c_0 needs VB1_Lichtsensor.stand0 and VB1_Verlichting_Bediening.auto and VB1_Stand.operationeel or VB1_Verlichting_Knoppen.s0 and VB1_Verlichting_Bediening.hand;
+requirement invariant VB1_Verlichting_Stand.c_1 needs VB1_Lichtsensor.stand1 and VB1_Verlichting_Bediening.auto and VB1_Stand.operationeel or VB1_Verlichting_Knoppen.s1 and VB1_Verlichting_Bediening.hand;
+requirement invariant VB1_Verlichting_Stand.c_2 needs VB1_Lichtsensor.stand2 and VB1_Verlichting_Bediening.auto and VB1_Stand.operationeel or VB1_Verlichting_Knoppen.s2 and VB1_Verlichting_Bediening.hand;
+requirement invariant VB1_Verlichting_Stand.c_3 needs VB1_Lichtsensor.stand3 and VB1_Verlichting_Bediening.auto and VB1_Stand.operationeel or VB1_Verlichting_Knoppen.s3 and VB1_Verlichting_Bediening.hand;
+requirement invariant VB1_Verlichting_Stand.c_4 needs VB1_Lichtsensor.stand4 and VB1_Verlichting_Bediening.auto and VB1_Stand.operationeel or VB1_Verlichting_Knoppen.s4 and VB1_Verlichting_Bediening.hand;
+requirement invariant VB1_Verlichting_Stand.c_5 needs VB1_Lichtsensor.stand5 and VB1_Verlichting_Bediening.auto and VB1_Stand.operationeel or VB1_Verlichting_Knoppen.s5 and VB1_Verlichting_Bediening.hand or (VB1_Stand.onderhoud or VB1_Stand.herstel) and VB1_Verlichting_Bediening.auto;
+requirement invariant VB1_Verlichting_Stand.c_6 needs VB1_Lichtsensor.stand6 and VB1_Verlichting_Bediening.auto and VB1_Stand.operationeel or VB1_Verlichting_Knoppen.s6 and VB1_Verlichting_Bediening.hand;
+requirement invariant VB1_Verlichting_Stand.c_7 needs VB1_Lichtsensor.stand7 and VB1_Verlichting_Bediening.auto and VB1_Stand.operationeel or VB1_Verlichting_Knoppen.s7 and VB1_Verlichting_Bediening.hand;
+requirement invariant VB1_Verlichting_Stand.c_8 needs VB1_Lichtsensor.stand8 and VB1_Verlichting_Bediening.auto and VB1_Stand.operationeel or VB1_Verlichting_Knoppen.s8 and VB1_Verlichting_Bediening.hand or (VB1_Stand.standby or VB1_Stand.calamiteit or VB1_Stand.ondersteunend or VB1_Stand.evacuatie) and VB1_Verlichting_Bediening.auto;
+requirement invariant VB1_Beeldregistratie.c_aan needs VB1_Stand.standby or VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend;
+requirement invariant VB1_Beeldregistratie.c_uit needs not(VB1_Stand.standby or VB1_Stand.calamiteit or VB1_Stand.evacuatie or VB1_Stand.ondersteunend);
+requirement invariant VB1_CCTV_Schouwen.c_schouwen needs VB1_KnoppenCCTV.schouwen or VB1_KnoppenCCTV.schouwenTegen;
+requirement invariant VB1_CCTV_Schouwen.c_schouwenHuidig needs VB1_KnoppenCCTV.schouwenHuidig or VB1_KnoppenCCTV.schouwenHuidigTegen;
+requirement invariant VB1_CCTV_Schouwen.c_stop needs VB1_KnoppenCCTV.schouwenStop or VB1_KnoppenCCTV.rechts or VB1_KnoppenCCTV.links;
+requirement invariant VB1_CCTV_Richting.c_mee needs VB1_KnoppenCCTV.schouwen or VB1_KnoppenCCTV.schouwenHuidig;
+requirement invariant VB1_CCTV_Richting.c_tegen needs VB1_KnoppenCCTV.schouwenTegen or VB1_KnoppenCCTV.schouwenHuidigTegen;
+requirement invariant VB1_CCTV_Selectie.c_rechts needs VB1_KnoppenCCTV.rechts;
+requirement invariant VB1_CCTV_Selectie.c_links needs VB1_KnoppenCCTV.links;
+requirement invariant VB1_CCTV_Selectie.c_klaar needs not VB1_KnoppenCCTV.rechts and not VB1_KnoppenCCTV.links;
+requirement invariant VB1_Omroep_Modus.c_startlive needs VB1_Omroep_Knoppen.startLive;
+requirement invariant VB1_Omroep_Modus.c_stoplive needs VB1_Omroep_Knoppen.stopLive;
+requirement invariant VB1_Omroep_Modus.c_startboodschap needs VB1_Omroep_Knoppen.startBoodschap or VB1_Stand.evacuatie and VB1_Omroep_Knoppen.los;
+requirement invariant VB1_Omroep_Modus.c_stopboodschap needs VB1_Omroep_Knoppen.stopBoodschap;
+requirement invariant VB1_Omroep_Gebied.c_buis needs VB1_Omroep_Knoppen.buis or VB1_Stand.evacuatie and VB1_Omroep_Knoppen.los;
+requirement invariant VB1_Omroep_Gebied.c_sectie needs VB1_Omroep_Knoppen.sectie;
+requirement invariant VB1_Vluchtdeur_Geluidsbaken.c_aan needs VB1_Vluchtdeur_BedieningGeluidsbaken.hand and VB1_Vluchtdeur_KnoppenGeluidsbaken.aan or VB1_Vluchtdeur_BedieningGeluidsbaken.auto and VB1_Stand.evacuatie;
+requirement invariant VB1_Vluchtdeur_Geluidsbaken.c_uit needs VB1_Vluchtdeur_BedieningGeluidsbaken.hand and VB1_Vluchtdeur_KnoppenGeluidsbaken.uit or VB1_Vluchtdeur_BedieningGeluidsbaken.auto and not VB1_Stand.evacuatie;
+requirement invariant VB1_Vluchtdeur_ContourVerlichting.c_aan needs VB1_Vluchtdeur_BedieningContourVerlichting.hand and VB1_Vluchtdeur_KnoppenContourVerlichting.aan or VB1_Vluchtdeur_BedieningContourVerlichting.auto and VB1_Stand.evacuatie;
+requirement invariant VB1_Vluchtdeur_ContourVerlichting.c_uit needs VB1_Vluchtdeur_BedieningContourVerlichting.hand and VB1_Vluchtdeur_KnoppenContourVerlichting.uit or VB1_Vluchtdeur_BedieningContourVerlichting.auto and not VB1_Stand.evacuatie;
+requirement invariant VB1_PopUp_Venster.c_aan needs VB1_PopUp_Timer.uit;
+requirement invariant VB1_PopUp_Timer.c_aan needs VB1_PopUp_Venster.aan;
+requirement invariant VB1_PopUp_Timer.c_resetAfgelopen needs VB1_PopUp_Venster.uit;
+requirement invariant VB1_PopUp_Timer.c_resetLopend needs VB1_PopUp_Venster.uit;
+requirement invariant VB1_HoogteDetectieAdvies_Lampen.c_aan needs VB1_HoogteDetectieAdvies_Sensor.aan;
+requirement invariant VB1_HoogteDetectieAdvies_Lampen.c_aan needs VB1_HoogteDetectieAdvies_Timer.uit;
+requirement invariant VB1_HoogteDetectieAdvies_Lampen.c_uit needs VB1_HoogteDetectieAdvies_Timer.afgelopen;
+requirement invariant VB1_HoogteDetectieAdvies_Timer.c_aan needs VB1_HoogteDetectieAdvies_Lampen.aan;
+requirement invariant VB1_HoogteDetectieAdvies_Timer.c_resetAfgelopen needs VB1_HoogteDetectieAdvies_Lampen.uit;
+requirement invariant VB1_HoogteDetectieToerit_Lampen.c_aan needs VB1_HoogteDetectieToerit_Sensor.aan;
+requirement invariant VB1_HoogteDetectieToerit_Lampen.c_aan needs VB1_HoogteDetectieToerit_Timer.uit;
+requirement invariant VB1_HoogteDetectieToerit_Lampen.c_uit needs VB1_HoogteDetectieToerit_Timer.afgelopen;
+requirement invariant VB1_HoogteDetectieToerit_Timer.c_aan needs VB1_HoogteDetectieToerit_Lampen.aan;
+requirement invariant VB1_HoogteDetectieToerit_Timer.c_resetAfgelopen needs VB1_HoogteDetectieToerit_Lampen.uit;
+requirement invariant VB1_HoogteDetectieWaarschuwing_Lampen.c_aan needs VB1_HoogteDetectieWaarschuwing_Sensor.aan;
+requirement invariant VB1_HoogteDetectieWaarschuwing_Lampen.c_aan needs VB1_HoogteDetectieWaarschuwing_Timer.uit;
+requirement invariant VB1_HoogteDetectieWaarschuwing_Lampen.c_uit needs VB1_HoogteDetectieWaarschuwing_Timer.afgelopen;
+requirement invariant VB1_HoogteDetectieWaarschuwing_Timer.c_aan needs VB1_HoogteDetectieWaarschuwing_Lampen.aan;
+requirement invariant VB1_HoogteDetectieWaarschuwing_Timer.c_resetAfgelopen needs VB1_HoogteDetectieWaarschuwing_Lampen.uit;
+requirement invariant VB1_HoogteDetectieRood_Lampen.c_aan needs VB1_HoogteDetectieRood_Sensor.aan;
+requirement invariant VB1_HoogteDetectieRood_Lampen.c_aan needs VB1_HoogteDetectieRood_Timer.uit;
+requirement invariant VB1_HoogteDetectieRood_Lampen.c_uit needs VB1_HoogteDetectieRood_Timer.afgelopen;
+requirement invariant VB1_HoogteDetectieRood_Timer.c_aan needs VB1_HoogteDetectieRood_Lampen.aan;
+requirement invariant VB1_HoogteDetectieRood_Timer.c_resetAfgelopen needs VB1_HoogteDetectieRood_Lampen.uit;
+requirement invariant VB1_VRI_TimerVrijgaveAan.c_aan needs VB1_VRI_Stand.uit;
+requirement invariant VB1_VRI_TimerVrijgaveAan.c_resetAfgelopen needs not VB1_VRI_Stand.uit;
+requirement invariant VB1_VRI_TimerVrijgaveGeel.c_aan needs VB1_VRI_Stand.knipper;
+requirement invariant VB1_VRI_TimerVrijgaveGeel.c_resetAfgelopen needs not VB1_VRI_Stand.knipper;
+requirement invariant VB1_VRI_TimerVrijgaveRood.c_aan needs VB1_VRI_Stand.geel;
+requirement invariant VB1_VRI_TimerVrijgaveRood.c_resetAfgelopen needs not VB1_VRI_Stand.geel;
+requirement invariant VB1_VRI_Stand.c_rood needs VB1_VRI_TimerVrijgaveRood.afgelopen;
+requirement invariant VB1_VRI_TimerVrijgaveUit.c_aan needs VB1_VRI_Stand.knipper;
+requirement invariant VB1_VRI_TimerVrijgaveUit.c_resetAfgelopen needs not VB1_VRI_Stand.knipper;
+requirement invariant VB1_VRI_Stand.c_uit needs VB1_VRI_TimerVrijgaveUit.afgelopen;
+requirement invariant VB1_VRI_TimerVrijgavesignaal.c_aan needs VB1_VRI_Stand.rood;
+requirement invariant VB1_VRI_TimerVrijgavesignaal.c_resetLopend needs not VB1_VRI_Stand.rood;
+requirement invariant VB1_VRI_TimerVrijgavesignaal.c_resetAfgelopen needs not VB1_VRI_Stand.rood;
+requirement invariant VB1_AB_Stand.op or VB1_AB_Beweging.op disables VB1_AB_Commando.c_neerop;
+requirement invariant VB1_AB_Stand.op or VB1_AB_Beweging.op disables VB1_AB_Commando.c_stopop;
+requirement invariant VB1_AB_Stand.op or VB1_AB_Beweging.op disables VB1_AB_Commando.c_neeronvoorwaardelijkop;
+requirement invariant VB1_AB_ObstakelDetectie.aan disables VB1_AB_Commando.c_opneer;
+requirement invariant VB1_AB_ObstakelDetectie.aan disables VB1_AB_Commando.c_stopneer;
+requirement invariant VB1_AB_ObstakelDetectie.aan disables VB1_AB_Commando.c_neeronvoorwaardelijkneer;
+requirement invariant VB1_AB_Stand.neer or VB1_AB_Beweging.neer disables VB1_AB_Commando.c_opneer;
+requirement invariant VB1_AB_Stand.neer or VB1_AB_Beweging.neer disables VB1_AB_Commando.c_stopneer;
+requirement invariant VB1_AB_Stand.neer or VB1_AB_Beweging.neer disables VB1_AB_Commando.c_neeronvoorwaardelijkneer;
+requirement invariant VB1_AB_Stand.neer or VB1_AB_Beweging.neer disables VB1_AB_Commando.c_opneeronvoorwaardelijk;
+requirement invariant VB1_AB_Stand.neer or VB1_AB_Beweging.neer disables VB1_AB_Commando.c_neerneeronvoorwaardelijk;
+requirement invariant VB1_AB_Stand.neer or VB1_AB_Beweging.neer disables VB1_AB_Commando.c_stopneeronvoorwaardelijk;
+requirement invariant VB1_AB_Beweging.geen disables VB1_AB_Commando.c_opstop;
+requirement invariant VB1_AB_Beweging.geen disables VB1_AB_Commando.c_neerstop;
+requirement invariant VB1_AB_Beweging.geen disables VB1_AB_Commando.c_neeronvoorwaardelijkstop;
+requirement invariant VB1_Ventilatie_Bediening.c_hand needs VB1_Ventilatie_Knoppen.hand and not VB1_Ventilatie_setauto;
+requirement invariant VB1_Ventilatie_Bediening.c_auto needs VB1_Ventilatie_Knoppen.auto or VB1_Ventilatie_setauto;
+requirement invariant VB1_Verlichting_Bediening.c_hand needs VB1_Verlichting_Knoppen.hand and not VB1_Verlichting_setauto;
+requirement invariant VB1_Verlichting_Bediening.c_auto needs VB1_Verlichting_Knoppen.auto or VB1_Verlichting_setauto;
+requirement invariant VB1_Vluchtdeur_BedieningGeluidsbaken.c_hand needs VB1_Vluchtdeur_KnoppenGeluidsbaken.hand and not VB1_Vluchtdeur_setauto;
+requirement invariant VB1_Vluchtdeur_BedieningGeluidsbaken.c_auto needs VB1_Vluchtdeur_KnoppenGeluidsbaken.auto or VB1_Vluchtdeur_setauto;
+requirement invariant VB1_Vluchtdeur_BedieningContourVerlichting.c_hand needs VB1_Vluchtdeur_KnoppenContourVerlichting.hand and not VB1_Vluchtdeur_setauto;
+requirement invariant VB1_Vluchtdeur_BedieningContourVerlichting.c_auto needs VB1_Vluchtdeur_KnoppenContourVerlichting.auto or VB1_Vluchtdeur_setauto;
+requirement invariant VB2_SetAuto.c_klaar needs VB2_Ventilatie_Bediening.auto and VB2_BedieningAB.auto and VB2_BedieningVRI.auto and VB2_Verlichting_Bediening.auto and VB2_Vluchtdeur_BedieningGeluidsbaken.auto and VB2_Vluchtdeur_BedieningContourVerlichting.auto;
+requirement invariant VB2_PrimairVRI.c_roodauto needs VB2_SetAuto.setauto;
+requirement invariant VB2_PrimairVRI.c_uitauto needs VB2_SetAuto.setauto;
+requirement invariant VB2_PrimairVRI.c_rood needs (VB2_KnoppenVBafsluiter.primairVRIrood or VB2_KnoppenVBafsluiter.primairVBdicht) and not VB2_SetAuto.setauto;
+requirement invariant VB2_PrimairVRI.c_uit needs (VB2_KnoppenVBafsluiter.primairVRIuit or VB2_KnoppenVBafsluiter.primairVBopen) and not VB2_SetAuto.setauto;
+requirement invariant VB2_PrimairAB.c_auto needs VB2_SetAuto.setauto;
+requirement invariant VB2_PrimairAB.c_dicht needs VB2_KnoppenVBafsluiter.primairVBdicht and not VB2_SetAuto.setauto;
+requirement invariant VB2_PrimairAB.c_open needs VB2_KnoppenVBafsluiter.primairVBopen and not VB2_SetAuto.setauto;
+requirement invariant VB2_J32_Stand.c_aan needs not VB2_VRI_Stand.uit or VB2_VRI_TimerVrijgaveAan.lopend;
+requirement invariant VB2_J32_Stand.c_uit needs VB2_VRI_Stand.uit and VB2_VRI_TimerVrijgaveAan.uit;
+requirement invariant VB2_BedieningVRI.c_hand needs VB2_KnoppenBedieningVRI.hand and not VB2_SetAuto.setauto;
+requirement invariant VB2_BedieningVRI.c_auto needs VB2_KnoppenBedieningVRI.auto or VB2_SetAuto.setauto;
+requirement invariant VB2_ToegangVRI.c_uitrood needs VB2_BedieningVRI.auto and VB2_PrimairVRI.rood or VB2_BedieningVRI.hand and VB2_KnoppenVBafsluiter.VRIrood or VB2_BedieningVRI.auto and (VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend) and not VB2_PrimairVRI.uit;
+requirement invariant VB2_ToegangVRI.c_knipperrood needs VB2_BedieningVRI.auto and VB2_PrimairVRI.rood or VB2_BedieningVRI.hand and VB2_KnoppenVBafsluiter.VRIrood or VB2_BedieningVRI.auto and (VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend) and not VB2_PrimairVRI.uit;
+requirement invariant VB2_ToegangVRI.c_knipperuit needs VB2_BedieningVRI.auto and VB2_PrimairVRI.uit or VB2_BedieningVRI.hand and VB2_KnoppenVBafsluiter.VRIuit or VB2_BedieningVRI.auto and not VB2_PrimairVRI.rood and not(VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend);
+requirement invariant VB2_ToegangVRI.c_rooduit needs VB2_BedieningVRI.auto and VB2_PrimairVRI.uit or VB2_BedieningVRI.hand and VB2_KnoppenVBafsluiter.VRIuit or VB2_BedieningVRI.auto and not VB2_PrimairVRI.rood and not(VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend);
+requirement invariant VB2_ToegangVRI.c_uitknipper needs VB2_BedieningVRI.hand and VB2_KnoppenVBafsluiter.VRIknipper;
+requirement invariant VB2_ToegangVRI.c_roodknipper needs VB2_BedieningVRI.hand and VB2_KnoppenVBafsluiter.VRIknipper;
+requirement invariant VB2_VRI_TimerVrijgaveAan.c_aan needs not VB2_ToegangVRI.uit;
+requirement invariant VB2_VRI_Stand.c_uitknipper needs not VB2_ToegangVRI.uit and VB2_VRI_TimerVrijgaveAan.afgelopen;
+requirement invariant VB2_VRI_Stand.c_geel needs VB2_VRI_TimerVrijgaveGeel.afgelopen and VB2_ToegangVRI.rood;
+requirement invariant VB2_VRI_Stand.c_rood needs VB2_ToegangVRI.rood;
+requirement invariant VB2_VRI_Stand.c_uit needs VB2_ToegangVRI.uit;
+requirement invariant VB2_VRI_Stand.c_geelknipper needs VB2_ToegangVRI.knipper;
+requirement invariant VB2_VRI_Stand.c_roodknipper needs not VB2_ToegangVRI.rood;
+requirement invariant VB2_BedieningAB.c_hand needs VB2_KnoppenBedieningAB.hand and not VB2_SetAuto.setauto;
+requirement invariant VB2_BedieningAB.c_auto needs VB2_KnoppenBedieningAB.auto or VB2_SetAuto.setauto;
+requirement invariant VB2_ToegangAB.c_neerop needs VB2_BedieningAB.auto and VB2_PrimairAB.open or VB2_BedieningAB.hand and VB2_KnoppenVBafsluiter.ABopen or VB2_BedieningAB.auto and not(VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend) and not VB2_PrimairAB.dicht;
+requirement invariant VB2_ToegangAB.c_stopop needs VB2_BedieningAB.auto and VB2_PrimairAB.open or VB2_BedieningAB.hand and VB2_KnoppenVBafsluiter.ABopen or VB2_BedieningAB.auto and not(VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend) and not VB2_PrimairAB.dicht;
+requirement invariant VB2_ToegangAB.c_neeronvoorwaardelijkop needs VB2_BedieningAB.auto and VB2_PrimairAB.open or VB2_BedieningAB.hand and VB2_KnoppenVBafsluiter.ABopen or VB2_BedieningAB.auto and not(VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend) and not VB2_PrimairAB.dicht;
+requirement invariant VB2_ToegangAB.c_opneer needs VB2_BedieningAB.auto and VB2_PrimairAB.dicht or VB2_BedieningAB.hand and VB2_KnoppenVBafsluiter.ABsluit or VB2_BedieningAB.auto and (VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend) and not VB2_PrimairAB.open;
+requirement invariant VB2_ToegangAB.c_stopneer needs VB2_BedieningAB.auto and VB2_PrimairAB.dicht or VB2_BedieningAB.hand and VB2_KnoppenVBafsluiter.ABsluit or VB2_BedieningAB.auto and (VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend) and not VB2_PrimairAB.open;
+requirement invariant VB2_ToegangAB.c_neeronvoorwaardelijkneer needs VB2_BedieningAB.auto and VB2_PrimairAB.dicht or VB2_BedieningAB.hand and VB2_KnoppenVBafsluiter.ABsluit or VB2_BedieningAB.auto and (VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend) and not VB2_PrimairAB.open;
+requirement invariant VB2_ToegangAB.c_opstop needs VB2_BedieningAB.hand and VB2_KnoppenVBafsluiter.ABstop;
+requirement invariant VB2_ToegangAB.c_neerstop needs VB2_BedieningAB.hand and VB2_KnoppenVBafsluiter.ABstop;
+requirement invariant VB2_ToegangAB.c_neeronvoorwaardelijkstop needs VB2_BedieningAB.hand and VB2_KnoppenVBafsluiter.ABstop;
+requirement invariant VB2_ToegangAB.c_opneeronvoorwaardelijk needs VB2_BedieningAB.hand and VB2_KnoppenVBafsluiter.ABsluitOnv;
+requirement invariant VB2_ToegangAB.c_neerneeronvoorwaardelijk needs VB2_BedieningAB.hand and VB2_KnoppenVBafsluiter.ABsluitOnv;
+requirement invariant VB2_ToegangAB.c_stopneeronvoorwaardelijk needs VB2_BedieningAB.hand and VB2_KnoppenVBafsluiter.ABsluitOnv;
+requirement invariant VB2_AB_Commando.c_neerop needs VB2_ToegangAB.op;
+requirement invariant VB2_AB_Commando.c_stopop needs VB2_ToegangAB.op;
+requirement invariant VB2_AB_Commando.c_neeronvoorwaardelijkop needs VB2_ToegangAB.op;
+requirement invariant VB2_AB_Commando.c_opneer needs VB2_ToegangAB.neer and VB2_VRI_Stand.rood and not VB2_AB_ObstakelDetectie.aan and VB2_VRI_TimerVrijgavesignaal.afgelopen;
+requirement invariant VB2_AB_Commando.c_stopneer needs VB2_ToegangAB.neer and VB2_VRI_Stand.rood and not VB2_AB_ObstakelDetectie.aan and VB2_VRI_TimerVrijgavesignaal.afgelopen;
+requirement invariant VB2_AB_Commando.c_neeronvoorwaardelijkneer needs VB2_ToegangAB.neer and VB2_VRI_Stand.rood and not VB2_AB_ObstakelDetectie.aan and VB2_VRI_TimerVrijgavesignaal.afgelopen;
+requirement invariant VB2_AB_Commando.c_opstop needs VB2_ToegangAB.stop;
+requirement invariant VB2_AB_Commando.c_neerstop needs VB2_ToegangAB.stop;
+requirement invariant VB2_AB_Commando.c_neeronvoorwaardelijkstop needs VB2_ToegangAB.stop;
+requirement invariant VB2_AB_Commando.c_opneeronvoorwaardelijk needs VB2_ToegangAB.neeronvoorwaardelijk;
+requirement invariant VB2_AB_Commando.c_neerneeronvoorwaardelijk needs VB2_ToegangAB.neeronvoorwaardelijk;
+requirement invariant VB2_AB_Commando.c_stopneeronvoorwaardelijk needs VB2_ToegangAB.neeronvoorwaardelijk;
+requirement invariant VB2_Ventilatie_Richting.c_rijrichting needs VB2_Ventilatie_Bediening.hand and VB2_Ventilatie_Knoppen.rijrichting or VB2_Ventilatie_Bediening.auto and not VB2_Stand.ondersteunend;
+requirement invariant VB2_Ventilatie_Richting.c_tegenRijrichting needs VB2_Ventilatie_Bediening.hand and VB2_Ventilatie_Knoppen.tegenRijrichting or VB2_Ventilatie_Bediening.auto and VB2_Stand.ondersteunend;
+requirement invariant VB2_Ventilatie_Stand.c_0 needs VB2_Ventilatie_Bediening.auto and (VB2_Stand.operationeel and VB2_Rookdetectie.stand0) or VB2_Ventilatie_Bediening.hand and VB2_Ventilatie_Knoppen.s0;
+requirement invariant VB2_Ventilatie_Stand.c_1 needs VB2_Ventilatie_Bediening.auto and (VB2_Stand.operationeel and VB2_Rookdetectie.stand1) or VB2_Ventilatie_Bediening.hand and VB2_Ventilatie_Knoppen.s1;
+requirement invariant VB2_Ventilatie_Stand.c_2 needs VB2_Ventilatie_Bediening.auto and (VB2_Stand.operationeel and VB2_Rookdetectie.stand2 or (VB2_Stand.onderhoud or VB2_Stand.herstel) and (VB2_Rookdetectie.stand0 or VB2_Rookdetectie.stand1 or VB2_Rookdetectie.stand2)) or VB2_Ventilatie_Bediening.hand and VB2_Ventilatie_Knoppen.s2;
+requirement invariant VB2_Ventilatie_Stand.c_3 needs VB2_Ventilatie_Bediening.auto and ((VB2_Stand.operationeel or VB2_Stand.onderhoud or VB2_Stand.herstel) and VB2_Rookdetectie.stand3) or VB2_Ventilatie_Bediening.hand and VB2_Ventilatie_Knoppen.s3;
+requirement invariant VB2_Ventilatie_Stand.c_4 needs VB2_Ventilatie_Bediening.auto and ((VB2_Stand.operationeel or VB2_Stand.onderhoud or VB2_Stand.herstel) and VB2_Rookdetectie.stand4 or (VB2_Stand.standby or VB2_Stand.ondersteunend) and (VB2_Rookdetectie.stand0 or VB2_Rookdetectie.stand1 or VB2_Rookdetectie.stand2 or VB2_Rookdetectie.stand3 or VB2_Rookdetectie.stand4)) or VB2_Ventilatie_Bediening.hand and VB2_Ventilatie_Knoppen.s4;
+requirement invariant VB2_Ventilatie_Stand.c_5 needs VB2_Ventilatie_Bediening.auto and ((VB2_Stand.operationeel or VB2_Stand.onderhoud or VB2_Stand.herstel or VB2_Stand.standby or VB2_Stand.ondersteunend) and VB2_Rookdetectie.stand5) or VB2_Ventilatie_Bediening.hand and VB2_Ventilatie_Knoppen.s5;
+requirement invariant VB2_Ventilatie_Stand.c_6 needs VB2_Ventilatie_Bediening.auto and ((VB2_Stand.operationeel or VB2_Stand.onderhoud or VB2_Stand.herstel or VB2_Stand.standby or VB2_Stand.ondersteunend) and VB2_Rookdetectie.stand6) or VB2_Ventilatie_Bediening.hand and VB2_Ventilatie_Knoppen.s6;
+requirement invariant VB2_Ventilatie_Stand.c_7 needs VB2_Ventilatie_Bediening.auto and ((VB2_Stand.operationeel or VB2_Stand.onderhoud or VB2_Stand.herstel or VB2_Stand.standby or VB2_Stand.ondersteunend) and VB2_Rookdetectie.stand7) or VB2_Ventilatie_Bediening.hand and VB2_Ventilatie_Knoppen.s7;
+requirement invariant VB2_Ventilatie_Stand.c_8 needs VB2_Ventilatie_Bediening.auto and ((VB2_Stand.operationeel or VB2_Stand.onderhoud or VB2_Stand.herstel or VB2_Stand.standby or VB2_Stand.ondersteunend) and VB2_Rookdetectie.stand8 or VB2_Stand.calamiteit or VB2_Stand.evacuatie) or VB2_Ventilatie_Bediening.hand and VB2_Ventilatie_Knoppen.s8;
+requirement invariant VB2_Verlichting_Stand.c_0 needs VB2_Lichtsensor.stand0 and VB2_Verlichting_Bediening.auto and VB2_Stand.operationeel or VB2_Verlichting_Knoppen.s0 and VB2_Verlichting_Bediening.hand;
+requirement invariant VB2_Verlichting_Stand.c_1 needs VB2_Lichtsensor.stand1 and VB2_Verlichting_Bediening.auto and VB2_Stand.operationeel or VB2_Verlichting_Knoppen.s1 and VB2_Verlichting_Bediening.hand;
+requirement invariant VB2_Verlichting_Stand.c_2 needs VB2_Lichtsensor.stand2 and VB2_Verlichting_Bediening.auto and VB2_Stand.operationeel or VB2_Verlichting_Knoppen.s2 and VB2_Verlichting_Bediening.hand;
+requirement invariant VB2_Verlichting_Stand.c_3 needs VB2_Lichtsensor.stand3 and VB2_Verlichting_Bediening.auto and VB2_Stand.operationeel or VB2_Verlichting_Knoppen.s3 and VB2_Verlichting_Bediening.hand;
+requirement invariant VB2_Verlichting_Stand.c_4 needs VB2_Lichtsensor.stand4 and VB2_Verlichting_Bediening.auto and VB2_Stand.operationeel or VB2_Verlichting_Knoppen.s4 and VB2_Verlichting_Bediening.hand;
+requirement invariant VB2_Verlichting_Stand.c_5 needs VB2_Lichtsensor.stand5 and VB2_Verlichting_Bediening.auto and VB2_Stand.operationeel or VB2_Verlichting_Knoppen.s5 and VB2_Verlichting_Bediening.hand or (VB2_Stand.onderhoud or VB2_Stand.herstel) and VB2_Verlichting_Bediening.auto;
+requirement invariant VB2_Verlichting_Stand.c_6 needs VB2_Lichtsensor.stand6 and VB2_Verlichting_Bediening.auto and VB2_Stand.operationeel or VB2_Verlichting_Knoppen.s6 and VB2_Verlichting_Bediening.hand;
+requirement invariant VB2_Verlichting_Stand.c_7 needs VB2_Lichtsensor.stand7 and VB2_Verlichting_Bediening.auto and VB2_Stand.operationeel or VB2_Verlichting_Knoppen.s7 and VB2_Verlichting_Bediening.hand;
+requirement invariant VB2_Verlichting_Stand.c_8 needs VB2_Lichtsensor.stand8 and VB2_Verlichting_Bediening.auto and VB2_Stand.operationeel or VB2_Verlichting_Knoppen.s8 and VB2_Verlichting_Bediening.hand or (VB2_Stand.standby or VB2_Stand.calamiteit or VB2_Stand.ondersteunend or VB2_Stand.evacuatie) and VB2_Verlichting_Bediening.auto;
+requirement invariant VB2_Beeldregistratie.c_aan needs VB2_Stand.standby or VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend;
+requirement invariant VB2_Beeldregistratie.c_uit needs not(VB2_Stand.standby or VB2_Stand.calamiteit or VB2_Stand.evacuatie or VB2_Stand.ondersteunend);
+requirement invariant VB2_CCTV_Schouwen.c_schouwen needs VB2_KnoppenCCTV.schouwen or VB2_KnoppenCCTV.schouwenTegen;
+requirement invariant VB2_CCTV_Schouwen.c_schouwenHuidig needs VB2_KnoppenCCTV.schouwenHuidig or VB2_KnoppenCCTV.schouwenHuidigTegen;
+requirement invariant VB2_CCTV_Schouwen.c_stop needs VB2_KnoppenCCTV.schouwenStop or VB2_KnoppenCCTV.rechts or VB2_KnoppenCCTV.links;
+requirement invariant VB2_CCTV_Richting.c_mee needs VB2_KnoppenCCTV.schouwen or VB2_KnoppenCCTV.schouwenHuidig;
+requirement invariant VB2_CCTV_Richting.c_tegen needs VB2_KnoppenCCTV.schouwenTegen or VB2_KnoppenCCTV.schouwenHuidigTegen;
+requirement invariant VB2_CCTV_Selectie.c_rechts needs VB2_KnoppenCCTV.rechts;
+requirement invariant VB2_CCTV_Selectie.c_links needs VB2_KnoppenCCTV.links;
+requirement invariant VB2_CCTV_Selectie.c_klaar needs not VB2_KnoppenCCTV.rechts and not VB2_KnoppenCCTV.links;
+requirement invariant VB2_Omroep_Modus.c_startlive needs VB2_Omroep_Knoppen.startLive;
+requirement invariant VB2_Omroep_Modus.c_stoplive needs VB2_Omroep_Knoppen.stopLive;
+requirement invariant VB2_Omroep_Modus.c_startboodschap needs VB2_Omroep_Knoppen.startBoodschap or VB2_Stand.evacuatie and VB2_Omroep_Knoppen.los;
+requirement invariant VB2_Omroep_Modus.c_stopboodschap needs VB2_Omroep_Knoppen.stopBoodschap;
+requirement invariant VB2_Omroep_Gebied.c_buis needs VB2_Omroep_Knoppen.buis or VB2_Stand.evacuatie and VB2_Omroep_Knoppen.los;
+requirement invariant VB2_Omroep_Gebied.c_sectie needs VB2_Omroep_Knoppen.sectie;
+requirement invariant VB2_Vluchtdeur_Geluidsbaken.c_aan needs VB2_Vluchtdeur_BedieningGeluidsbaken.hand and VB2_Vluchtdeur_KnoppenGeluidsbaken.aan or VB2_Vluchtdeur_BedieningGeluidsbaken.auto and VB2_Stand.evacuatie;
+requirement invariant VB2_Vluchtdeur_Geluidsbaken.c_uit needs VB2_Vluchtdeur_BedieningGeluidsbaken.hand and VB2_Vluchtdeur_KnoppenGeluidsbaken.uit or VB2_Vluchtdeur_BedieningGeluidsbaken.auto and not VB2_Stand.evacuatie;
+requirement invariant VB2_Vluchtdeur_ContourVerlichting.c_aan needs VB2_Vluchtdeur_BedieningContourVerlichting.hand and VB2_Vluchtdeur_KnoppenContourVerlichting.aan or VB2_Vluchtdeur_BedieningContourVerlichting.auto and VB2_Stand.evacuatie;
+requirement invariant VB2_Vluchtdeur_ContourVerlichting.c_uit needs VB2_Vluchtdeur_BedieningContourVerlichting.hand and VB2_Vluchtdeur_KnoppenContourVerlichting.uit or VB2_Vluchtdeur_BedieningContourVerlichting.auto and not VB2_Stand.evacuatie;
+requirement invariant VB2_PopUp_Venster.c_aan needs VB2_PopUp_Timer.uit;
+requirement invariant VB2_PopUp_Timer.c_aan needs VB2_PopUp_Venster.aan;
+requirement invariant VB2_PopUp_Timer.c_resetAfgelopen needs VB2_PopUp_Venster.uit;
+requirement invariant VB2_PopUp_Timer.c_resetLopend needs VB2_PopUp_Venster.uit;
+requirement invariant VB2_HoogteDetectieToerit_Lampen.c_aan needs VB2_HoogteDetectieToerit_Sensor.aan;
+requirement invariant VB2_HoogteDetectieToerit_Lampen.c_aan needs VB2_HoogteDetectieToerit_Timer.uit;
+requirement invariant VB2_HoogteDetectieToerit_Lampen.c_uit needs VB2_HoogteDetectieToerit_Timer.afgelopen;
+requirement invariant VB2_HoogteDetectieToerit_Timer.c_aan needs VB2_HoogteDetectieToerit_Lampen.aan;
+requirement invariant VB2_HoogteDetectieToerit_Timer.c_resetAfgelopen needs VB2_HoogteDetectieToerit_Lampen.uit;
+requirement invariant VB2_VRI_TimerVrijgaveAan.c_aan needs VB2_VRI_Stand.uit;
+requirement invariant VB2_VRI_TimerVrijgaveAan.c_resetAfgelopen needs not VB2_VRI_Stand.uit;
+requirement invariant VB2_VRI_TimerVrijgaveGeel.c_aan needs VB2_VRI_Stand.knipper;
+requirement invariant VB2_VRI_TimerVrijgaveGeel.c_resetAfgelopen needs not VB2_VRI_Stand.knipper;
+requirement invariant VB2_VRI_TimerVrijgaveRood.c_aan needs VB2_VRI_Stand.geel;
+requirement invariant VB2_VRI_TimerVrijgaveRood.c_resetAfgelopen needs not VB2_VRI_Stand.geel;
+requirement invariant VB2_VRI_Stand.c_rood needs VB2_VRI_TimerVrijgaveRood.afgelopen;
+requirement invariant VB2_VRI_TimerVrijgaveUit.c_aan needs VB2_VRI_Stand.knipper;
+requirement invariant VB2_VRI_TimerVrijgaveUit.c_resetAfgelopen needs not VB2_VRI_Stand.knipper;
+requirement invariant VB2_VRI_Stand.c_uit needs VB2_VRI_TimerVrijgaveUit.afgelopen;
+requirement invariant VB2_VRI_TimerVrijgavesignaal.c_aan needs VB2_VRI_Stand.rood;
+requirement invariant VB2_VRI_TimerVrijgavesignaal.c_resetLopend needs not VB2_VRI_Stand.rood;
+requirement invariant VB2_VRI_TimerVrijgavesignaal.c_resetAfgelopen needs not VB2_VRI_Stand.rood;
+requirement invariant VB2_AB_Stand.op or VB2_AB_Beweging.op disables VB2_AB_Commando.c_neerop;
+requirement invariant VB2_AB_Stand.op or VB2_AB_Beweging.op disables VB2_AB_Commando.c_stopop;
+requirement invariant VB2_AB_Stand.op or VB2_AB_Beweging.op disables VB2_AB_Commando.c_neeronvoorwaardelijkop;
+requirement invariant VB2_AB_ObstakelDetectie.aan disables VB2_AB_Commando.c_opneer;
+requirement invariant VB2_AB_ObstakelDetectie.aan disables VB2_AB_Commando.c_stopneer;
+requirement invariant VB2_AB_ObstakelDetectie.aan disables VB2_AB_Commando.c_neeronvoorwaardelijkneer;
+requirement invariant VB2_AB_Stand.neer or VB2_AB_Beweging.neer disables VB2_AB_Commando.c_opneer;
+requirement invariant VB2_AB_Stand.neer or VB2_AB_Beweging.neer disables VB2_AB_Commando.c_stopneer;
+requirement invariant VB2_AB_Stand.neer or VB2_AB_Beweging.neer disables VB2_AB_Commando.c_neeronvoorwaardelijkneer;
+requirement invariant VB2_AB_Stand.neer or VB2_AB_Beweging.neer disables VB2_AB_Commando.c_opneeronvoorwaardelijk;
+requirement invariant VB2_AB_Stand.neer or VB2_AB_Beweging.neer disables VB2_AB_Commando.c_neerneeronvoorwaardelijk;
+requirement invariant VB2_AB_Stand.neer or VB2_AB_Beweging.neer disables VB2_AB_Commando.c_stopneeronvoorwaardelijk;
+requirement invariant VB2_AB_Beweging.geen disables VB2_AB_Commando.c_opstop;
+requirement invariant VB2_AB_Beweging.geen disables VB2_AB_Commando.c_neerstop;
+requirement invariant VB2_AB_Beweging.geen disables VB2_AB_Commando.c_neeronvoorwaardelijkstop;
+requirement invariant VB2_Ventilatie_Bediening.c_hand needs VB2_Ventilatie_Knoppen.hand and not VB2_Ventilatie_setauto;
+requirement invariant VB2_Ventilatie_Bediening.c_auto needs VB2_Ventilatie_Knoppen.auto or VB2_Ventilatie_setauto;
+requirement invariant VB2_Verlichting_Bediening.c_hand needs VB2_Verlichting_Knoppen.hand and not VB2_Verlichting_setauto;
+requirement invariant VB2_Verlichting_Bediening.c_auto needs VB2_Verlichting_Knoppen.auto or VB2_Verlichting_setauto;
+requirement invariant VB2_Vluchtdeur_BedieningGeluidsbaken.c_hand needs VB2_Vluchtdeur_KnoppenGeluidsbaken.hand and not VB2_Vluchtdeur_setauto;
+requirement invariant VB2_Vluchtdeur_BedieningGeluidsbaken.c_auto needs VB2_Vluchtdeur_KnoppenGeluidsbaken.auto or VB2_Vluchtdeur_setauto;
+requirement invariant VB2_Vluchtdeur_BedieningContourVerlichting.c_hand needs VB2_Vluchtdeur_KnoppenContourVerlichting.hand and not VB2_Vluchtdeur_setauto;
+requirement invariant VB2_Vluchtdeur_BedieningContourVerlichting.c_auto needs VB2_Vluchtdeur_KnoppenContourVerlichting.auto or VB2_Vluchtdeur_setauto;
+requirement invariant MTK_BedieningVerlichting.c_hand needs MTK_KnoppenVerlichting.hand and not MTK_setauto;
+requirement invariant MTK_BedieningVerlichting.c_auto needs MTK_KnoppenVerlichting.auto or MTK_setauto;
+requirement invariant MTK_Verlichting.c_aan needs MTK_BedieningVerlichting.hand and MTK_KnoppenVerlichting.aan or MTK_BedieningVerlichting.auto and (MTK_vluchtgereed or MTK_evacuatie);
+requirement invariant MTK_Verlichting.c_uit needs MTK_BedieningVerlichting.hand and MTK_KnoppenVerlichting.uit or MTK_BedieningVerlichting.auto and not(MTK_vluchtgereed or MTK_evacuatie);
+requirement invariant MTK_BedieningOverdruk.c_hand needs MTK_KnoppenOverdruk.hand and not MTK_setauto;
+requirement invariant MTK_BedieningOverdruk.c_auto needs MTK_KnoppenOverdruk.auto or MTK_setauto;
+requirement invariant MTK_Overdruk.c_uit needs MTK_BedieningOverdruk.hand and MTK_KnoppenOverdruk.uit or MTK_BedieningOverdruk.auto and not(MTK_vluchtgereed or MTK_evacuatie);
+requirement invariant MTK_Overdruk.c_links needs MTK_BedieningOverdruk.hand and MTK_KnoppenOverdruk.links or MTK_BedieningOverdruk.auto and MTK_evacuatie_aflopend;
+requirement invariant MTK_Overdruk.c_rechts needs MTK_BedieningOverdruk.hand and MTK_KnoppenOverdruk.rechts or MTK_BedieningOverdruk.auto and MTK_evacuatie_oplopend;
+requirement invariant MTK_BedieningDVI.c_hand needs MTK_KnoppenDVI.hand and not MTK_setauto;
+requirement invariant MTK_BedieningDVI.c_auto needs MTK_KnoppenDVI.auto or MTK_setauto;
+requirement invariant MTK_DVI.c_uit needs MTK_BedieningDVI.hand and MTK_KnoppenDVI.uit or MTK_BedieningDVI.auto and not(MTK_vluchtgereed or MTK_evacuatie);
+requirement invariant MTK_DVI.c_aflopend needs MTK_BedieningDVI.hand and MTK_KnoppenDVI.aflopend or MTK_BedieningDVI.auto and MTK_evacuatie_oplopend;
+requirement invariant MTK_DVI.c_oplopend needs MTK_BedieningDVI.hand and MTK_KnoppenDVI.oplopend or MTK_BedieningDVI.auto and MTK_evacuatie_aflopend;
+requirement invariant BBI_Bediening.c_hand needs BBI_Knoppen.hand and not BBI_setauto;
+requirement invariant BBI_Bediening.c_auto needs BBI_Knoppen.auto or BBI_setauto;
+requirement invariant BBI_Pomp.c_aan needs BBI_Regime.blussen and BBI_Sensors.laag;
+requirement invariant BBI_Pomp.c_uit needs BBI_Regime.bewaken or BBI_Regime.blussen and BBI_Sensors.hoog;
+requirement invariant KelderSchoon_Bediening.c_hand needs KelderSchoon_Knoppen.hand and not KelderSchoon_setauto;
+requirement invariant KelderSchoon_Bediening.c_auto needs KelderSchoon_Knoppen.auto or KelderSchoon_setauto;
+requirement invariant KelderSchoon_Regime.uit disables KelderSchoon_Pomp.c_aan;
+requirement invariant KelderSchoon_Pomp.c_aan needs KelderSchoon_Regime.bergen and KelderSchoon_Sensors.Hooghoogwater or KelderSchoon_Regime.leeghouden and KelderSchoon_Sensors.Startwater;
+requirement invariant KelderSchoon_Pomp.c_uit needs KelderSchoon_Regime.bergen and KelderSchoon_Sensors.Laaghoogwater or KelderSchoon_Regime.leeghouden and KelderSchoon_Sensors.Laagwater or KelderSchoon_Regime.uit;
+requirement invariant KelderSchoon_Regime.c_bergen needs KelderSchoon_Bediening.auto and KelderSchoon_calamiteit or KelderSchoon_Bediening.hand and KelderSchoon_Knoppen.bergen;
+requirement invariant KelderSchoon_Regime.c_leeghouden needs KelderSchoon_Bediening.hand and KelderSchoon_Knoppen.leeghouden;
+requirement invariant KelderSchoon_Regime.c_uit needs KelderSchoon_Bediening.hand and KelderSchoon_Knoppen.uit;
+requirement invariant KelderVuil_Bediening.c_hand needs KelderVuil_Knoppen.hand and not KelderVuil_setauto;
+requirement invariant KelderVuil_Bediening.c_auto needs KelderVuil_Knoppen.auto or KelderVuil_setauto;
+requirement invariant KelderVuil_SensorLaagwater.uit disables KelderVuil_Pomp.c_aan;
+requirement invariant KelderVuil_Pomp.c_uit needs KelderVuil_Regime.uit or KelderVuil_SensorLaagwater.uit;
+requirement invariant KelderVuil_Pomp.c_aan needs KelderVuil_Regime.lozen and KelderVuil_SensorLaagwater.aan;
+requirement invariant KelderVuil_Regime.c_uit needs KelderVuil_Bediening.auto and KelderVuil_calamiteit or KelderVuil_Bediening.hand and KelderVuil_Knoppen.uit;
+requirement invariant KelderVuil_Regime.c_lozen needs KelderVuil_Bediening.hand and KelderVuil_Knoppen.lozen;
+requirement invariant CaDoNoord_Stand.op or CaDoNoord_Beweging.op disables CaDoNoord_Commando.c_neerop;
+requirement invariant CaDoNoord_Stand.op or CaDoNoord_Beweging.op disables CaDoNoord_Commando.c_stopop;
+requirement invariant CaDoNoord_Stand.neer or CaDoNoord_Beweging.neer disables CaDoNoord_Commando.c_opneer;
+requirement invariant CaDoNoord_Stand.neer or CaDoNoord_Beweging.neer disables CaDoNoord_Commando.c_stopneer;
+requirement invariant CaDoNoord_Beweging.geen disables CaDoNoord_Commando.c_opstop;
+requirement invariant CaDoNoord_Beweging.geen disables CaDoNoord_Commando.c_neerstop;
+requirement invariant CaDoZuid_Stand.op or CaDoZuid_Beweging.op disables CaDoZuid_Commando.c_neerop;
+requirement invariant CaDoZuid_Stand.op or CaDoZuid_Beweging.op disables CaDoZuid_Commando.c_stopop;
+requirement invariant CaDoZuid_Stand.neer or CaDoZuid_Beweging.neer disables CaDoZuid_Commando.c_opneer;
+requirement invariant CaDoZuid_Stand.neer or CaDoZuid_Beweging.neer disables CaDoZuid_Commando.c_stopneer;
+requirement invariant CaDoZuid_Beweging.geen disables CaDoZuid_Commando.c_opstop;
+requirement invariant CaDoZuid_Beweging.geen disables CaDoZuid_Commando.c_neerstop;
