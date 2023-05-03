@@ -1,8 +1,11 @@
 """
-This module provides functionality for working with CSV files in the context of the CIF optimization process and
-DSM matrix conversion. It contains functions for converting a list of sequenced RaGraph node objects to a CSV file
-and for converting a binary DSM matrix in CSV format to an edge list in CSV format, using node names from a
-separate CSV file.
+This module provides functionality for working with CSV files related to the CIF optimization process, DSM matrix
+conversion, and plant group sequence handling. It includes functions for:
+
+- Converting a list of sequenced RaGraph node objects to a CSV file;
+- Converting a binary DSM matrix in .mat to an edge list in CSV format, using node names from a separate CSV file;
+- Generating a CSV file with ordered node names based on plant group information from a product system map and a group
+  sequence .mat file.
 """
 
 import csv
@@ -124,6 +127,29 @@ def plant_groups_to_csv(
     stem_path: str,
     output_dir: Union[str, Path] = "generated",
 ) -> None:
+    """
+    Reads plant group information from a product system map file and a group sequence file output by the MATLAB
+    sequencing script from de Jong (2020), and generates a CSV file containing the ordered list of node names based on
+    the group sequence.
+
+    Args:
+        group_map_path (Union[str, Path]): The path to a file containing plant group information, also known as the
+                                           product system map. Each line should contain a group ID followed by a
+                                           comma-separated list of plant elements (node names) belonging to the group.
+                                           For example:
+                                           G1,NodeA,NodeB
+                                           G2,NodeC,NodeD
+        group_sequence_path (Union[str, Path]): The path to a .mat file containing a 'scheduleorder' variable, which
+                                                represents the ordered sequence of group IDs. This file is output by the
+                                                MATLAB sequencing script from de Jong (2020).
+        stem_path (str): A string used as the base of the output file's name.
+        output_dir (Union[str, Path]): The path to the directory where the output files will be saved.
+                                       Defaults to "generated".
+
+    Returns:
+        None. The ordered node names are saved to a CSV file with the header "name" in the specified output directory.
+              The output file's name is created by appending ".nodes.seq.csv" to the stem_path.
+    """
     # Read the group information from the file
     with open(group_map_path, "r") as f:
         group_lines = f.readlines()

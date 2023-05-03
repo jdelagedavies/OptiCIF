@@ -84,7 +84,9 @@ def do_global_optimization(
     current_item_lines = []
 
     for line in cif_lines:
-        if not line.strip() or line.strip().startswith("//"):  # Skip empty lines and comments
+        if not line.strip() or line.strip().startswith(
+            "//"
+        ):  # Skip empty lines and comments
             continue
 
         if not capturing_item:
