@@ -97,7 +97,8 @@ def mat_to_csv(
     # Check if the length of both files matches
     if len(matrix) != len(nodes):
         raise ValueError(
-            f"The length of '{matrix_path}' does not match the length of '{node_path}'.")
+            f"The length of '{matrix_path}' does not match the length of '{node_path}'."
+        )
 
     # Create the 'generated' directory if it doesn't exist
     generated_dir = Path(output_dir)
@@ -142,7 +143,8 @@ def plant_groups_to_csv(
     # Check if the length of both files matches
     if len(group_map) != len(group_sequence):
         raise ValueError(
-            f"The length of '{group_map_path}' does not match the length of '{group_sequence_path}'.")
+            f"The length of '{group_map_path}' does not match the length of '{group_sequence_path}'."
+        )
 
     # Create the ordered list of node names based on the group_sequence
     ordered_node_names = []

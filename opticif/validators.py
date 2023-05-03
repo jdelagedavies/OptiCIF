@@ -1,6 +1,6 @@
 """
-This module provides functionality for validating the structure of CSV files used in the CIF optimization and DSM matrix
-conversion processes.
+This module provides functionality for validating the structure of CSV and MAT files used in the CIF optimization
+and DSM matrix conversion processes.
 """
 
 import csv
@@ -37,26 +37,24 @@ def validate_node_csv_structure(
             raise CSVStructureError(
                 f"'{csv_path}' should have a header with a 'name' column."
             )
+        rows = list(reader)
 
-        # Check if the "name" column contains duplicates or empty values
-        names = set()
-        for row in reader:
-            name = row["name"].strip()
-            if not name:
-                raise CSVStructureError(
-                    f"'{csv_path}' contains an empty value in the 'name' column."
-                )
-            if name in names:
-                raise CSVStructureError(
-                    f"'{csv_path}' contains duplicate names in the 'name' column."
-                )
+    names = set()
+    for row in rows:
+        name = row["name"].strip()
+        if not name:
+            raise CSVStructureError(
+                f"'{csv_path}' contains an empty value in the 'name' column."
+            )
+        names.add(name)
 
-            names.add(name)
+    if len(names) != len(rows):
+        raise CSVStructureError(
+            f"'{csv_path}' contains duplicate names in the 'name' column."
+        )
 
 
-def validate_matrix_file_structure(
-    matrix_path: Union[str, Path]
-) -> None:
+def validate_matrix_file_structure(matrix_path: Union[str, Path]) -> None:
     """
     Checks if the matrix file structure is valid, is square, and is binary (only uses 1s and 0s).
 
@@ -67,15 +65,20 @@ def validate_matrix_file_structure(
         MATStructureError: If the matrix file is not square, is not binary or has any formatting issues.
     """
     with open(matrix_path, "r", encoding="utf-8-sig") as f:
-        matrix = [list(map(int, row.strip().split())) for row in f]
+        matrix_lines = f.readlines()
 
-        row_count = len(matrix)
+    matrix = []
+    for line in matrix_lines:
+        row = list(map(int, line.strip().split()))
+        matrix.append(row)
+
+    row_count = len(matrix)
 
     for i, row in enumerate(matrix):
         if len(row) != row_count:
             raise MATStructureError(
-                f"The matrix in '{matrix_path}' is not square. Each row should have the same number of elements as "
-                f"the number of rows."
+                f"The matrix in '{matrix_path}' is not square. Each row should have the same number of elements as the"
+                f"number of rows."
             )
 
         for j, element in enumerate(row):

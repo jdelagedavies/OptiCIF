@@ -39,7 +39,9 @@ def do_global_optimization(
         output directory.
     """
     if mode not in ["instantiation", "automata"]:
-        raise ValueError("Invalid mode specified. Choose either 'instantiation' or 'automata'")
+        raise ValueError(
+            "Invalid mode specified. Choose either 'instantiation' or 'automata'"
+        )
 
     # Convert to Path object
     output_dir = Path(output_dir)
@@ -51,14 +53,20 @@ def do_global_optimization(
     # Read the CSV file and get the sequence
     with open(csv_path, "r") as f:
         csv_reader = csv.DictReader(f, delimiter=csv_delimiter)
-        node_sequence = [row['name'] for row in csv_reader]
+        node_sequence = [row["name"] for row in csv_reader]
 
     # Prepare a regex pattern for matching node names
     pattern = ""
     if mode == "instantiation":
-        pattern = r"^\s*(" + "|".join(re.escape(name) for name in node_sequence) + r")\s*:"
+        pattern = (
+            r"^\s*(" + "|".join(re.escape(name) for name in node_sequence) + r")\s*:"
+        )
     elif mode == "automata":
-        pattern = r"^\s*plant\s+automaton\s+(" + "|".join(re.escape(name) for name in node_sequence) + r")\s*:"
+        pattern = (
+            r"^\s*plant\s+automaton\s+("
+            + "|".join(re.escape(name) for name in node_sequence)
+            + r")\s*:"
+        )
 
     node_name_pattern = re.compile(pattern)
 
@@ -72,35 +80,36 @@ def do_global_optimization(
     duplicates = set()
 
     capturing_item = False
-    current_item = None
+    node_name = None
     current_item_lines = []
 
     for line in cif_lines:
+        if not line.strip() or line.strip().startswith("//"):  # Skip empty lines and comments
+            continue
+
         if not capturing_item:
             match = node_name_pattern.match(line)
-            if match:
-                node_name = match.group(1)
-                capturing_item = True
-                current_item = node_name
-                current_item_lines = [line]
-
-                if node_name in items_dict:
-                    duplicates.add(node_name)
-            else:
+            if not match:
                 non_item_lines.append(line)
+                continue
+
+            node_name = match.group(1)
+            capturing_item = True
+            current_item_lines = [line]
+
+            if node_name in items_dict:
+                duplicates.add(node_name)
         else:
             current_item_lines.append(line)
 
             closing_condition = (
-                ";" in line if mode == "instantiation" else line.strip().split()[-1] == "end"
+                ";" in line
+                if mode == "instantiation"
+                else line.strip().split()[-1] == "end"
             )
             if capturing_item and closing_condition:
-                items_dict[current_item] = current_item_lines
+                items_dict[node_name] = current_item_lines
                 capturing_item = False
-
-    # Store the last item if any
-    if capturing_item:
-        items_dict[current_item] = current_item_lines
 
     if capturing_item:
         raise ValueError(f"Unclosed {mode} detected")
@@ -117,12 +126,9 @@ def do_global_optimization(
             f"Nodes not found in the CIF specification '{cif_path}': {', '.join(sorted(missing_nodes))}"
         )
 
-    reordered_lines = [
-        line for node_name in node_sequence for line in items_dict[node_name]
-    ]
-
-    # Combine unmatched lines with reordered lines
-    output_lines = non_item_lines + reordered_lines
+    output_lines = non_item_lines
+    for node_name in node_sequence:
+        output_lines += items_dict[node_name]
 
     # Create the 'generated' directory if it doesn't exist
     generated_dir = Path(output_dir)
