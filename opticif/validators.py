@@ -46,12 +46,11 @@ def validate_node_csv_structure(
             raise CSVStructureError(
                 f"'{csv_path}' contains an empty value in the 'name' column."
             )
+        if name in names:
+            raise CSVStructureError(
+                f"'{csv_path}' contains duplicate names in the 'name' column."
+            )
         names.add(name)
-
-    if len(names) != len(rows):
-        raise CSVStructureError(
-            f"'{csv_path}' contains duplicate names in the 'name' column."
-        )
 
 
 def validate_matrix_file_structure(matrix_path: Union[str, Path]) -> None:
@@ -77,8 +76,7 @@ def validate_matrix_file_structure(matrix_path: Union[str, Path]) -> None:
     for i, row in enumerate(matrix):
         if len(row) != row_count:
             raise MATStructureError(
-                f"The matrix in '{matrix_path}' is not square. Each row should have the same number of elements as the"
-                f"number of rows."
+                f"The matrix in '{matrix_path}' is not square. Each row should have the same number of elements as the number of rows."
             )
 
         for j, element in enumerate(row):
