@@ -91,27 +91,26 @@ def do_global_optimization(
 
         if not capturing_item:
             match = node_name_pattern.match(line)
-            if not match:
+            if match:
+                node_name = match.group(1)
+                capturing_item = True
+                current_item_lines = [line]
+
+                if node_name in items_dict:
+                    duplicates.add(node_name)
+            else:
                 non_item_lines.append(line)
-                continue
-
-            node_name = match.group(1)
-            capturing_item = True
-            current_item_lines = [line]
-
-            if node_name in items_dict:
-                duplicates.add(node_name)
         else:
             current_item_lines.append(line)
 
-            closing_condition = (
-                ";" in line
-                if mode == "instantiation"
-                else line.strip().split()[-1] == "end"
-            )
-            if capturing_item and closing_condition:
-                items_dict[node_name] = current_item_lines
-                capturing_item = False
+        closing_condition = (
+            capturing_item and ";" in line
+            if mode == "instantiation"
+            else capturing_item and line.strip().split()[-1] == "end"
+        )
+        if closing_condition:
+            items_dict[node_name] = current_item_lines
+            capturing_item = False
 
     if capturing_item:
         raise ValueError(f"Unclosed {mode} detected")
