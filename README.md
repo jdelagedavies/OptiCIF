@@ -41,8 +41,8 @@ from opticif import do_global_optimization
 cif_path = "path/to/your/cif/specification.cif"
 csv_path = "path/to/your/sequence.csv"  # CSV file containing the node sequence
 
-# Perform global optimization with the "instantiation" mode
-do_global_optimization(csv_path, cif_path, mode="instantiation")
+# Perform global optimization with the "automaton" mode
+do_global_optimization(csv_path, cif_path, mode="automaton")
 ```
 
 The input CSV file containing the node sequence should have a header with a "name" column, listing the nodes to be reordered. Ensure that the node names in the CSV file match the node names in your CIF specification. Example input CSV format:
@@ -56,17 +56,14 @@ d
 e
 f
 ```
-The `mode` parameter can be set to either "instantiation" or "automata":
+The `mode` parameter can be set to either "automaton" or "instantiation":
 
+- "automaton": Reorder explicit plant automaton declarations (e.g., "plant automaton Node1: ... end")
 - "instantiation": Reorder plant instantiations (e.g., "Node1: Plant;")
-- "automata": Reorder explicit plant automaton declarations (e.g., "plant automaton Node1: ... end")
 
-Note that plant elements must either be fully instantiated, or fully declared explicitely. This tool does not support groups, see [CIF to CIF transformer](https://www.eclipse.org/escet/cif/tools/cif2cif/) for information on how to remove groups as a preprocessing step.
+Note that plant elements must either be fully declared explicitely, or fully instantiated. This tool does not support groups, see [CIF to CIF transformer](https://www.eclipse.org/escet/cif/tools/cif2cif/) for information on how to remove groups as a preprocessing step.
 
-Example CIF models and corresponding input CSV files can be found in the tests/models directory of the repository. For more advanced usage, see the test scripts provided in the repository.
-
-For detailed information on the functions and their parameters, refer to the function documentation (docstrings) in the source code.
-Example CIF models and corresponding input CSV files can be found in the `tests/models` directory of the repository. For more advanced usage, see the test scripts provided in the repository.
+Example CIF models and corresponding input files can be found in the tests/models directory of the repository. For more advanced usage, see the test scripts provided in the repository.
 
 For detailed information on the functions and their parameters, refer to the function documentation (docstrings) in the source code.
 
