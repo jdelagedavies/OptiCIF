@@ -1,5 +1,4 @@
-"""
-This module provides functionality for working with CSV files related to the CIF optimization process, DSM matrix
+"""This module provides functionality for working with CSV files related to the CIF optimization process, DSM matrix
 conversion, and plant group sequence handling. It includes functions for:
 
 - Converting a list of sequenced RaGraph node objects to a CSV file;

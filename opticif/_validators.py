@@ -1,5 +1,4 @@
-"""
-This module provides functionality for validating the structure of CSV and MAT files used in the CIF optimization
+"""This module provides functionality for validating the structure of CSV and MAT files used in the CIF optimization
 and DSM matrix conversion processes.
 """
 
@@ -76,7 +75,8 @@ def validate_matrix_file_structure(matrix_path: Union[str, Path]) -> None:
     for i, row in enumerate(matrix):
         if len(row) != row_count:
             raise MATStructureError(
-                f"The matrix in '{matrix_path}' is not square. Each row should have the same number of elements as the number of rows."
+                f"The matrix in '{matrix_path}' is not square. Each row should have the same number of elements as "
+                f"the number of rows."
             )
 
         for j, element in enumerate(row):

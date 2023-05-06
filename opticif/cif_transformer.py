@@ -1,13 +1,11 @@
-"""
-This module provides functionality for global optimization on CIF specifications.
-"""
+"""This module provides functionality for global optimization on CIF specifications."""
 
 import csv
 import re
 from pathlib import Path
 from typing import Union
 
-from opticif.validators import validate_node_csv_structure
+from opticif._validators import validate_node_csv_structure
 
 
 def do_global_optimization(
@@ -15,12 +13,12 @@ def do_global_optimization(
     cif_path: Union[str, Path],
     output_dir: Union[str, Path] = "generated",
     csv_delimiter: str = ";",
-    mode: str = "instantiation",
+    mode: str = "automaton",
 ) -> None:
     """
-    Performs global optimization on a CIF specification by reordering plant instantiations or explicit plant automaton
-    declarations according to an input sequence. Reordered items are placed at the end of the output file, preserving
-    multiline instantiations or automata declarations.
+    Performs global optimization on a CIF specification by reordering explicit plant automaton declarations or plant
+    instantiations or  according to an input sequence. Reordered items are placed at the end of the output file,
+    preserving multiline automaton declarations or instantiations.
 
     Args:
         csv_path (Union[str, Path]): The path to a CSV file containing the node sequence. The file should have a
@@ -30,17 +28,17 @@ def do_global_optimization(
         output_dir (Union[str, Path]): The path to the directory where the output files will be saved.
                         Defaults to "generated".
         csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ";".
-        mode (str): The optimization mode, either "instantiation" or "automata". Defaults to "instantiation".
+        mode (str): The optimization mode, either "instantiation" or "automaton". Defaults to "automaton".
+            - "automaton": Reorder explicit plant automaton declarations (e.g., "plant automaton Node1: ... end").
             - "instantiation": Reorder plant instantiations (e.g., "Node1: Plant;").
-            - "automata": Reorder explicit plant automaton declarations (e.g., "plant automaton Node1: ... end").
 
     Returns:
         None. The reordered CIF file is saved with ".seq" appended to the input file's name in the specified
         output directory.
     """
-    if mode not in ["instantiation", "automata"]:
+    if mode not in ["automaton", "instantiation"]:
         raise ValueError(
-            "Invalid mode specified. Choose either 'instantiation' or 'automata'"
+            "Invalid mode specified. Choose either 'automaton' or 'instantiation'"
         )
 
     # Convert to Path object
@@ -57,15 +55,15 @@ def do_global_optimization(
 
     # Prepare a regex pattern for matching node names
     pattern = ""
-    if mode == "instantiation":
-        pattern = (
-            r"^\s*(" + "|".join(re.escape(name) for name in node_sequence) + r")\s*:"
-        )
-    elif mode == "automata":
+    if mode == "automaton":
         pattern = (
             r"^\s*plant\s+automaton\s+("
             + "|".join(re.escape(name) for name in node_sequence)
             + r")\s*:"
+        )
+    elif mode == "instantiation":
+        pattern = (
+            r"^\s*(" + "|".join(re.escape(name) for name in node_sequence) + r")\s*:"
         )
 
     node_name_pattern = re.compile(pattern)
