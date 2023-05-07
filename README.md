@@ -1,6 +1,6 @@
 # OptiCIF
 
-OptiCIF is a Python package for performing global optimization on CIF specifications by reordering plant instantiations or explicit plant automaton declarations according to a provided input sequence. Global optimization is formally defined in Reijnen ([2020](https://www.persistent-identifier.nl/urn:nbn:nl:ui:25-115168de-878f-4f5f-9c55-126f20f845fe)). It integrates in the [synthesis-based engineering](https://www.eclipse.org/escet/cif/synthesis-based-engineering/approaches/synthesis-based-engineering.html) development process. This package was developed as part of a bachelor thesis at the Eindhoven University of Technology.
+OptiCIF is a Python package for performing global optimization on [CIF](https://eclipse.dev/escet/cif/) specifications by reordering plant instantiations or explicit plant automaton declarations according to a provided input sequence. Global optimization is formally defined in Reijnen ([2020](https://www.persistent-identifier.nl/urn:nbn:nl:ui:25-115168de-878f-4f5f-9c55-126f20f845fe)). It integrates in the [synthesis-based engineering](https://www.eclipse.org/escet/cif/synthesis-based-engineering/approaches/synthesis-based-engineering.html) development process. This package was developed as part of a bachelor thesis at the Eindhoven University of Technology.
 
 Modules:
 - `csv_utils`: Utility functions for working with CSV files, including:
