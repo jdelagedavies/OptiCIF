@@ -4,8 +4,16 @@ import csv
 import re
 from pathlib import Path
 from typing import Union
+from enum import Enum
 
 from opticif._validators import validate_node_csv_structure
+
+
+class OptimizationMode(Enum):
+    """An enumeration representing the available optimization modes for the do_global_optimization function."""
+
+    AUTOMATON = "automaton"
+    INSTANTIATION = "instantiation"
 
 
 def do_global_optimization(
@@ -13,7 +21,7 @@ def do_global_optimization(
     cif_path: Union[str, Path],
     output_dir: Union[str, Path] = "generated",
     csv_delimiter: str = ";",
-    mode: str = "automaton",
+    mode: OptimizationMode = OptimizationMode.AUTOMATON,
 ) -> None:
     """
     Performs global optimization on a CIF specification by reordering explicit plant automaton declarations or plant
@@ -28,7 +36,7 @@ def do_global_optimization(
         output_dir (Union[str, Path]): The path to the directory where the output files will be saved.
                         Defaults to "generated".
         csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ";".
-        mode (str): The optimization mode, either "instantiation" or "automaton". Defaults to "automaton".
+        mode (OptimizationMode): The optimization mode, either "instantiation" or "automaton". Defaults to "automaton".
             - "automaton": Reorder explicit plant automaton declarations (e.g., "plant automaton Node1: ... end").
             - "instantiation": Reorder plant instantiations (e.g., "Node1: Plant;").
 
@@ -36,7 +44,8 @@ def do_global_optimization(
         None. The reordered CIF file is saved with ".seq" appended to the input file's name in the specified
         output directory.
     """
-    if mode not in ["automaton", "instantiation"]:
+    # Check the optimization mode
+    if mode not in OptimizationMode:
         raise ValueError(
             "Invalid mode specified. Choose either 'automaton' or 'instantiation'"
         )
@@ -53,15 +62,15 @@ def do_global_optimization(
         csv_reader = csv.DictReader(f, delimiter=csv_delimiter)
         node_sequence = [row["name"] for row in csv_reader]
 
-    # Prepare a regex pattern for matching node names
+    # Prepare a regex pattern for matching node names based on the selected mode
     pattern = ""
-    if mode == "automaton":
+    if mode == OptimizationMode.AUTOMATON:
         pattern = (
             r"^\s*plant\s+automaton\s+("
             + "|".join(re.escape(name) for name in node_sequence)
             + r")\s*:"
         )
-    elif mode == "instantiation":
+    elif mode == OptimizationMode.INSTANTIATION:
         pattern = (
             r"^\s*(" + "|".join(re.escape(name) for name in node_sequence) + r")\s*:"
         )
@@ -72,21 +81,23 @@ def do_global_optimization(
     with open(cif_path, "r") as f:
         cif_lines = f.readlines()
 
-    # Create a dictionary mapping the target lines to their contents and catch duplicates
+    # Initialize dictionaries and sets for tracking lines and duplicates
     items_dict = {}
     non_item_lines = []
     duplicates = set()
 
+    # Initialize variables for capturing multiline items
     capturing_item = False
     node_name = None
     current_item_lines = []
 
+    # Iterate through CIF lines, separating target lines and non-target lines
     for line in cif_lines:
-        if not line.strip() or line.strip().startswith(
-            "//"
-        ):  # Skip empty lines and comments
+        # Skip empty lines and comments
+        if not line.strip() or line.strip().startswith("//"):
             continue
 
+        # If not capturing an item, check if the line starts a new item
         if not capturing_item:
             match = node_name_pattern.match(line)
             if match:
@@ -94,24 +105,30 @@ def do_global_optimization(
                 capturing_item = True
                 current_item_lines = [line]
 
+                # Check for duplicates
                 if node_name in items_dict:
                     duplicates.add(node_name)
             else:
                 non_item_lines.append(line)
+        # If capturing an item, append the line to the current item lines
         else:
             current_item_lines.append(line)
 
+        # Determine if the current item ends on this line
         closing_condition = (
             capturing_item and ";" in line
             if mode == "instantiation"
             else capturing_item and line.strip().split()[-1] == "end"
         )
+
+        # If item ends, store the captured lines and reset capturing state
         if closing_condition:
             items_dict[node_name] = current_item_lines
             capturing_item = False
 
+    # Check for unclosed items or duplicates and raise appropriate exceptions
     if capturing_item:
-        raise ValueError(f"Unclosed {mode} detected")
+        raise SyntaxError(f"Unclosed {mode} detected")
 
     if duplicates:
         raise ValueError(
@@ -129,7 +146,7 @@ def do_global_optimization(
     for node_name in node_sequence:
         output_lines += items_dict[node_name]
 
-    # Create the 'generated' directory if it doesn't exist
+    # Create the output directory if it doesn't exist
     generated_dir = Path(output_dir)
     generated_dir.mkdir(exist_ok=True)
 

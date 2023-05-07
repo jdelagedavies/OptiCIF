@@ -42,7 +42,7 @@ def node_to_csv(
     # Extracting only the names of each node using list comprehension
     node_names = [node.name for node in nodes]
 
-    # Create the 'generated' directory if it doesn't exist
+    # Create the output directory if it doesn't exist
     generated_dir = Path(output_dir)
     generated_dir.mkdir(exist_ok=True)
 
@@ -102,7 +102,7 @@ def mat_to_csv(
             f"The length of '{matrix_path}' does not match the length of '{node_path}'."
         )
 
-    # Create the 'generated' directory if it doesn't exist
+    # Create the output directory if it doesn't exist
     generated_dir = Path(output_dir)
     generated_dir.mkdir(exist_ok=True)
 
@@ -176,7 +176,7 @@ def plant_groups_to_csv(
     for group_id in group_sequence:
         ordered_node_names.extend(group_map[group_id])
 
-    # Create the 'generated' directory if it doesn't exist
+    # Create the output directory if it doesn't exist
     generated_dir = Path(output_dir)
     generated_dir.mkdir(exist_ok=True)
 
