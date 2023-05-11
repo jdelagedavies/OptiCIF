@@ -1,13 +1,13 @@
 from opticif import mat_to_csv
 
 # Define input files and directories
-input_dir = "../models/simple_lock"
-test_matrix = f"{input_dir}/simple_lock_DSM.csv"
-test_nodes = f"{input_dir}/simple_lock.nodes.csv"
+input_dir = "../models/swalmen_tunnel"
+test_matrix = f"{input_dir}/swalmen_tunnel_DSM.mat"
+test_nodes = f"{input_dir}/swalmen_tunnel.groups.nodes.csv"
 
 # Define output files and directories
 output_dir = f"{input_dir}/generated"
-output_csv_stem_path = "simple_lock"
+output_csv_stem_path = "swalmen_tunnel.groups"
 
 # Define parameters
 delimiter = ";"

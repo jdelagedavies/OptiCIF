@@ -5,7 +5,7 @@ and DSM matrix conversion processes.
 import csv
 from pathlib import Path
 from typing import Union
-
+from scipy.io import loadmat
 
 class CSVStructureError(Exception):
     """Custom exception for CSV file structure errors."""
@@ -62,13 +62,8 @@ def validate_matrix_file_structure(matrix_path: Union[str, Path]) -> None:
     Raises:
         MATStructureError: If the matrix file is not square, is not binary or has any formatting issues.
     """
-    with open(matrix_path, "r", encoding="utf-8-sig") as f:
-        matrix_lines = f.readlines()
-
-    matrix = []
-    for line in matrix_lines:
-        row = list(map(int, line.strip().split()))
-        matrix.append(row)
+    mat_data = loadmat(matrix_path)
+    matrix = mat_data[list(mat_data.keys())[-1]]
 
     row_count = len(matrix)
 

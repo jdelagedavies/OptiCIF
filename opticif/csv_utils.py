@@ -93,8 +93,8 @@ def mat_to_csv(
     validate_matrix_file_structure(matrix_path)
 
     # Read the matrix from the .mat file
-    with open(matrix_path, "r", encoding="utf-8-sig") as f:
-        matrix = [list(map(int, row.strip().split())) for row in f]
+    mat_data = sio.loadmat(matrix_path)
+    matrix = mat_data[list(mat_data.keys())[-1]]
 
     # Check if the length of both files matches
     if len(matrix) != len(nodes):
@@ -128,8 +128,8 @@ def plant_groups_to_csv(
 ) -> None:
     """
     Reads plant group information from a product system map file and a group sequence file output by the MATLAB
-    sequencing script from de Jong (2020), and generates a CSV file containing the ordered list of node names based on
-    the group sequence.
+    sequencing script from De Jong (2019), and generates two CSV files: one containing the ordered list of node names
+    based on the group sequence, and another containing the ordered list of group IDs.
 
     Args:
         group_map_path (Union[str, Path]): The path to a file containing plant group information, also known as the
@@ -141,13 +141,13 @@ def plant_groups_to_csv(
         group_sequence_path (Union[str, Path]): The path to a .mat file containing a 'scheduleorder' variable, which
                                                 represents the ordered sequence of group IDs. This file is output by the
                                                 MATLAB sequencing script from de Jong (2020).
-        stem_path (str): A string used as the base of the output file's name.
+        stem_path (str): A string used as the base of the output files' names.
         output_dir (Union[str, Path]): The path to the directory where the output files will be saved.
                                        Defaults to "generated".
 
-    Returns:
-        None. The ordered node names are saved to a CSV file with the header "name" in the specified output directory.
-              The output file's name is created by appending ".nodes.seq.csv" to the stem_path.
+    Returns: None. The ordered node names and group IDs are saved to two separate CSV files in the specified output
+    directory. The output files' names are created by appending ".nodes.seq.csv" and ".groups.nodes.seq.csv" to the
+    stem_path.
     """
     # Read the group information from the file
     with open(group_map_path, "r") as f:
@@ -180,11 +180,20 @@ def plant_groups_to_csv(
     generated_dir = Path(output_dir)
     generated_dir.mkdir(exist_ok=True)
 
-    # Append ".nodes.seq.csv" to the stem path to create the filename
-    output_file = generated_dir / f"{stem_path}.nodes.seq.csv"
+    # Append ".nodes.seq.csv" to the stem path to create the filename for ordered node names
+    output_file_nodes = generated_dir / f"{stem_path}.nodes.seq.csv"
 
     # Write the ordered node names to a CSV file with the header "name"
-    with open(output_file, "w") as f:
+    with open(output_file_nodes, "w") as f:
         f.write("name\n")
         for node_name in ordered_node_names:
             f.write(node_name + "\n")
+
+    # Append ".groups.nodes.seq.csv" to the stem path to create the filename for ordered group IDs
+    output_file_groups = generated_dir / f"{stem_path}.groups.nodes.seq.csv"
+
+    # Write the ordered group IDs to a CSV file with the header "name"
+    with open(output_file_groups, "w") as f:
+        f.write("name\n")
+        for group_id in group_sequence:
+            f.write("G" + str(group_id) + "\n")
