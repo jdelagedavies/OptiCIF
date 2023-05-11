@@ -1,9 +1,10 @@
 """This script demonstrates how to use the opticif package to perform global optimization on a CIF specification.
 
 1. Loads the sequenced node names from a CSV file.
-2. Reads the original CIF specification containing the plant instantiations.
-3. Performs global optimization by reordering plant automatons or instantiations according to the sequenced node names.
-4. Writes the reordered plant automatons or instantiations to a new CIF file.
+2. Reads the original CIF specification containing the plant model.
+3. Performs global optimization by reordering plant automatons according to the sequenced node names.
+4. Writes the reordered plant automatons or instantiations to a new CIF file. Creates groups based on the plant groups,
+   if applicable.
 
 To customize the script for your own system, modify the file paths, directories, and adjust the
 parameters as needed."""
@@ -27,7 +28,7 @@ csv_delimiter = ";"
 print("Optimizing: Performing global optimization...")
 start_time = time.time()
 do_global_optimization(
-    test_sequenced_nodes, test_cif_path, output_dir, csv_delimiter, "automata"
+    test_sequenced_nodes, test_cif_path, output_dir, csv_delimiter
 )
 end_time = time.time()
 

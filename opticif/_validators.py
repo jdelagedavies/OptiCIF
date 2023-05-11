@@ -7,8 +7,13 @@ from pathlib import Path
 from typing import Union
 from scipy.io import loadmat
 
+
 class CSVStructureError(Exception):
     """Custom exception for CSV file structure errors."""
+
+
+class CSVGroupingError(Exception):
+    """Custom exception for CSV file grouping errors."""
 
 
 class MATStructureError(Exception):
@@ -16,18 +21,20 @@ class MATStructureError(Exception):
 
 
 def validate_node_csv_structure(
-    csv_path: Union[str, Path], csv_delimiter: str = ";"
+        csv_path: Union[str, Path], csv_delimiter: str = ";"
 ) -> None:
     """
     Checks if the node CSV file structure is valid and contains a non-empty "name" column with no duplicates and no
-    empty values.
+    empty values. Additionally, if a "kind" column is present, checks that nodes of the same kind are grouped together.
 
     Args:
         csv_path (Union[str, Path]): The path to the node CSV file to validate.
         csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ";".
 
-    Raises: CSVStructureError: If the node CSV file does not contain a "name" column, contains duplicate names,
-    or contains empty values.
+    Raises:
+        CSVStructureError: If the node CSV file does not contain a "name" column, contains duplicate names,
+        or contains empty values.
+        CSVGroupingError: If a "kind" column is present and nodes of the same kind are not grouped together.
     """
     # Check if the CSV file contains a "name" column
     with open(csv_path, "r") as f:
@@ -36,20 +43,33 @@ def validate_node_csv_structure(
             raise CSVStructureError(
                 f"'{csv_path}' should have a header with a 'name' column."
             )
-        rows = list(reader)
 
-    names = set()
-    for row in rows:
-        name = row["name"].strip()
-        if not name:
+        rows = list(reader)
+        if "kind" in reader.fieldnames:
+            last_kind = None
+            for row in rows:
+                if row["kind"] == "":
+                    raise CSVStructureError(
+                        f"'{csv_path}' should not have empty values in the 'kind' column."
+                    )
+                if last_kind is not None and last_kind != row["kind"] and any(
+                        r["kind"] == last_kind for r in rows[rows.index(row):]
+                ):
+                    raise CSVGroupingError(
+                        f"'{csv_path}' should group nodes of the same kind together."
+                    )
+                last_kind = row["kind"]
+
+        # Check for duplicate and empty names
+        names = [row["name"] for row in rows]
+        if "" in names:
             raise CSVStructureError(
-                f"'{csv_path}' contains an empty value in the 'name' column."
+                f"'{csv_path}' should not have empty values in the 'name' column."
             )
-        if name in names:
+        if len(names) != len(set(names)):
             raise CSVStructureError(
-                f"'{csv_path}' contains duplicate names in the 'name' column."
+                f"'{csv_path}' should not have duplicate values in the 'name' column."
             )
-        names.add(name)
 
 
 def validate_matrix_file_structure(matrix_path: Union[str, Path]) -> None:

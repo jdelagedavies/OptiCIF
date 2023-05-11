@@ -125,6 +125,7 @@ def plant_groups_to_csv(
     group_sequence_path: Union[str, Path],
     stem_path: str,
     output_dir: Union[str, Path] = "generated",
+    csv_delimiter: str = ";"
 ) -> None:
     """
     Reads plant group information from a product system map file and a group sequence file output by the MATLAB
@@ -144,6 +145,7 @@ def plant_groups_to_csv(
         stem_path (str): A string used as the base of the output files' names.
         output_dir (Union[str, Path]): The path to the directory where the output files will be saved.
                                        Defaults to "generated".
+        csv_delimiter (str): The csv_delimiter used in the CSV files. Defaults to ";".
 
     Returns: None. The ordered node names and group IDs are saved to two separate CSV files in the specified output
     directory. The output files' names are created by appending ".nodes.seq.csv" and ".groups.nodes.seq.csv" to the
@@ -171,10 +173,11 @@ def plant_groups_to_csv(
             f"The length of '{group_map_path}' does not match the length of '{group_sequence_path}'."
         )
 
-    # Create the ordered list of node names based on the group_sequence
+    # Create the ordered list of node names and the group they belong to based on the group_sequence
     ordered_node_names = []
     for group_id in group_sequence:
-        ordered_node_names.extend(group_map[group_id])
+        for node_name in group_map[group_id]:
+            ordered_node_names.append((node_name, 'G' + str(group_id)))
 
     # Create the output directory if it doesn't exist
     generated_dir = Path(output_dir)
@@ -183,11 +186,11 @@ def plant_groups_to_csv(
     # Append ".nodes.seq.csv" to the stem path to create the filename for ordered node names
     output_file_nodes = generated_dir / f"{stem_path}.nodes.seq.csv"
 
-    # Write the ordered node names to a CSV file with the header "name"
-    with open(output_file_nodes, "w") as f:
-        f.write("name\n")
-        for node_name in ordered_node_names:
-            f.write(node_name + "\n")
+    # Write the ordered node names to a CSV file with the header "name" and "kind"
+    with open(output_file_nodes, "w", newline='') as f:
+        writer = csv.writer(f, delimiter=csv_delimiter)
+        writer.writerow(["name", "kind"])  # write the header
+        writer.writerows(ordered_node_names)  # write the data rows
 
     # Append ".groups.nodes.seq.csv" to the stem path to create the filename for ordered group IDs
     output_file_groups = generated_dir / f"{stem_path}.groups.nodes.seq.csv"
