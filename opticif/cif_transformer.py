@@ -23,7 +23,7 @@ def do_global_optimization(
     Args:
         csv_path (Union[str, Path]): The path to a CSV file containing the node sequence. The file should have a
                         header with a "name" column containing the nodes to be reordered. Optionally, it may also have
-                        a "kind" column to group reordered nodes by plant groups.
+                        a "kind" column to group reordered nodes by iteration blocks.
         cif_path (Union[str, Path]): The path to the CIF specification containing the explicit
                         plant automaton declarations to be reordered.
         output_dir (Union[str, Path]): The path to the directory where the output files will be saved.
@@ -54,10 +54,10 @@ def do_global_optimization(
 
     # Prepare a regex pattern for matching node names
     pattern = (
-            r"^\s*plant\s+automaton\s+("
-            + "|".join(re.escape(name) for name in node_sequence)
-            + r")\s*:"
-        )
+        r"^\s*plant\s+automaton\s+("
+        + "|".join(re.escape(name) for name in node_sequence)
+        + r")\s*:"
+    )
     node_name_pattern = re.compile(pattern)
 
     # Read the CIF file
@@ -97,10 +97,10 @@ def do_global_optimization(
         else:
             current_item_lines.append(line)
 
-        # If item ends, store the captured lines and reset capturing state
-        if capturing_item and line.strip().split()[-1] == "end":
-            items_dict[node_name] = current_item_lines
-            capturing_item = False
+            # If item ends, store the captured lines and reset capturing state
+            if line.strip().endswith("end"):
+                items_dict[node_name] = current_item_lines
+                capturing_item = False
 
     # Check for unclosed items or duplicates and raise appropriate exceptions
     if capturing_item:
@@ -112,7 +112,7 @@ def do_global_optimization(
         )
 
     # Reorder the target lines according to the sequence
-    missing_nodes = set(node_sequence) - set(items_dict.keys())
+    missing_nodes = set(node_sequence) - items_dict.keys()
     if missing_nodes:
         raise KeyError(
             f"Nodes not found in the CIF specification '{cif_path}': {', '.join(sorted(missing_nodes))}"

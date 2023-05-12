@@ -21,7 +21,7 @@ class MATStructureError(Exception):
 
 
 def validate_node_csv_structure(
-        csv_path: Union[str, Path], csv_delimiter: str = ";"
+    csv_path: Union[str, Path], csv_delimiter: str = ";"
 ) -> None:
     """
     Checks if the node CSV file structure is valid and contains a non-empty "name" column with no duplicates and no
@@ -52,8 +52,10 @@ def validate_node_csv_structure(
                     raise CSVStructureError(
                         f"'{csv_path}' should not have empty values in the 'kind' column."
                     )
-                if last_kind is not None and last_kind != row["kind"] and any(
-                        r["kind"] == last_kind for r in rows[rows.index(row):]
+                if (
+                    last_kind is not None
+                    and last_kind != row["kind"]
+                    and any(r["kind"] == last_kind for r in rows[rows.index(row) :])
                 ):
                     raise CSVGroupingError(
                         f"'{csv_path}' should group nodes of the same kind together."

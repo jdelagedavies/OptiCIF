@@ -27,9 +27,7 @@ csv_delimiter = ";"
 # Perform global optimization
 print("Optimizing: Performing global optimization...")
 start_time = time.time()
-do_global_optimization(
-    test_sequenced_nodes, test_cif_path, output_dir, csv_delimiter
-)
+do_global_optimization(test_sequenced_nodes, test_cif_path, output_dir, csv_delimiter)
 end_time = time.time()
 
 time_elapsed_ms = (end_time - start_time) * 1000

@@ -464,7 +464,7 @@ requirement invariant CaDoZuid_Stand.neer or CaDoZuid_Beweging.neer disables CaD
 requirement invariant CaDoZuid_Stand.neer or CaDoZuid_Beweging.neer disables CaDoZuid_Commando.c_stopneer;
 requirement invariant CaDoZuid_Beweging.geen disables CaDoZuid_Commando.c_opstop;
 requirement invariant CaDoZuid_Beweging.geen disables CaDoZuid_Commando.c_neerstop;
-group G2:
+group B1:
     plant automaton VB1_HPKA1_SensorOpen:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -480,8 +480,6 @@ group G2:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G3:
     plant automaton VB1_HPKA1_Noodtelefoon:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -497,8 +495,6 @@ group G3:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G4:
     plant automaton VB1_HPKA1_Handblusser:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -514,8 +510,6 @@ group G4:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G5:
     plant automaton VB1_HPKA1_Brandslang:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -531,8 +525,6 @@ group G5:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G6:
     plant automaton VB1_HPKC1_SensorOpen:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -548,8 +540,6 @@ group G6:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G7:
     plant automaton VB1_HPKC1_Noodtelefoon:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -565,8 +555,6 @@ group G7:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G8:
     plant automaton VB1_HPKC1_Handblusser:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -582,8 +570,6 @@ group G8:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G9:
     plant automaton VB1_Rookdetectie:
       uncontrollable u_0;
       uncontrollable u_1;
@@ -686,8 +672,6 @@ group G9:
         edge u_6 goto stand6;
         edge u_7 goto stand7;
     end
-end
-group G10:
     plant automaton VB1_SOS:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -703,8 +687,6 @@ group G10:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G12:
     plant automaton VB1_HoogteDetectieAdvies_Sensor:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -720,8 +702,6 @@ group G12:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G15:
     plant automaton VB1_HoogteDetectieToerit_Sensor:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -737,8 +717,6 @@ group G15:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G18:
     plant automaton VB1_HoogteDetectieWaarschuwing_Sensor:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -754,8 +732,6 @@ group G18:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G21:
     plant automaton VB1_HoogteDetectieRood_Sensor:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -771,8 +747,6 @@ group G21:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G28:
     plant automaton VB1_AB_Stand:
       uncontrollable u_op;
       uncontrollable u_opverlaten;
@@ -787,8 +761,6 @@ group G28:
       location neer:
         edge u_opverlaten goto opverlaten;
     end
-end
-group G29:
     plant automaton VB1_AB_Beweging:
       uncontrollable u_op;
       uncontrollable u_neer;
@@ -805,8 +777,6 @@ group G29:
         edge u_op goto op;
         edge u_geen goto geen;
     end
-end
-group G31:
     plant automaton VB1_AB_ObstakelDetectie:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -822,8 +792,6 @@ group G31:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G33:
     plant automaton VB1_Lichtsensor:
       uncontrollable u_0;
       uncontrollable u_1;
@@ -926,8 +894,6 @@ group G33:
         edge u_6 goto stand6;
         edge u_7 goto stand7;
     end
-end
-group G35:
     plant automaton VB1_CCTV_Schouwen:
       controllable c_schouwen;
       controllable c_schouwenHuidig;
@@ -1007,8 +973,6 @@ group G35:
       location links:
         edge c_klaar goto geen;
     end
-end
-group G38:
     plant automaton VB1_Vluchtdeur_SensorOpen:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -1024,8 +988,6 @@ group G38:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G41:
     plant automaton VB2_HPKA1_SensorOpen:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -1041,8 +1003,6 @@ group G41:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G42:
     plant automaton VB2_HPKA1_Noodtelefoon:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -1058,8 +1018,6 @@ group G42:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G43:
     plant automaton VB2_HPKA1_Handblusser:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -1075,8 +1033,6 @@ group G43:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G44:
     plant automaton VB2_HPKA1_Brandslang:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -1092,8 +1048,6 @@ group G44:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G45:
     plant automaton VB2_HPKC1_SensorOpen:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -1109,8 +1063,6 @@ group G45:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G46:
     plant automaton VB2_HPKC1_Noodtelefoon:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -1126,8 +1078,6 @@ group G46:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G47:
     plant automaton VB2_HPKC1_Handblusser:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -1143,8 +1093,6 @@ group G47:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G48:
     plant automaton VB2_Rookdetectie:
       uncontrollable u_0;
       uncontrollable u_1;
@@ -1247,8 +1195,6 @@ group G48:
         edge u_6 goto stand6;
         edge u_7 goto stand7;
     end
-end
-group G49:
     plant automaton VB2_SOS:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -1264,8 +1210,6 @@ group G49:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G51:
     plant automaton VB2_HoogteDetectieToerit_Sensor:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -1281,8 +1225,6 @@ group G51:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G60:
     plant automaton VB2_AB_Stand:
       uncontrollable u_op;
       uncontrollable u_opverlaten;
@@ -1297,8 +1239,6 @@ group G60:
       location neer:
         edge u_opverlaten goto opverlaten;
     end
-end
-group G61:
     plant automaton VB2_AB_Beweging:
       uncontrollable u_op;
       uncontrollable u_neer;
@@ -1315,8 +1255,6 @@ group G61:
         edge u_op goto op;
         edge u_geen goto geen;
     end
-end
-group G63:
     plant automaton VB2_AB_ObstakelDetectie:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -1332,8 +1270,6 @@ group G63:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G65:
     plant automaton VB2_Lichtsensor:
       uncontrollable u_0;
       uncontrollable u_1;
@@ -1436,8 +1372,6 @@ group G65:
         edge u_6 goto stand6;
         edge u_7 goto stand7;
     end
-end
-group G67:
     plant automaton VB2_CCTV_Schouwen:
       controllable c_schouwen;
       controllable c_schouwenHuidig;
@@ -1517,8 +1451,6 @@ group G67:
       location links:
         edge c_klaar goto geen;
     end
-end
-group G70:
     plant automaton VB2_Vluchtdeur_SensorOpen:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -1534,8 +1466,6 @@ group G70:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G78:
     plant automaton BBI_Sensors:
       uncontrollable u_laag_aan;
       uncontrollable u_laag_uit;
@@ -1551,8 +1481,6 @@ group G78:
       location hoog:
         edge u_hoog_uit goto tussen;
     end
-end
-group G82:
     plant automaton KelderVuil_SensorLaagwater:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -1568,8 +1496,6 @@ group G82:
         marked aanGemarkeerd;
         edge u_uit goto uit;
     end
-end
-group G85:
     plant automaton CaDoNoord_Stand:
       uncontrollable u_op;
       uncontrollable u_opverlaten;
@@ -1584,8 +1510,6 @@ group G85:
       location neer:
         edge u_opverlaten goto opverlaten;
     end
-end
-group G86:
     plant automaton CaDoNoord_Beweging:
       uncontrollable u_op;
       uncontrollable u_neer;
@@ -1602,8 +1526,6 @@ group G86:
         edge u_op goto op;
         edge u_geen goto geen;
     end
-end
-group G88:
     plant automaton KnoppenCaDo:
       monitor u_noordOpen, u_noordSluit, u_noordStop, u_zuidOpen, u_zuidSluit, u_zuidStop;
       uncontrollable u_noordOpen;
@@ -1640,8 +1562,6 @@ group G88:
       location zuidStop:
         edge c_zuidStop_klaar goto los;
     end
-end
-group G89:
     plant automaton CaDoZuid_Stand:
       uncontrollable u_op;
       uncontrollable u_opverlaten;
@@ -1656,8 +1576,6 @@ group G89:
       location neer:
         edge u_opverlaten goto opverlaten;
     end
-end
-group G91:
     plant automaton CaDoZuid_Commando:
       controllable c_opneer;
       controllable c_opstop;
@@ -1677,8 +1595,6 @@ group G91:
         edge c_stopneer goto neer;
         edge c_stopop goto op;
     end
-end
-group G87:
     plant automaton CaDoNoord_Commando:
       controllable c_opneer;
       controllable c_opstop;
@@ -1698,8 +1614,6 @@ group G87:
         edge c_stopneer goto neer;
         edge c_stopop goto op;
     end
-end
-group G90:
     plant automaton CaDoZuid_Beweging:
       uncontrollable u_op;
       uncontrollable u_neer;
@@ -1717,7 +1631,7 @@ group G90:
         edge u_geen goto geen;
     end
 end
-group G19:
+group B2:
     plant automaton VB1_HoogteDetectieWaarschuwing_Lampen:
       controllable c_aan;
       controllable c_uit;
@@ -1731,8 +1645,6 @@ group G19:
         marked aanGemarkeerd;
         edge c_uit goto uit;
     end
-end
-group G20:
     plant automaton VB1_HoogteDetectieWaarschuwing_Timer:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -1747,7 +1659,7 @@ group G20:
         edge c_resetAfgelopen goto uit;
     end
 end
-group G11:
+group B3:
     plant automaton VB1_KnoppenVBafsluiter:
       monitor u_primairVRIrood, u_primairVRIuit, u_primairVBdicht, u_primairVBopen, u_VRIrood, u_VRIknipper, u_VRIuit, u_ABstop, u_ABopen, u_ABsluit, u_ABsluitOnv, u_resetHD;
       uncontrollable u_primairVRIrood;
@@ -1976,8 +1888,6 @@ group G11:
       location hand:
         edge c_hand_klaar when VB1_BedieningAB.hand goto los;
     end
-end
-group G84:
     plant automaton KelderVuil_Regime:
       controllable c_lozen;
       controllable c_uit;
@@ -2024,8 +1934,6 @@ group G84:
       location hand:
         edge c_auto goto auto;
     end
-end
-group G32:
     plant automaton VB1_Ventilatie_Bediening:
       controllable c_auto;
       controllable c_hand;
@@ -2219,8 +2127,6 @@ group G32:
       location tegenRijrichting:
         edge c_rijrichting goto rijrichting;
     end
-end
-group G34:
     plant automaton VB1_Verlichting_Bediening:
       controllable c_auto;
       controllable c_hand;
@@ -2394,8 +2300,6 @@ group G34:
         edge c_6 goto s6;
         edge c_7 goto s7;
     end
-end
-group G39:
     plant automaton VB1_Vluchtdeur_Geluidsbaken:
       controllable c_aan;
       controllable c_uit;
@@ -2445,8 +2349,6 @@ group G39:
       location hand:
         edge c_auto goto auto;
     end
-end
-group G40:
     plant automaton VB1_Vluchtdeur_ContourVerlichting:
       controllable c_aan;
       controllable c_uit;
@@ -2496,8 +2398,6 @@ group G40:
       location hand:
         edge c_auto goto auto;
     end
-end
-group G50:
     plant automaton VB2_KnoppenVBafsluiter:
       monitor u_primairVRIrood, u_primairVRIuit, u_primairVBdicht, u_primairVBopen, u_VRIrood, u_VRIknipper, u_VRIuit, u_ABstop, u_ABopen, u_ABsluit, u_ABsluitOnv;
       uncontrollable u_primairVRIrood;
@@ -2695,8 +2595,6 @@ group G50:
       location hand:
         edge c_hand_klaar when VB2_BedieningAB.hand goto los;
     end
-end
-group G64:
     plant automaton VB2_Ventilatie_Bediening:
       controllable c_auto;
       controllable c_hand;
@@ -2890,8 +2788,6 @@ group G64:
       location tegenRijrichting:
         edge c_rijrichting goto rijrichting;
     end
-end
-group G66:
     plant automaton VB2_Verlichting_Bediening:
       controllable c_auto;
       controllable c_hand;
@@ -3065,8 +2961,6 @@ group G66:
         edge c_6 goto s6;
         edge c_7 goto s7;
     end
-end
-group G71:
     plant automaton VB2_Vluchtdeur_Geluidsbaken:
       controllable c_aan;
       controllable c_uit;
@@ -3116,8 +3010,6 @@ group G71:
       location hand:
         edge c_auto goto auto;
     end
-end
-group G72:
     plant automaton VB2_Vluchtdeur_ContourVerlichting:
       controllable c_aan;
       controllable c_uit;
@@ -3167,8 +3059,6 @@ group G72:
       location hand:
         edge c_auto goto auto;
     end
-end
-group G73:
     plant automaton MTK_Verlichting:
       controllable c_aan;
       controllable c_uit;
@@ -3218,8 +3108,6 @@ group G73:
       location hand:
         edge c_auto goto auto;
     end
-end
-group G79:
     plant automaton BBI_Regime:
       controllable c_bewaken;
       controllable c_blussen;
@@ -3266,8 +3154,6 @@ group G79:
       location hand:
         edge c_auto goto auto;
     end
-end
-group G81:
     plant automaton KelderSchoon_Regime:
       controllable c_bergen;
       controllable c_leeghouden;
@@ -3325,8 +3211,6 @@ group G81:
       location hand:
         edge c_auto goto auto;
     end
-end
-group G1:
     plant automaton VB1_PopUp_Venster:
       controllable c_aan;
       controllable c_uit;
@@ -3653,8 +3537,6 @@ group G1:
         marked;
         edge u_indrukken;
     end
-end
-group G74:
     plant automaton MTK_Overdruk:
       controllable c_uit;
       controllable c_links;
@@ -3759,8 +3641,6 @@ group G74:
         edge c_uit goto uit;
         edge c_oplopend goto oplopend;
     end
-end
-group G75:
     plant automaton MTK_BedieningDVI:
       controllable c_auto;
       controllable c_hand;
@@ -3771,8 +3651,6 @@ group G75:
       location hand:
         edge c_auto goto auto;
     end
-end
-group G36:
     plant automaton VB1_Beeldregistratie:
       controllable c_aan;
       controllable c_uit;
@@ -3787,7 +3665,7 @@ group G36:
         edge c_uit goto uit;
     end
 end
-group G37:
+group B4:
     plant automaton VB1_Omroep_Modus:
       controllable c_startlive;
       controllable c_stoplive;
@@ -3851,8 +3729,6 @@ group G37:
       location sectie:
         edge c_buis goto buis;
     end
-end
-group G68:
     plant automaton VB2_Beeldregistratie:
       controllable c_aan;
       controllable c_uit;
@@ -3866,8 +3742,6 @@ group G68:
         marked aanGemarkeerd;
         edge c_uit goto uit;
     end
-end
-group G69:
     plant automaton VB2_Omroep_Modus:
       controllable c_startlive;
       controllable c_stoplive;
@@ -3931,8 +3805,6 @@ group G69:
       location sectie:
         edge c_buis goto buis;
     end
-end
-group G76:
     plant automaton MTK_Omroep_Modus:
       controllable c_startlive;
       controllable c_stoplive;
@@ -3976,8 +3848,6 @@ group G76:
       location stopBoodschap:
         edge c_stopBoodschap_klaar when MTK_Omroep_Modus.uit goto los;
     end
-end
-group G77:
     plant automaton BBI_Pomp:
       controllable c_aan;
       controllable c_uit;
@@ -3991,8 +3861,6 @@ group G77:
         marked aanGemarkeerd;
         edge c_uit goto uit;
     end
-end
-group G80:
     plant automaton KelderSchoon_Sensors:
       uncontrollable u_S1aan;
       uncontrollable u_S1uit;
@@ -4036,8 +3904,6 @@ group G80:
         marked aanGemarkeerd;
         edge c_uit goto uit;
     end
-end
-group G83:
     plant automaton KelderVuil_Pomp:
       controllable c_aan;
       controllable c_uit;
@@ -4052,7 +3918,7 @@ group G83:
         edge c_uit goto uit;
     end
 end
-group G13:
+group B5:
     plant automaton VB1_HoogteDetectieAdvies_Lampen:
       controllable c_aan;
       controllable c_uit;
@@ -4066,8 +3932,6 @@ group G13:
         marked aanGemarkeerd;
         edge c_uit goto uit;
     end
-end
-group G14:
     plant automaton VB1_HoogteDetectieAdvies_Timer:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4082,7 +3946,7 @@ group G14:
         edge c_resetAfgelopen goto uit;
     end
 end
-group G16:
+group B6:
     plant automaton VB1_HoogteDetectieToerit_Lampen:
       controllable c_aan;
       controllable c_uit;
@@ -4096,8 +3960,6 @@ group G16:
         marked aanGemarkeerd;
         edge c_uit goto uit;
     end
-end
-group G17:
     plant automaton VB1_HoogteDetectieToerit_Timer:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4112,7 +3974,7 @@ group G17:
         edge c_resetAfgelopen goto uit;
     end
 end
-group G24:
+group B7:
     plant automaton VB1_VRI_TimerVrijgaveAan:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4126,8 +3988,6 @@ group G24:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
-end
-group G25:
     plant automaton VB1_VRI_TimerVrijgaveGeel:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4141,8 +4001,6 @@ group G25:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
-end
-group G23:
     plant automaton VB1_VRI_Stand:
       controllable c_uit;
       controllable c_geel;
@@ -4200,8 +4058,6 @@ group G23:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
-end
-group G26:
     plant automaton VB1_VRI_TimerVrijgaveRood:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4215,8 +4071,6 @@ group G26:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
-end
-group G27:
     plant automaton VB1_VRI_TimerVrijgaveUit:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4230,8 +4084,6 @@ group G27:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
-end
-group G22:
     plant automaton VB1_J32_Stand:
       controllable c_aan;
       controllable c_uit;
@@ -4246,7 +4098,7 @@ group G22:
         edge c_uit goto uit;
     end
 end
-group G30:
+group B8:
     plant automaton VB1_AB_Commando:
       controllable c_opneer;
       controllable c_opstop;
@@ -4280,7 +4132,7 @@ group G30:
         edge c_neeronvoorwaardelijkop goto op;
     end
 end
-group G52:
+group B9:
     plant automaton VB2_HoogteDetectieToerit_Lampen:
       controllable c_aan;
       controllable c_uit;
@@ -4294,8 +4146,6 @@ group G52:
         marked aanGemarkeerd;
         edge c_uit goto uit;
     end
-end
-group G53:
     plant automaton VB2_HoogteDetectieToerit_Timer:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4310,7 +4160,7 @@ group G53:
         edge c_resetAfgelopen goto uit;
     end
 end
-group G56:
+group B10:
     plant automaton VB2_VRI_TimerVrijgaveAan:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4324,8 +4174,6 @@ group G56:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
-end
-group G57:
     plant automaton VB2_VRI_TimerVrijgaveGeel:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4339,8 +4187,6 @@ group G57:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
-end
-group G55:
     plant automaton VB2_VRI_Stand:
       controllable c_uit;
       controllable c_geel;
@@ -4398,8 +4244,6 @@ group G55:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
-end
-group G58:
     plant automaton VB2_VRI_TimerVrijgaveRood:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4413,8 +4257,6 @@ group G58:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
-end
-group G59:
     plant automaton VB2_VRI_TimerVrijgaveUit:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4428,8 +4270,6 @@ group G59:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
-end
-group G54:
     plant automaton VB2_J32_Stand:
       controllable c_aan;
       controllable c_uit;
@@ -4444,7 +4284,7 @@ group G54:
         edge c_uit goto uit;
     end
 end
-group G62:
+group B11:
     plant automaton VB2_AB_Commando:
       controllable c_opneer;
       controllable c_opstop;

@@ -14,7 +14,11 @@ Modules:
 ## Installation
 
 To use OptiCIF, clone the repository:
+Including an example of the output in the README can be helpful to users. It gives them an idea of what to expect after running the code, and it can also serve as a form of validation for them to check if the code ran correctly. This is especially important if the output is complex or not immediately intuitive.
 
+In the case of your project, since the output is a reordered CIF file based on the node sequence from a CSV file, you could include a snippet of the reordered CIF specification in the README. However, keep in mind that showing the entire file may not be practical if it's too large. A snippet with a brief explanation should suffice.
+
+Here's an example of how you can present it:
 ```bash
 git clone https://github.com/jdelagedavies/opticif.git
 ```
