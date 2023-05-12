@@ -125,7 +125,7 @@ def plant_groups_to_csv(
 ) -> None:
     """
     Reads plant group information from a product system map, a schedule order, and a partition information output by
-    the MATLAB sequencing script from De Jong (2019), and generates two CSV files: one containing the ordered list of
+    the MATLAB sequencing script from De Jong (2019). Generates two CSV files: one containing the ordered list of
     node names based on the plant group sequence, and another containing the ordered list of plant group IDs. It also
     appends a "labels" column to both the ordered node and plant groups files with the iteration block they are part of
     (Delage-Davies, 2023).
@@ -200,14 +200,14 @@ def plant_groups_to_csv(
         for plant_group_id in ordered_plant_group_names:
             block_id = plant_group_blocks[plant_group_id]
             for node_name in plant_group_map[plant_group_id]:
-                writer.writerow([node_name, f"B{block_id}"])
+                writer.writerow([node_name, f"block{block_id}"])
 
     # Write the ordered plant group IDs and their iteration blocks to a CSV file with the headers "name;labels"
     with open(output_file_groups, "w") as f:
         writer = csv.writer(f, delimiter=csv_delimiter)
         writer.writerow(["name", "labels"])
         for plant_group_id, block_id in plant_group_blocks.items():
-            writer.writerow([f"G{plant_group_id}", f"B{block_id}"])
+            writer.writerow([f"G{plant_group_id}", f"block{block_id}"])
 
 
 def _determine_iteration_blocks(ordered_items, group_info):

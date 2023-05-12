@@ -6,10 +6,10 @@ Modules:
 - `csv_utils`: Utility functions for working with CSV files, including:
   - converting a list of sequenced RaGraph node objects to a CSV file; 
   - converting a binary DSM matrix in .mat to an edge list in CSV format, using node names from a separate CSV file; 
-  - generating a CSV file with ordered node names and their plant groups based on a product system map and a group 
-    sequence .mat file.
+  - generating CSV files with ordered node and plant group names based on a product system map and a group 
+    sequence .mat file. It also labels each item in the CSV files with the iteration block it is part of. 
 - `validators`: Functions for validating the structure of CSV files containing node sequences and binary DSM matrices.
-- `cif_transformer`: Function for performing global optimization by reordering plant instantiations or explicit plant automaton declarations.
+- `cif_transformer`: Function for performing global optimization by reordering explicit plant automaton declarations.
 
 ## Installation
 
@@ -49,17 +49,17 @@ csv_path = "path/to/your/sequence.csv"  # CSV file containing the node sequence
 do_global_optimization(csv_path, cif_path)
 ```
 
-The input CSV file should have a header with a "name" column. If a "kind" column is present, nodes will be grouped accordingly in the output CIF file. Ensure that the node names in the CSV file match the node names in your CIF specification.
+The input CSV file should have a header with a "name" column. If a "labels" column is present, nodes will be grouped accordingly in the output CIF file. Ensure that the node names in the CSV file match the node names in your CIF specification.
 
 For instance:
 ```csv
-name,kind
-a,group1
-b,group1
-c,group2
-d,group2
-e,group3
-f,group3
+name,labels
+a,block1
+b,block1
+c,block2
+d,block2
+e,block3
+f,block3
 ```
 
 This tool neither supports instantiations nor groups in the CIF plant model, see [CIF to CIF transformer](https://www.eclipse.org/escet/cif/tools/cif2cif/) for information on how to eliminate them as a preprocessing step.
