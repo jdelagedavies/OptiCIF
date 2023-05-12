@@ -1,10 +1,5 @@
 """This module provides functionality for working with CSV files related to the CIF optimization process, DSM matrix
-conversion, and plant group sequence handling. It includes functions for:
-
-- Converting a list of sequenced RaGraph node objects to a CSV file;
-- Converting a binary DSM matrix in .mat to an edge list in CSV format, using node names from a separate CSV file;
-- Generating a CSV file with ordered node names based on plant group information from a product system map and a group
-  sequence .mat file.
+conversion, and plant group sequence handling.
 """
 
 import csv
@@ -132,7 +127,7 @@ def plant_groups_to_csv(
     Reads plant group information from a product system map, a schedule order, and a partition information output by
     the MATLAB sequencing script from De Jong (2019), and generates two CSV files: one containing the ordered list of
     node names based on the plant group sequence, and another containing the ordered list of plant group IDs. It also
-    appends a "kind" column to both the ordered node and plant groups files with the iteration block they are part of
+    appends a "labels" column to both the ordered node and plant groups files with the iteration block they are part of
     (Delage-Davies, 2023).
 
     Args:
@@ -185,7 +180,7 @@ def plant_groups_to_csv(
         ordered_node_names.extend(plant_group_map[plant_group_id])
         ordered_plant_group_names.append(plant_group_id)
 
-    # Determine the iteration groups (kinds)
+    # Determine the iteration blocks (labels)
     plant_group_blocks = _determine_iteration_blocks(
         ordered_plant_group_names, partition_info
     )
@@ -198,26 +193,26 @@ def plant_groups_to_csv(
     output_file_nodes = generated_dir / f"{stem_path}.nodes.seq.csv"
     output_file_groups = generated_dir / f"{stem_path}.groups.nodes.seq.csv"
 
-    # Write the ordered node names and their iteration blocks to a CSV file with the headers "name;kind"
+    # Write the ordered node names and their iteration blocks to a CSV file with the headers "name;labels"
     with open(output_file_nodes, "w") as f:
         writer = csv.writer(f, delimiter=csv_delimiter)
-        writer.writerow(["name", "kind"])
+        writer.writerow(["name", "labels"])
         for plant_group_id in ordered_plant_group_names:
             block_id = plant_group_blocks[plant_group_id]
             for node_name in plant_group_map[plant_group_id]:
                 writer.writerow([node_name, f"B{block_id}"])
 
-    # Write the ordered plant group IDs and their iteration blocks to a CSV file with the headers "name;kind"
+    # Write the ordered plant group IDs and their iteration blocks to a CSV file with the headers "name;labels"
     with open(output_file_groups, "w") as f:
         writer = csv.writer(f, delimiter=csv_delimiter)
-        writer.writerow(["name", "kind"])
+        writer.writerow(["name", "labels"])
         for plant_group_id, block_id in plant_group_blocks.items():
             writer.writerow([f"G{plant_group_id}", f"B{block_id}"])
 
 
 def _determine_iteration_blocks(ordered_items, group_info):
     """
-    Assigns a block ID (node "kind" attribute) to each item in ordered_items, where each block represents a group
+    Assigns a block ID (node "label" attribute) to each item in ordered_items, where each block represents a group
     of items that are processed together in one iteration. Each partition represents a block, and items in the spaces
     between partitions form blocks.
 
@@ -238,20 +233,20 @@ def _determine_iteration_blocks(ordered_items, group_info):
     partitions.sort()
 
     block_assignments = {}
-    current_block = 0
+    current_block_id = 0  # Start from 0 and increment at the start of the first block
     partition_end = -1
 
     for i, item in enumerate(ordered_items):
-        # Start a new block at the beginning of the sequence, after the end of each partition,
-        # and at the start of each new partition
-        if i == 0 or i == partition_end + 1 or (partitions and i == partitions[0][0]):
-            current_block += 1
+        # Start a new block at the beginning of the sequence, or at the start of each new partition
+        if i == 0 or (partitions and i == partitions[0][0]):
+            current_block_id += 1
             if partitions and i == partitions[0][0]:  # We've reached a new partition
                 partition_end = partitions[0][1]
                 partitions.pop(0)
-            else:  # We've moved past the current partition
-                partition_end = -1  # Reset partition_end
+        elif i == partition_end:  # We've moved past the current partition
+            current_block_id += 1
+            partition_end = -1  # Reset partition_end
 
-        block_assignments[item] = current_block
+        block_assignments[item] = current_block_id
 
     return block_assignments

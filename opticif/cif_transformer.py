@@ -17,13 +17,13 @@ def do_global_optimization(
 ) -> None:
     """
     Performs global optimization on a CIF specification by reordering explicit plant automaton declarations according
-    to an input sequence. Reordered items are grouped by their kind if a kind column exists in the CSV. Reordered items
+    to an input sequence. Reordered items are grouped by their label if a labels column exists in the CSV. Reordered items
     are placed at the end of the output file.
 
     Args:
         csv_path (Union[str, Path]): The path to a CSV file containing the node sequence. The file should have a
                         header with a "name" column containing the nodes to be reordered. Optionally, it may also have
-                        a "kind" column to group reordered nodes by iteration blocks.
+                        a "labels" column to group reordered nodes by iteration blocks.
         cif_path (Union[str, Path]): The path to the CIF specification containing the explicit
                         plant automaton declarations to be reordered.
         output_dir (Union[str, Path]): The path to the directory where the output files will be saved.
@@ -41,16 +41,16 @@ def do_global_optimization(
     # Validate the CSV file structure
     validate_node_csv_structure(csv_path, csv_delimiter)
 
-    # Read the CSV file and get the sequence and kinds
+    # Read the CSV file and get the sequence and labels
     with open(csv_path, "r") as f:
         csv_reader = csv.DictReader(f, delimiter=csv_delimiter)
-        has_kind_column = "kind" in csv_reader.fieldnames
+        has_labels_column = "labels" in csv_reader.fieldnames
         node_sequence = []
-        kind_sequence = [] if has_kind_column else None
+        label_sequence = [] if has_labels_column else None
         for row in csv_reader:
             node_sequence.append(row["name"])
-            if has_kind_column:
-                kind_sequence.append(row["kind"])
+            if has_labels_column:
+                label_sequence.append(row["labels"])
 
     # Prepare a regex pattern for matching node names
     pattern = (
@@ -80,31 +80,28 @@ def do_global_optimization(
         if not line.strip() or line.strip().startswith("//"):
             continue
 
-        # If not capturing an item, check if the line starts a new item
-        if not capturing_item:
-            match = node_name_pattern.match(line)
-            if match:
-                node_name = match.group(1)
-                capturing_item = True
-                current_item_lines = [line]
+        match = node_name_pattern.match(line)
+        # If the line starts a new item
+        if match and not capturing_item:
+            node_name = match.group(1)
+            capturing_item = True
+            current_item_lines = [line]
 
-                # Check for duplicates
-                if node_name in items_dict:
-                    duplicates.add(node_name)
-            else:
-                non_item_lines.append(line)
-        # If capturing an item, append the line to the current item lines
-        else:
+            # Check for duplicates
+            if node_name in items_dict:
+                duplicates.add(node_name)
+        elif match:  # If a new item starts while still capturing the previous one
+            raise SyntaxError(f"Unclosed automaton detected")
+        elif not capturing_item:  # If it's a non-target line
+            non_item_lines.append(line)
+        else:  # If it's part of the current item
             current_item_lines.append(line)
-
             # If item ends, store the captured lines and reset capturing state
-            if line.strip().endswith("end"):
+            if line.strip().split()[-1] == "end":
                 items_dict[node_name] = current_item_lines
                 capturing_item = False
 
-    # Check for unclosed items or duplicates and raise appropriate exceptions
-    if capturing_item:
-        raise SyntaxError(f"Unclosed automaton detected")
+    # Check for duplicates and raise ValueError exception
 
     if duplicates:
         raise ValueError(
@@ -119,13 +116,13 @@ def do_global_optimization(
         )
 
     output_lines = non_item_lines
-    if has_kind_column:
-        kind_grouped_lines = defaultdict(list)
-        for node_name, kind in zip(node_sequence, kind_sequence):
-            kind_grouped_lines[kind].extend(items_dict[node_name])
+    if has_labels_column:
+        label_grouped_lines = defaultdict(list)
+        for node_name, label in zip(node_sequence, label_sequence):
+            label_grouped_lines[label].extend(items_dict[node_name])
 
-        for kind, lines in kind_grouped_lines.items():
-            output_lines.append(f"group {kind}:\n")
+        for label, lines in label_grouped_lines.items():
+            output_lines.append(f"group {label}:\n")
             output_lines.extend(["    " + line for line in lines])
             output_lines.append("end\n")
     else:

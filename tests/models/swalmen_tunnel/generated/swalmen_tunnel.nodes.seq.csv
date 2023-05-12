@@ -1,4 +1,4 @@
-name;kind
+name;labels
 VB1_HPKA1_SensorOpen;B1
 VB1_HPKA1_Noodtelefoon;B1
 VB1_HPKA1_Handblusser;B1
@@ -139,7 +139,7 @@ MTK_KnoppenDVI;B3
 MTK_BedieningOverdruk;B3
 MTK_DVI;B3
 MTK_BedieningDVI;B3
-VB1_Beeldregistratie;B3
+VB1_Beeldregistratie;B4
 VB1_Omroep_Modus;B4
 VB1_Omroep_Knoppen;B4
 VB1_Omroep_Gebied;B4
@@ -165,7 +165,7 @@ VB1_VRI_Vrijgavesignaal;B7
 VB1_VRI_TimerVrijgavesignaal;B7
 VB1_VRI_TimerVrijgaveRood;B7
 VB1_VRI_TimerVrijgaveUit;B7
-VB1_J32_Stand;B7
+VB1_J32_Stand;B8
 VB1_AB_Commando;B8
 VB2_HoogteDetectieToerit_Lampen;B9
 VB2_HoogteDetectieToerit_Timer;B9
@@ -177,5 +177,5 @@ VB2_VRI_Vrijgavesignaal;B10
 VB2_VRI_TimerVrijgavesignaal;B10
 VB2_VRI_TimerVrijgaveRood;B10
 VB2_VRI_TimerVrijgaveUit;B10
-VB2_J32_Stand;B10
+VB2_J32_Stand;B11
 VB2_AB_Commando;B11

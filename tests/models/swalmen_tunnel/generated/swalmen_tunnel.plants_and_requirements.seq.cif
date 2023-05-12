@@ -3651,6 +3651,8 @@ group B3:
       location hand:
         edge c_auto goto auto;
     end
+end
+group B4:
     plant automaton VB1_Beeldregistratie:
       controllable c_aan;
       controllable c_uit;
@@ -3664,8 +3666,6 @@ group B3:
         marked aanGemarkeerd;
         edge c_uit goto uit;
     end
-end
-group B4:
     plant automaton VB1_Omroep_Modus:
       controllable c_startlive;
       controllable c_stoplive;
@@ -4084,6 +4084,8 @@ group B7:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
+end
+group B8:
     plant automaton VB1_J32_Stand:
       controllable c_aan;
       controllable c_uit;
@@ -4097,8 +4099,6 @@ group B7:
         marked aanGemarkeerd;
         edge c_uit goto uit;
     end
-end
-group B8:
     plant automaton VB1_AB_Commando:
       controllable c_opneer;
       controllable c_opstop;
@@ -4270,6 +4270,8 @@ group B10:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
+end
+group B11:
     plant automaton VB2_J32_Stand:
       controllable c_aan;
       controllable c_uit;
@@ -4283,8 +4285,6 @@ group B10:
         marked aanGemarkeerd;
         edge c_uit goto uit;
     end
-end
-group B11:
     plant automaton VB2_AB_Commando:
       controllable c_opneer;
       controllable c_opstop;

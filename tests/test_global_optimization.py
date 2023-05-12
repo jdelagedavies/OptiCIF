@@ -3,11 +3,11 @@
 1. Loads the sequenced node names from a CSV file.
 2. Reads the original CIF specification containing the plant model.
 3. Performs global optimization by reordering plant automatons according to the sequenced node names.
-4. Writes the reordered plant automatons or instantiations to a new CIF file. Creates groups based on the plant groups,
-   if applicable.
+4. Writes the reordered plant automaton to a new CIF file. Creates groups based on the iteration blocks, if applicable.
 
 To customize the script for your own system, modify the file paths, directories, and adjust the
-parameters as needed."""
+parameters as needed.
+"""
 
 import time
 

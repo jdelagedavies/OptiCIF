@@ -25,7 +25,8 @@ def validate_node_csv_structure(
 ) -> None:
     """
     Checks if the node CSV file structure is valid and contains a non-empty "name" column with no duplicates and no
-    empty values. Additionally, if a "kind" column is present, checks that nodes of the same kind are grouped together.
+    empty values. Additionally, if a "labels" column is present, checks that nodes with the same label are grouped
+    together.
 
     Args:
         csv_path (Union[str, Path]): The path to the node CSV file to validate.
@@ -34,7 +35,7 @@ def validate_node_csv_structure(
     Raises:
         CSVStructureError: If the node CSV file does not contain a "name" column, contains duplicate names,
         or contains empty values.
-        CSVGroupingError: If a "kind" column is present and nodes of the same kind are not grouped together.
+        CSVGroupingError: If a "labels" column is present and nodes with the same label are not grouped together.
     """
     # Check if the CSV file contains a "name" column
     with open(csv_path, "r") as f:
@@ -45,22 +46,22 @@ def validate_node_csv_structure(
             )
 
         rows = list(reader)
-        if "kind" in reader.fieldnames:
-            last_kind = None
+        if "labels" in reader.fieldnames:
+            last_label = None
             for row in rows:
-                if row["kind"] == "":
+                if row["labels"] == "":
                     raise CSVStructureError(
-                        f"'{csv_path}' should not have empty values in the 'kind' column."
+                        f"'{csv_path}' should not have empty values in the 'labels' column."
                     )
                 if (
-                    last_kind is not None
-                    and last_kind != row["kind"]
-                    and any(r["kind"] == last_kind for r in rows[rows.index(row) :])
+                    last_label is not None
+                    and last_label != row["labels"]
+                    and any(r["labels"] == last_label for r in rows[rows.index(row) :])
                 ):
                     raise CSVGroupingError(
-                        f"'{csv_path}' should group nodes of the same kind together."
+                        f"'{csv_path}' should group nodes of the same label together."
                     )
-                last_kind = row["kind"]
+                last_label = row["labels"]
 
         # Check for duplicate and empty names
         names = [row["name"] for row in rows]
