@@ -464,7 +464,7 @@ requirement invariant CaDoZuid_Stand.neer or CaDoZuid_Beweging.neer disables CaD
 requirement invariant CaDoZuid_Stand.neer or CaDoZuid_Beweging.neer disables CaDoZuid_Commando.c_stopneer;
 requirement invariant CaDoZuid_Beweging.geen disables CaDoZuid_Commando.c_opstop;
 requirement invariant CaDoZuid_Beweging.geen disables CaDoZuid_Commando.c_neerstop;
-group B1:
+group block1:
     plant automaton VB1_HPKA1_SensorOpen:
       uncontrollable u_aan;
       uncontrollable u_uit;
@@ -1631,7 +1631,7 @@ group B1:
         edge u_geen goto geen;
     end
 end
-group B2:
+group block2:
     plant automaton VB1_HoogteDetectieWaarschuwing_Lampen:
       controllable c_aan;
       controllable c_uit;
@@ -1659,7 +1659,7 @@ group B2:
         edge c_resetAfgelopen goto uit;
     end
 end
-group B3:
+group block3:
     plant automaton VB1_KnoppenVBafsluiter:
       monitor u_primairVRIrood, u_primairVRIuit, u_primairVBdicht, u_primairVBopen, u_VRIrood, u_VRIknipper, u_VRIuit, u_ABstop, u_ABopen, u_ABsluit, u_ABsluitOnv, u_resetHD;
       uncontrollable u_primairVRIrood;
@@ -3652,7 +3652,7 @@ group B3:
         edge c_auto goto auto;
     end
 end
-group B4:
+group block4:
     plant automaton VB1_Beeldregistratie:
       controllable c_aan;
       controllable c_uit;
@@ -3918,7 +3918,7 @@ group B4:
         edge c_uit goto uit;
     end
 end
-group B5:
+group block5:
     plant automaton VB1_HoogteDetectieAdvies_Lampen:
       controllable c_aan;
       controllable c_uit;
@@ -3946,7 +3946,7 @@ group B5:
         edge c_resetAfgelopen goto uit;
     end
 end
-group B6:
+group block6:
     plant automaton VB1_HoogteDetectieToerit_Lampen:
       controllable c_aan;
       controllable c_uit;
@@ -3974,7 +3974,7 @@ group B6:
         edge c_resetAfgelopen goto uit;
     end
 end
-group B7:
+group block7:
     plant automaton VB1_VRI_TimerVrijgaveAan:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4085,7 +4085,7 @@ group B7:
         edge c_resetAfgelopen goto uit;
     end
 end
-group B8:
+group block8:
     plant automaton VB1_J32_Stand:
       controllable c_aan;
       controllable c_uit;
@@ -4132,7 +4132,7 @@ group B8:
         edge c_neeronvoorwaardelijkop goto op;
     end
 end
-group B9:
+group block9:
     plant automaton VB2_HoogteDetectieToerit_Lampen:
       controllable c_aan;
       controllable c_uit;
@@ -4160,7 +4160,7 @@ group B9:
         edge c_resetAfgelopen goto uit;
     end
 end
-group B10:
+group block10:
     plant automaton VB2_VRI_TimerVrijgaveAan:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4271,7 +4271,7 @@ group B10:
         edge c_resetAfgelopen goto uit;
     end
 end
-group B11:
+group block11:
     plant automaton VB2_J32_Stand:
       controllable c_aan;
       controllable c_uit;
