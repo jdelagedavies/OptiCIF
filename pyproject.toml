@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "OptiCIF"
-version = "0.6.0"
+version = "0.7.0"
 description = "Global optimization of CIF specifications in Python."
 authors = ["Jules Delage-Davies <j.r.d.delage.davies@student.tue.nl>"]
 readme = "README.md"

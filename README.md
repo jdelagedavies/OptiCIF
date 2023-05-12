@@ -7,7 +7,7 @@ Modules:
   - converting a list of sequenced RaGraph node objects to a CSV file; 
   - converting a binary DSM matrix in .mat to an edge list in CSV format, using node names from a separate CSV file; 
   - generating CSV files with ordered node and plant group names based on a product system map and a group 
-    sequence .mat file. It also labels each item in the CSV files with the iteration block it is part of. 
+    sequence. It also labels each item in the CSV files with the iteration block it is part of. 
 - `validators`: Functions for validating the structure of CSV files containing node sequences and binary DSM matrices.
 - `cif_transformer`: Function for performing global optimization by reordering explicit plant automaton declarations.
 
