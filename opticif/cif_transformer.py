@@ -3,8 +3,7 @@
 import csv
 import re
 from pathlib import Path
-from typing import Union
-from collections import defaultdict
+from typing import Union, List, Tuple, Optional, Dict
 
 from opticif._validators import validate_node_csv_structure
 
@@ -17,27 +16,46 @@ def do_global_optimization(
 ) -> None:
     """
     Performs global optimization on a CIF specification by reordering explicit plant automaton declarations according
-    to an input sequence. Reordered items are grouped by their label if a labels column exists in the CSV. Reordered items
-    are placed at the end of the output file.
+    to an input sequence. Reordered items are grouped by their label if a labels column exists in the CSV. Reordered
+    items are placed at the end of the output file.
 
     Args:
         csv_path (Union[str, Path]): The path to a CSV file containing the node sequence. The file should have a
-                        header with a "name" column containing the nodes to be reordered. Optionally, it may also have
-                        a "labels" column to group reordered nodes by iteration blocks.
+                        header with a 'name' column containing the nodes to be reordered. Optionally, it may also have
+                        a 'labels' column to group reordered nodes by iteration blocks.
         cif_path (Union[str, Path]): The path to the CIF specification containing the explicit
                         plant automaton declarations to be reordered.
         output_dir (Union[str, Path]): The path to the directory where the output files will be saved.
-                        Defaults to "generated".
-        csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ";".
+                        Defaults to 'generated'.
+        csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ';'.
 
     Returns:
-        None. The reordered CIF file is saved with ".seq" appended to the input file's name in the specified
+        None. The reordered CIF file is saved with '.seq' appended to the input file's name in the specified
         output directory.
     """
     # Convert to Path object
     output_dir = Path(output_dir)
     cif_path = Path(cif_path)
 
+    # Read and validate CSV
+    node_sequence, label_sequence = _read_and_validate_csv(csv_path, csv_delimiter)
+
+    # Read CIF file
+    items_dict, non_item_lines = _read_cif_file(cif_path, node_sequence)
+
+    # Reorder and group nodes
+    output_lines = _reorder_and_group_nodes(items_dict, node_sequence, label_sequence)
+
+    # Write reordered nodes to CIF
+    _write_reordered_nodes_to_cif(output_dir, cif_path, non_item_lines, output_lines)
+
+
+def _read_and_validate_csv(
+    csv_path: Union[str, Path], csv_delimiter: str = ";"
+) -> Tuple[List[str], Optional[List[str]]]:
+    """
+    Read the CSV file and get the sequence and labels. Also validates the CSV structure.
+    """
     # Validate the CSV file structure
     validate_node_csv_structure(csv_path, csv_delimiter)
 
@@ -52,6 +70,15 @@ def do_global_optimization(
             if has_labels_column:
                 label_sequence.append(row["labels"])
 
+    return node_sequence, label_sequence
+
+
+def _read_cif_file(
+    cif_path: Union[str, Path], node_sequence: List[str]
+) -> Tuple[Dict[str, List[str]], List[str]]:
+    """
+    Read the CIF file and separate it into the relevant parts.
+    """
     # Prepare a regex pattern for matching node names
     pattern = (
         r"^\s*plant\s+automaton\s+("
@@ -101,34 +128,65 @@ def do_global_optimization(
                 items_dict[node_name] = current_item_lines
                 capturing_item = False
 
-    # Check for duplicates and raise ValueError exception
+    return items_dict, non_item_lines
 
-    if duplicates:
-        raise ValueError(
-            f"Duplicate automatons found for nodes: {', '.join(sorted(duplicates))}"
-        )
 
+def _reorder_and_group_nodes(
+    items_dict: Dict[str, List[str]],
+    node_sequence: List[str],
+    label_sequence: Optional[List[str]],
+) -> List[str]:
+    """
+    Reorder and group the nodes based on the input sequence and labels.
+    """
     # Reorder the target lines according to the sequence
     missing_nodes = set(node_sequence) - items_dict.keys()
     if missing_nodes:
         raise KeyError(
-            f"Nodes not found in the CIF specification '{cif_path}': {', '.join(sorted(missing_nodes))}"
+            f"Nodes not found in the CIF specification: {', '.join(sorted(missing_nodes))}"
         )
 
-    output_lines = non_item_lines
-    if has_labels_column:
-        label_grouped_lines = defaultdict(list)
+    output_lines = []
+    if label_sequence:
+        last_label = None
         for node_name, label in zip(node_sequence, label_sequence):
-            label_grouped_lines[label].extend(items_dict[node_name])
+            # If the label is not empty and has changed from the previous label, start a new group
+            if label and label != last_label:
+                if last_label is not None:  # Close the previous group
+                    output_lines.append("end\n")
+                output_lines.append(f"group {label}:\n")
 
-        for label, lines in label_grouped_lines.items():
-            output_lines.append(f"group {label}:\n")
-            output_lines.extend(["    " + line for line in lines])
+            # If the current label is empty but the last label was not, close the previous group
+            if not label and last_label:
+                output_lines.append("end\n")
+
+            # Add the node lines to the output, with indentation if it's in a group
+            if label:
+                output_lines.extend(["    " + line for line in items_dict[node_name]])
+            else:
+                output_lines.extend(items_dict[node_name])
+
+            last_label = label
+
+        # If the last node was in a group, close the group
+        if last_label:
             output_lines.append("end\n")
     else:
         for node_name in node_sequence:
             output_lines += items_dict[node_name]
 
+    return output_lines
+
+
+def _write_reordered_nodes_to_cif(
+    output_dir: Union[str, Path],
+    cif_path: Union[str, Path],
+    non_item_lines: List[str],
+    output_lines: List[str],
+) -> None:
+    """
+    Write the reordered nodes back into the CIF file.
+    """
     # Create the output directory if it doesn't exist
     generated_dir = Path(output_dir)
     generated_dir.mkdir(exist_ok=True)
@@ -137,4 +195,4 @@ def do_global_optimization(
     output_file = generated_dir / f"{cif_path.stem}.seq.cif"
 
     with open(output_file, "w") as f:
-        f.writelines(output_lines)
+        f.writelines(non_item_lines + output_lines)

@@ -464,1174 +464,1173 @@ requirement invariant CaDoZuid_Stand.neer or CaDoZuid_Beweging.neer disables CaD
 requirement invariant CaDoZuid_Stand.neer or CaDoZuid_Beweging.neer disables CaDoZuid_Commando.c_stopneer;
 requirement invariant CaDoZuid_Beweging.geen disables CaDoZuid_Commando.c_opstop;
 requirement invariant CaDoZuid_Beweging.geen disables CaDoZuid_Commando.c_neerstop;
-group block1:
-    plant automaton VB1_HPKA1_SensorOpen:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB1_HPKA1_Noodtelefoon:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB1_HPKA1_Handblusser:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB1_HPKA1_Brandslang:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB1_HPKC1_SensorOpen:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB1_HPKC1_Noodtelefoon:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB1_HPKC1_Handblusser:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB1_Rookdetectie:
-      uncontrollable u_0;
-      uncontrollable u_1;
-      uncontrollable u_2;
-      uncontrollable u_3;
-      uncontrollable u_4;
-      uncontrollable u_5;
-      uncontrollable u_6;
-      uncontrollable u_7;
-      uncontrollable u_8;
-      location stand0:
-        initial;
-        marked;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand1:
-        marked;
-        edge u_0 goto stand0;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand2:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand3:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand4:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand5:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand6:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand7:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_8 goto stand8;
-      location stand8:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-    end
-    plant automaton VB1_SOS:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB1_HoogteDetectieAdvies_Sensor:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB1_HoogteDetectieToerit_Sensor:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB1_HoogteDetectieWaarschuwing_Sensor:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB1_HoogteDetectieRood_Sensor:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB1_AB_Stand:
-      uncontrollable u_op;
-      uncontrollable u_opverlaten;
-      uncontrollable u_neer;
-      location op:
-        initial;
-        marked;
-        edge u_opverlaten goto opverlaten;
-      location opverlaten:
-        edge u_op goto op;
-        edge u_neer goto neer;
-      location neer:
-        edge u_opverlaten goto opverlaten;
-    end
-    plant automaton VB1_AB_Beweging:
-      uncontrollable u_op;
-      uncontrollable u_neer;
-      uncontrollable u_geen;
-      location geen:
-        initial;
-        marked;
-        edge u_op goto op;
-        edge u_neer goto neer;
-      location op:
-        edge u_neer goto neer;
-        edge u_geen goto geen;
-      location neer:
-        edge u_op goto op;
-        edge u_geen goto geen;
-    end
-    plant automaton VB1_AB_ObstakelDetectie:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB1_Lichtsensor:
-      uncontrollable u_0;
-      uncontrollable u_1;
-      uncontrollable u_2;
-      uncontrollable u_3;
-      uncontrollable u_4;
-      uncontrollable u_5;
-      uncontrollable u_6;
-      uncontrollable u_7;
-      uncontrollable u_8;
-      location stand0:
-        initial;
-        marked;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand1:
-        marked;
-        edge u_0 goto stand0;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand2:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand3:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand4:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand5:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand6:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand7:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_8 goto stand8;
-      location stand8:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-    end
-    plant automaton VB1_CCTV_Schouwen:
-      controllable c_schouwen;
-      controllable c_schouwenHuidig;
-      controllable c_stop;
-      location uit:
-        initial;
-        marked;
-        edge c_schouwen goto schouwen;
-        edge c_schouwenHuidig goto schouwenHuidig;
-      location schouwen:
-        edge c_stop goto uit;
-      location schouwenHuidig:
-        edge c_stop goto uit;
-    end
-    plant automaton VB1_KnoppenCCTV:
-      monitor u_schouwen, u_shouwenTegen, u_schouwenHuidig, u_schouwenHuidigTegen, u_schouwenStop, u_rechts, u_links;
-      uncontrollable u_schouwen;
-      uncontrollable u_shouwenTegen;
-      uncontrollable u_schouwenHuidig;
-      uncontrollable u_schouwenHuidigTegen;
-      uncontrollable u_schouwenStop;
-      uncontrollable u_rechts;
-      uncontrollable u_links;
-      controllable c_schouwen_klaar;
-      controllable c_shouwenTegen_klaar;
-      controllable c_schouwenHuidig_klaar;
-      controllable c_schouwenHuidigTegen_klaar;
-      controllable c_schouwenStop_klaar;
-      controllable c_rechts_klaar;
-      controllable c_links_klaar;
-      location los:
-        initial;
-        marked;
-        edge u_schouwen goto schouwen;
-        edge u_shouwenTegen goto schouwenTegen;
-        edge u_schouwenHuidig goto schouwenHuidig;
-        edge u_schouwenHuidigTegen goto schouwenHuidigTegen;
-        edge u_schouwenStop goto schouwenStop;
-        edge u_rechts goto rechts;
-        edge u_links goto links;
-      location schouwen:
-        edge c_schouwen_klaar when VB1_CCTV_Schouwen.schouwen and VB1_CCTV_Richting.mee goto los;
-      location schouwenTegen:
-        edge c_shouwenTegen_klaar when VB1_CCTV_Schouwen.schouwen and VB1_CCTV_Richting.tegen goto los;
-      location schouwenHuidig:
-        edge c_schouwenHuidig_klaar when VB1_CCTV_Schouwen.schouwenHuidig and VB1_CCTV_Richting.mee goto los;
-      location schouwenHuidigTegen:
-        edge c_schouwenHuidigTegen_klaar when VB1_CCTV_Schouwen.schouwenHuidig and VB1_CCTV_Richting.tegen goto los;
-      location schouwenStop:
-        edge c_schouwenStop_klaar when VB1_CCTV_Schouwen.uit goto los;
-      location rechts:
-        edge c_rechts_klaar when VB1_CCTV_Selectie.rechts and VB1_CCTV_Schouwen.uit goto los;
-      location links:
-        edge c_links_klaar when VB1_CCTV_Selectie.links and VB1_CCTV_Schouwen.uit goto los;
-    end
-    plant automaton VB1_CCTV_Richting:
-      controllable c_mee;
-      controllable c_tegen;
-      location mee:
-        initial;
-        marked;
-        edge c_tegen goto tegen;
-      location tegen:
-        edge c_mee goto mee;
-    end
-    plant automaton VB1_CCTV_Selectie:
-      controllable c_rechts;
-      controllable c_links;
-      controllable c_klaar;
-      location geen:
-        initial;
-        marked;
-        edge c_rechts goto rechts;
-        edge c_links goto links;
-      location rechts:
-        edge c_klaar goto geen;
-      location links:
-        edge c_klaar goto geen;
-    end
-    plant automaton VB1_Vluchtdeur_SensorOpen:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB2_HPKA1_SensorOpen:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB2_HPKA1_Noodtelefoon:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB2_HPKA1_Handblusser:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB2_HPKA1_Brandslang:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB2_HPKC1_SensorOpen:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB2_HPKC1_Noodtelefoon:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB2_HPKC1_Handblusser:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB2_Rookdetectie:
-      uncontrollable u_0;
-      uncontrollable u_1;
-      uncontrollable u_2;
-      uncontrollable u_3;
-      uncontrollable u_4;
-      uncontrollable u_5;
-      uncontrollable u_6;
-      uncontrollable u_7;
-      uncontrollable u_8;
-      location stand0:
-        initial;
-        marked;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand1:
-        marked;
-        edge u_0 goto stand0;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand2:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand3:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand4:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand5:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand6:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand7:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_8 goto stand8;
-      location stand8:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-    end
-    plant automaton VB2_SOS:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB2_HoogteDetectieToerit_Sensor:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB2_AB_Stand:
-      uncontrollable u_op;
-      uncontrollable u_opverlaten;
-      uncontrollable u_neer;
-      location op:
-        initial;
-        marked;
-        edge u_opverlaten goto opverlaten;
-      location opverlaten:
-        edge u_op goto op;
-        edge u_neer goto neer;
-      location neer:
-        edge u_opverlaten goto opverlaten;
-    end
-    plant automaton VB2_AB_Beweging:
-      uncontrollable u_op;
-      uncontrollable u_neer;
-      uncontrollable u_geen;
-      location geen:
-        initial;
-        marked;
-        edge u_op goto op;
-        edge u_neer goto neer;
-      location op:
-        edge u_neer goto neer;
-        edge u_geen goto geen;
-      location neer:
-        edge u_op goto op;
-        edge u_geen goto geen;
-    end
-    plant automaton VB2_AB_ObstakelDetectie:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton VB2_Lichtsensor:
-      uncontrollable u_0;
-      uncontrollable u_1;
-      uncontrollable u_2;
-      uncontrollable u_3;
-      uncontrollable u_4;
-      uncontrollable u_5;
-      uncontrollable u_6;
-      uncontrollable u_7;
-      uncontrollable u_8;
-      location stand0:
-        initial;
-        marked;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand1:
-        marked;
-        edge u_0 goto stand0;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand2:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand3:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand4:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand5:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand6:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_7 goto stand7;
-        edge u_8 goto stand8;
-      location stand7:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_8 goto stand8;
-      location stand8:
-        marked;
-        edge u_0 goto stand0;
-        edge u_1 goto stand1;
-        edge u_2 goto stand2;
-        edge u_3 goto stand3;
-        edge u_4 goto stand4;
-        edge u_5 goto stand5;
-        edge u_6 goto stand6;
-        edge u_7 goto stand7;
-    end
-    plant automaton VB2_CCTV_Schouwen:
-      controllable c_schouwen;
-      controllable c_schouwenHuidig;
-      controllable c_stop;
-      location uit:
-        initial;
-        marked;
-        edge c_schouwen goto schouwen;
-        edge c_schouwenHuidig goto schouwenHuidig;
-      location schouwen:
-        edge c_stop goto uit;
-      location schouwenHuidig:
-        edge c_stop goto uit;
-    end
-    plant automaton VB2_KnoppenCCTV:
-      monitor u_schouwen, u_shouwenTegen, u_schouwenHuidig, u_schouwenHuidigTegen, u_schouwenStop, u_rechts, u_links;
-      uncontrollable u_schouwen;
-      uncontrollable u_shouwenTegen;
-      uncontrollable u_schouwenHuidig;
-      uncontrollable u_schouwenHuidigTegen;
-      uncontrollable u_schouwenStop;
-      uncontrollable u_rechts;
-      uncontrollable u_links;
-      controllable c_schouwen_klaar;
-      controllable c_shouwenTegen_klaar;
-      controllable c_schouwenHuidig_klaar;
-      controllable c_schouwenHuidigTegen_klaar;
-      controllable c_schouwenStop_klaar;
-      controllable c_rechts_klaar;
-      controllable c_links_klaar;
-      location los:
-        initial;
-        marked;
-        edge u_schouwen goto schouwen;
-        edge u_shouwenTegen goto schouwenTegen;
-        edge u_schouwenHuidig goto schouwenHuidig;
-        edge u_schouwenHuidigTegen goto schouwenHuidigTegen;
-        edge u_schouwenStop goto schouwenStop;
-        edge u_rechts goto rechts;
-        edge u_links goto links;
-      location schouwen:
-        edge c_schouwen_klaar when VB2_CCTV_Schouwen.schouwen and VB2_CCTV_Richting.mee goto los;
-      location schouwenTegen:
-        edge c_shouwenTegen_klaar when VB2_CCTV_Schouwen.schouwen and VB2_CCTV_Richting.tegen goto los;
-      location schouwenHuidig:
-        edge c_schouwenHuidig_klaar when VB2_CCTV_Schouwen.schouwenHuidig and VB2_CCTV_Richting.mee goto los;
-      location schouwenHuidigTegen:
-        edge c_schouwenHuidigTegen_klaar when VB2_CCTV_Schouwen.schouwenHuidig and VB2_CCTV_Richting.tegen goto los;
-      location schouwenStop:
-        edge c_schouwenStop_klaar when VB2_CCTV_Schouwen.uit goto los;
-      location rechts:
-        edge c_rechts_klaar when VB2_CCTV_Selectie.rechts and VB2_CCTV_Schouwen.uit goto los;
-      location links:
-        edge c_links_klaar when VB2_CCTV_Selectie.links and VB2_CCTV_Schouwen.uit goto los;
-    end
-    plant automaton VB2_CCTV_Richting:
-      controllable c_mee;
-      controllable c_tegen;
-      location mee:
-        initial;
-        marked;
-        edge c_tegen goto tegen;
-      location tegen:
-        edge c_mee goto mee;
-    end
-    plant automaton VB2_CCTV_Selectie:
-      controllable c_rechts;
-      controllable c_links;
-      controllable c_klaar;
-      location geen:
-        initial;
-        marked;
-        edge c_rechts goto rechts;
-        edge c_links goto links;
-      location rechts:
-        edge c_klaar goto geen;
-      location links:
-        edge c_klaar goto geen;
-    end
-    plant automaton VB2_Vluchtdeur_SensorOpen:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton BBI_Sensors:
-      uncontrollable u_laag_aan;
-      uncontrollable u_laag_uit;
-      uncontrollable u_hoog_aan;
-      uncontrollable u_hoog_uit;
-      location laag:
-        initial;
-        marked;
-        edge u_laag_uit goto tussen;
-      location tussen:
-        edge u_laag_aan goto laag;
-        edge u_hoog_aan goto hoog;
-      location hoog:
-        edge u_hoog_uit goto tussen;
-    end
-    plant automaton KelderVuil_SensorLaagwater:
-      uncontrollable u_aan;
-      uncontrollable u_uit;
-      alg bool uitInitieel = true;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial uitInitieel;
-        marked uitGemarkeerd;
-        edge u_aan goto aan;
-      location aan:
-        initial not uitInitieel;
-        marked aanGemarkeerd;
-        edge u_uit goto uit;
-    end
-    plant automaton CaDoNoord_Stand:
-      uncontrollable u_op;
-      uncontrollable u_opverlaten;
-      uncontrollable u_neer;
-      location op:
-        initial;
-        marked;
-        edge u_opverlaten goto opverlaten;
-      location opverlaten:
-        edge u_op goto op;
-        edge u_neer goto neer;
-      location neer:
-        edge u_opverlaten goto opverlaten;
-    end
-    plant automaton CaDoNoord_Beweging:
-      uncontrollable u_op;
-      uncontrollable u_neer;
-      uncontrollable u_geen;
-      location geen:
-        initial;
-        marked;
-        edge u_op goto op;
-        edge u_neer goto neer;
-      location op:
-        edge u_neer goto neer;
-        edge u_geen goto geen;
-      location neer:
-        edge u_op goto op;
-        edge u_geen goto geen;
-    end
-    plant automaton KnoppenCaDo:
-      monitor u_noordOpen, u_noordSluit, u_noordStop, u_zuidOpen, u_zuidSluit, u_zuidStop;
-      uncontrollable u_noordOpen;
-      uncontrollable u_noordSluit;
-      uncontrollable u_noordStop;
-      uncontrollable u_zuidOpen;
-      uncontrollable u_zuidSluit;
-      uncontrollable u_zuidStop;
-      controllable c_noordOpen_klaar;
-      controllable c_noordSluit_klaar;
-      controllable c_noordStop_klaar;
-      controllable c_zuidOpen_klaar;
-      controllable c_zuidSluit_klaar;
-      controllable c_zuidStop_klaar;
-      location los:
-        initial;
-        marked;
-        edge u_noordOpen goto noordOpen;
-        edge u_noordSluit goto noordSluit;
-        edge u_noordStop goto noordStop;
-        edge u_zuidOpen goto zuidOpen;
-        edge u_zuidSluit goto zuidSluit;
-        edge u_zuidStop goto zuidStop;
-      location noordOpen:
-        edge c_noordOpen_klaar goto los;
-      location noordSluit:
-        edge c_noordSluit_klaar goto los;
-      location noordStop:
-        edge c_noordStop_klaar goto los;
-      location zuidOpen:
-        edge c_zuidOpen_klaar goto los;
-      location zuidSluit:
-        edge c_zuidSluit_klaar goto los;
-      location zuidStop:
-        edge c_zuidStop_klaar goto los;
-    end
-    plant automaton CaDoZuid_Stand:
-      uncontrollable u_op;
-      uncontrollable u_opverlaten;
-      uncontrollable u_neer;
-      location op:
-        initial;
-        marked;
-        edge u_opverlaten goto opverlaten;
-      location opverlaten:
-        edge u_op goto op;
-        edge u_neer goto neer;
-      location neer:
-        edge u_opverlaten goto opverlaten;
-    end
-    plant automaton CaDoZuid_Commando:
-      controllable c_opneer;
-      controllable c_opstop;
-      controllable c_neerop;
-      controllable c_neerstop;
-      controllable c_stopneer;
-      controllable c_stopop;
-      location op:
-        initial;
-        marked;
-        edge c_opneer goto neer;
-        edge c_opstop goto stop;
-      location neer:
-        edge c_neerop goto op;
-        edge c_neerstop goto stop;
-      location stop:
-        edge c_stopneer goto neer;
-        edge c_stopop goto op;
-    end
-    plant automaton CaDoNoord_Commando:
-      controllable c_opneer;
-      controllable c_opstop;
-      controllable c_neerop;
-      controllable c_neerstop;
-      controllable c_stopneer;
-      controllable c_stopop;
-      location op:
-        initial;
-        marked;
-        edge c_opneer goto neer;
-        edge c_opstop goto stop;
-      location neer:
-        edge c_neerop goto op;
-        edge c_neerstop goto stop;
-      location stop:
-        edge c_stopneer goto neer;
-        edge c_stopop goto op;
-    end
-    plant automaton CaDoZuid_Beweging:
-      uncontrollable u_op;
-      uncontrollable u_neer;
-      uncontrollable u_geen;
-      location geen:
-        initial;
-        marked;
-        edge u_op goto op;
-        edge u_neer goto neer;
-      location op:
-        edge u_neer goto neer;
-        edge u_geen goto geen;
-      location neer:
-        edge u_op goto op;
-        edge u_geen goto geen;
-    end
+plant automaton VB1_HPKA1_SensorOpen:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
 end
-group block2:
+plant automaton VB1_HPKA1_Noodtelefoon:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HPKA1_Handblusser:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HPKA1_Brandslang:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HPKC1_SensorOpen:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HPKC1_Noodtelefoon:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HPKC1_Handblusser:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_Rookdetectie:
+  uncontrollable u_0;
+  uncontrollable u_1;
+  uncontrollable u_2;
+  uncontrollable u_3;
+  uncontrollable u_4;
+  uncontrollable u_5;
+  uncontrollable u_6;
+  uncontrollable u_7;
+  uncontrollable u_8;
+  location stand0:
+    initial;
+    marked;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand1:
+    marked;
+    edge u_0 goto stand0;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand2:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand3:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand4:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand5:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand6:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand7:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_8 goto stand8;
+  location stand8:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+end
+plant automaton VB1_SOS:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HoogteDetectieAdvies_Sensor:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HoogteDetectieToerit_Sensor:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HoogteDetectieWaarschuwing_Sensor:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_HoogteDetectieRood_Sensor:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_AB_Stand:
+  uncontrollable u_op;
+  uncontrollable u_opverlaten;
+  uncontrollable u_neer;
+  location op:
+    initial;
+    marked;
+    edge u_opverlaten goto opverlaten;
+  location opverlaten:
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location neer:
+    edge u_opverlaten goto opverlaten;
+end
+plant automaton VB1_AB_Beweging:
+  uncontrollable u_op;
+  uncontrollable u_neer;
+  uncontrollable u_geen;
+  location geen:
+    initial;
+    marked;
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location op:
+    edge u_neer goto neer;
+    edge u_geen goto geen;
+  location neer:
+    edge u_op goto op;
+    edge u_geen goto geen;
+end
+plant automaton VB1_AB_ObstakelDetectie:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB1_Lichtsensor:
+  uncontrollable u_0;
+  uncontrollable u_1;
+  uncontrollable u_2;
+  uncontrollable u_3;
+  uncontrollable u_4;
+  uncontrollable u_5;
+  uncontrollable u_6;
+  uncontrollable u_7;
+  uncontrollable u_8;
+  location stand0:
+    initial;
+    marked;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand1:
+    marked;
+    edge u_0 goto stand0;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand2:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand3:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand4:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand5:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand6:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand7:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_8 goto stand8;
+  location stand8:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+end
+plant automaton VB1_CCTV_Schouwen:
+  controllable c_schouwen;
+  controllable c_schouwenHuidig;
+  controllable c_stop;
+  location uit:
+    initial;
+    marked;
+    edge c_schouwen goto schouwen;
+    edge c_schouwenHuidig goto schouwenHuidig;
+  location schouwen:
+    edge c_stop goto uit;
+  location schouwenHuidig:
+    edge c_stop goto uit;
+end
+plant automaton VB1_KnoppenCCTV:
+  monitor u_schouwen, u_shouwenTegen, u_schouwenHuidig, u_schouwenHuidigTegen, u_schouwenStop, u_rechts, u_links;
+  uncontrollable u_schouwen;
+  uncontrollable u_shouwenTegen;
+  uncontrollable u_schouwenHuidig;
+  uncontrollable u_schouwenHuidigTegen;
+  uncontrollable u_schouwenStop;
+  uncontrollable u_rechts;
+  uncontrollable u_links;
+  controllable c_schouwen_klaar;
+  controllable c_shouwenTegen_klaar;
+  controllable c_schouwenHuidig_klaar;
+  controllable c_schouwenHuidigTegen_klaar;
+  controllable c_schouwenStop_klaar;
+  controllable c_rechts_klaar;
+  controllable c_links_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_schouwen goto schouwen;
+    edge u_shouwenTegen goto schouwenTegen;
+    edge u_schouwenHuidig goto schouwenHuidig;
+    edge u_schouwenHuidigTegen goto schouwenHuidigTegen;
+    edge u_schouwenStop goto schouwenStop;
+    edge u_rechts goto rechts;
+    edge u_links goto links;
+  location schouwen:
+    edge c_schouwen_klaar when VB1_CCTV_Schouwen.schouwen and VB1_CCTV_Richting.mee goto los;
+  location schouwenTegen:
+    edge c_shouwenTegen_klaar when VB1_CCTV_Schouwen.schouwen and VB1_CCTV_Richting.tegen goto los;
+  location schouwenHuidig:
+    edge c_schouwenHuidig_klaar when VB1_CCTV_Schouwen.schouwenHuidig and VB1_CCTV_Richting.mee goto los;
+  location schouwenHuidigTegen:
+    edge c_schouwenHuidigTegen_klaar when VB1_CCTV_Schouwen.schouwenHuidig and VB1_CCTV_Richting.tegen goto los;
+  location schouwenStop:
+    edge c_schouwenStop_klaar when VB1_CCTV_Schouwen.uit goto los;
+  location rechts:
+    edge c_rechts_klaar when VB1_CCTV_Selectie.rechts and VB1_CCTV_Schouwen.uit goto los;
+  location links:
+    edge c_links_klaar when VB1_CCTV_Selectie.links and VB1_CCTV_Schouwen.uit goto los;
+end
+plant automaton VB1_CCTV_Richting:
+  controllable c_mee;
+  controllable c_tegen;
+  location mee:
+    initial;
+    marked;
+    edge c_tegen goto tegen;
+  location tegen:
+    edge c_mee goto mee;
+end
+plant automaton VB1_CCTV_Selectie:
+  controllable c_rechts;
+  controllable c_links;
+  controllable c_klaar;
+  location geen:
+    initial;
+    marked;
+    edge c_rechts goto rechts;
+    edge c_links goto links;
+  location rechts:
+    edge c_klaar goto geen;
+  location links:
+    edge c_klaar goto geen;
+end
+plant automaton VB1_Vluchtdeur_SensorOpen:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HPKA1_SensorOpen:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HPKA1_Noodtelefoon:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HPKA1_Handblusser:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HPKA1_Brandslang:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HPKC1_SensorOpen:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HPKC1_Noodtelefoon:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HPKC1_Handblusser:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_Rookdetectie:
+  uncontrollable u_0;
+  uncontrollable u_1;
+  uncontrollable u_2;
+  uncontrollable u_3;
+  uncontrollable u_4;
+  uncontrollable u_5;
+  uncontrollable u_6;
+  uncontrollable u_7;
+  uncontrollable u_8;
+  location stand0:
+    initial;
+    marked;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand1:
+    marked;
+    edge u_0 goto stand0;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand2:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand3:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand4:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand5:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand6:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand7:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_8 goto stand8;
+  location stand8:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+end
+plant automaton VB2_SOS:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_HoogteDetectieToerit_Sensor:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_AB_Stand:
+  uncontrollable u_op;
+  uncontrollable u_opverlaten;
+  uncontrollable u_neer;
+  location op:
+    initial;
+    marked;
+    edge u_opverlaten goto opverlaten;
+  location opverlaten:
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location neer:
+    edge u_opverlaten goto opverlaten;
+end
+plant automaton VB2_AB_Beweging:
+  uncontrollable u_op;
+  uncontrollable u_neer;
+  uncontrollable u_geen;
+  location geen:
+    initial;
+    marked;
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location op:
+    edge u_neer goto neer;
+    edge u_geen goto geen;
+  location neer:
+    edge u_op goto op;
+    edge u_geen goto geen;
+end
+plant automaton VB2_AB_ObstakelDetectie:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton VB2_Lichtsensor:
+  uncontrollable u_0;
+  uncontrollable u_1;
+  uncontrollable u_2;
+  uncontrollable u_3;
+  uncontrollable u_4;
+  uncontrollable u_5;
+  uncontrollable u_6;
+  uncontrollable u_7;
+  uncontrollable u_8;
+  location stand0:
+    initial;
+    marked;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand1:
+    marked;
+    edge u_0 goto stand0;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand2:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand3:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand4:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand5:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand6:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_7 goto stand7;
+    edge u_8 goto stand8;
+  location stand7:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_8 goto stand8;
+  location stand8:
+    marked;
+    edge u_0 goto stand0;
+    edge u_1 goto stand1;
+    edge u_2 goto stand2;
+    edge u_3 goto stand3;
+    edge u_4 goto stand4;
+    edge u_5 goto stand5;
+    edge u_6 goto stand6;
+    edge u_7 goto stand7;
+end
+plant automaton VB2_CCTV_Schouwen:
+  controllable c_schouwen;
+  controllable c_schouwenHuidig;
+  controllable c_stop;
+  location uit:
+    initial;
+    marked;
+    edge c_schouwen goto schouwen;
+    edge c_schouwenHuidig goto schouwenHuidig;
+  location schouwen:
+    edge c_stop goto uit;
+  location schouwenHuidig:
+    edge c_stop goto uit;
+end
+plant automaton VB2_KnoppenCCTV:
+  monitor u_schouwen, u_shouwenTegen, u_schouwenHuidig, u_schouwenHuidigTegen, u_schouwenStop, u_rechts, u_links;
+  uncontrollable u_schouwen;
+  uncontrollable u_shouwenTegen;
+  uncontrollable u_schouwenHuidig;
+  uncontrollable u_schouwenHuidigTegen;
+  uncontrollable u_schouwenStop;
+  uncontrollable u_rechts;
+  uncontrollable u_links;
+  controllable c_schouwen_klaar;
+  controllable c_shouwenTegen_klaar;
+  controllable c_schouwenHuidig_klaar;
+  controllable c_schouwenHuidigTegen_klaar;
+  controllable c_schouwenStop_klaar;
+  controllable c_rechts_klaar;
+  controllable c_links_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_schouwen goto schouwen;
+    edge u_shouwenTegen goto schouwenTegen;
+    edge u_schouwenHuidig goto schouwenHuidig;
+    edge u_schouwenHuidigTegen goto schouwenHuidigTegen;
+    edge u_schouwenStop goto schouwenStop;
+    edge u_rechts goto rechts;
+    edge u_links goto links;
+  location schouwen:
+    edge c_schouwen_klaar when VB2_CCTV_Schouwen.schouwen and VB2_CCTV_Richting.mee goto los;
+  location schouwenTegen:
+    edge c_shouwenTegen_klaar when VB2_CCTV_Schouwen.schouwen and VB2_CCTV_Richting.tegen goto los;
+  location schouwenHuidig:
+    edge c_schouwenHuidig_klaar when VB2_CCTV_Schouwen.schouwenHuidig and VB2_CCTV_Richting.mee goto los;
+  location schouwenHuidigTegen:
+    edge c_schouwenHuidigTegen_klaar when VB2_CCTV_Schouwen.schouwenHuidig and VB2_CCTV_Richting.tegen goto los;
+  location schouwenStop:
+    edge c_schouwenStop_klaar when VB2_CCTV_Schouwen.uit goto los;
+  location rechts:
+    edge c_rechts_klaar when VB2_CCTV_Selectie.rechts and VB2_CCTV_Schouwen.uit goto los;
+  location links:
+    edge c_links_klaar when VB2_CCTV_Selectie.links and VB2_CCTV_Schouwen.uit goto los;
+end
+plant automaton VB2_CCTV_Richting:
+  controllable c_mee;
+  controllable c_tegen;
+  location mee:
+    initial;
+    marked;
+    edge c_tegen goto tegen;
+  location tegen:
+    edge c_mee goto mee;
+end
+plant automaton VB2_CCTV_Selectie:
+  controllable c_rechts;
+  controllable c_links;
+  controllable c_klaar;
+  location geen:
+    initial;
+    marked;
+    edge c_rechts goto rechts;
+    edge c_links goto links;
+  location rechts:
+    edge c_klaar goto geen;
+  location links:
+    edge c_klaar goto geen;
+end
+plant automaton VB2_Vluchtdeur_SensorOpen:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton BBI_Sensors:
+  uncontrollable u_laag_aan;
+  uncontrollable u_laag_uit;
+  uncontrollable u_hoog_aan;
+  uncontrollable u_hoog_uit;
+  location laag:
+    initial;
+    marked;
+    edge u_laag_uit goto tussen;
+  location tussen:
+    edge u_laag_aan goto laag;
+    edge u_hoog_aan goto hoog;
+  location hoog:
+    edge u_hoog_uit goto tussen;
+end
+plant automaton KelderVuil_SensorLaagwater:
+  uncontrollable u_aan;
+  uncontrollable u_uit;
+  alg bool uitInitieel = true;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial uitInitieel;
+    marked uitGemarkeerd;
+    edge u_aan goto aan;
+  location aan:
+    initial not uitInitieel;
+    marked aanGemarkeerd;
+    edge u_uit goto uit;
+end
+plant automaton CaDoNoord_Stand:
+  uncontrollable u_op;
+  uncontrollable u_opverlaten;
+  uncontrollable u_neer;
+  location op:
+    initial;
+    marked;
+    edge u_opverlaten goto opverlaten;
+  location opverlaten:
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location neer:
+    edge u_opverlaten goto opverlaten;
+end
+plant automaton CaDoNoord_Beweging:
+  uncontrollable u_op;
+  uncontrollable u_neer;
+  uncontrollable u_geen;
+  location geen:
+    initial;
+    marked;
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location op:
+    edge u_neer goto neer;
+    edge u_geen goto geen;
+  location neer:
+    edge u_op goto op;
+    edge u_geen goto geen;
+end
+plant automaton KnoppenCaDo:
+  monitor u_noordOpen, u_noordSluit, u_noordStop, u_zuidOpen, u_zuidSluit, u_zuidStop;
+  uncontrollable u_noordOpen;
+  uncontrollable u_noordSluit;
+  uncontrollable u_noordStop;
+  uncontrollable u_zuidOpen;
+  uncontrollable u_zuidSluit;
+  uncontrollable u_zuidStop;
+  controllable c_noordOpen_klaar;
+  controllable c_noordSluit_klaar;
+  controllable c_noordStop_klaar;
+  controllable c_zuidOpen_klaar;
+  controllable c_zuidSluit_klaar;
+  controllable c_zuidStop_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_noordOpen goto noordOpen;
+    edge u_noordSluit goto noordSluit;
+    edge u_noordStop goto noordStop;
+    edge u_zuidOpen goto zuidOpen;
+    edge u_zuidSluit goto zuidSluit;
+    edge u_zuidStop goto zuidStop;
+  location noordOpen:
+    edge c_noordOpen_klaar goto los;
+  location noordSluit:
+    edge c_noordSluit_klaar goto los;
+  location noordStop:
+    edge c_noordStop_klaar goto los;
+  location zuidOpen:
+    edge c_zuidOpen_klaar goto los;
+  location zuidSluit:
+    edge c_zuidSluit_klaar goto los;
+  location zuidStop:
+    edge c_zuidStop_klaar goto los;
+end
+plant automaton CaDoZuid_Stand:
+  uncontrollable u_op;
+  uncontrollable u_opverlaten;
+  uncontrollable u_neer;
+  location op:
+    initial;
+    marked;
+    edge u_opverlaten goto opverlaten;
+  location opverlaten:
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location neer:
+    edge u_opverlaten goto opverlaten;
+end
+plant automaton CaDoZuid_Commando:
+  controllable c_opneer;
+  controllable c_opstop;
+  controllable c_neerop;
+  controllable c_neerstop;
+  controllable c_stopneer;
+  controllable c_stopop;
+  location op:
+    initial;
+    marked;
+    edge c_opneer goto neer;
+    edge c_opstop goto stop;
+  location neer:
+    edge c_neerop goto op;
+    edge c_neerstop goto stop;
+  location stop:
+    edge c_stopneer goto neer;
+    edge c_stopop goto op;
+end
+plant automaton CaDoNoord_Commando:
+  controllable c_opneer;
+  controllable c_opstop;
+  controllable c_neerop;
+  controllable c_neerstop;
+  controllable c_stopneer;
+  controllable c_stopop;
+  location op:
+    initial;
+    marked;
+    edge c_opneer goto neer;
+    edge c_opstop goto stop;
+  location neer:
+    edge c_neerop goto op;
+    edge c_neerstop goto stop;
+  location stop:
+    edge c_stopneer goto neer;
+    edge c_stopop goto op;
+end
+plant automaton CaDoZuid_Beweging:
+  uncontrollable u_op;
+  uncontrollable u_neer;
+  uncontrollable u_geen;
+  location geen:
+    initial;
+    marked;
+    edge u_op goto op;
+    edge u_neer goto neer;
+  location op:
+    edge u_neer goto neer;
+    edge u_geen goto geen;
+  location neer:
+    edge u_op goto op;
+    edge u_geen goto geen;
+end
+end
+group partition4:
     plant automaton VB1_HoogteDetectieWaarschuwing_Lampen:
       controllable c_aan;
       controllable c_uit;
@@ -1658,8 +1657,6 @@ group block2:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
-end
-group block3:
     plant automaton VB1_KnoppenVBafsluiter:
       monitor u_primairVRIrood, u_primairVRIuit, u_primairVBdicht, u_primairVBopen, u_VRIrood, u_VRIknipper, u_VRIuit, u_ABstop, u_ABopen, u_ABsluit, u_ABsluitOnv, u_resetHD;
       uncontrollable u_primairVRIrood;
@@ -1888,6 +1885,8 @@ group block3:
       location hand:
         edge c_hand_klaar when VB1_BedieningAB.hand goto los;
     end
+end
+group partition1:
     plant automaton KelderVuil_Regime:
       controllable c_lozen;
       controllable c_uit;
@@ -3651,8 +3650,6 @@ group block3:
       location hand:
         edge c_auto goto auto;
     end
-end
-group block4:
     plant automaton VB1_Beeldregistratie:
       controllable c_aan;
       controllable c_uit;
@@ -3666,259 +3663,260 @@ group block4:
         marked aanGemarkeerd;
         edge c_uit goto uit;
     end
-    plant automaton VB1_Omroep_Modus:
-      controllable c_startlive;
-      controllable c_stoplive;
-      controllable c_startboodschap;
-      controllable c_stopboodschap;
-      location uit:
-        initial;
-        marked;
-        edge c_startlive goto live;
-        edge c_startboodschap goto boodschap;
-      location live:
-        edge c_stoplive goto uit;
-        edge c_startboodschap goto boodschap;
-      location boodschap:
-        edge c_startlive goto live;
-        edge c_stopboodschap goto uit;
-    end
-    plant automaton VB1_Omroep_Knoppen:
-      monitor u_startLive, u_stopLive, u_startBoodschap, u_stopBoodschap, u_buis, u_sectie;
-      uncontrollable u_startLive;
-      uncontrollable u_stopLive;
-      uncontrollable u_startBoodschap;
-      uncontrollable u_stopBoodschap;
-      uncontrollable u_buis;
-      uncontrollable u_sectie;
-      controllable c_startLive_klaar;
-      controllable c_stopLive_klaar;
-      controllable c_startBoodschap_klaar;
-      controllable c_stopBoodschap_klaar;
-      controllable c_buis_klaar;
-      controllable c_sectie_klaar;
-      location los:
-        initial;
-        marked;
-        edge u_startLive goto startLive;
-        edge u_stopLive goto stopLive;
-        edge u_startBoodschap goto startBoodschap;
-        edge u_stopBoodschap goto stopBoodschap;
-        edge u_buis goto buis;
-        edge u_sectie goto sectie;
-      location startLive:
-        edge c_startLive_klaar when VB1_Omroep_Modus.live goto los;
-      location stopLive:
-        edge c_stopLive_klaar when VB1_Omroep_Modus.uit goto los;
-      location startBoodschap:
-        edge c_startBoodschap_klaar when VB1_Omroep_Modus.boodschap goto los;
-      location stopBoodschap:
-        edge c_stopBoodschap_klaar when VB1_Omroep_Modus.uit goto los;
-      location buis:
-        edge c_buis_klaar when VB1_Omroep_Gebied.buis goto los;
-      location sectie:
-        edge c_sectie_klaar when VB1_Omroep_Gebied.sectie goto los;
-    end
-    plant automaton VB1_Omroep_Gebied:
-      controllable c_buis;
-      controllable c_sectie;
-      location buis:
-        initial;
-        marked;
-        edge c_sectie goto sectie;
-      location sectie:
-        edge c_buis goto buis;
-    end
-    plant automaton VB2_Beeldregistratie:
-      controllable c_aan;
-      controllable c_uit;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial;
-        marked uitGemarkeerd;
-        edge c_aan goto aan;
-      location aan:
-        marked aanGemarkeerd;
-        edge c_uit goto uit;
-    end
-    plant automaton VB2_Omroep_Modus:
-      controllable c_startlive;
-      controllable c_stoplive;
-      controllable c_startboodschap;
-      controllable c_stopboodschap;
-      location uit:
-        initial;
-        marked;
-        edge c_startlive goto live;
-        edge c_startboodschap goto boodschap;
-      location live:
-        edge c_stoplive goto uit;
-        edge c_startboodschap goto boodschap;
-      location boodschap:
-        edge c_startlive goto live;
-        edge c_stopboodschap goto uit;
-    end
-    plant automaton VB2_Omroep_Knoppen:
-      monitor u_startLive, u_stopLive, u_startBoodschap, u_stopBoodschap, u_buis, u_sectie;
-      uncontrollable u_startLive;
-      uncontrollable u_stopLive;
-      uncontrollable u_startBoodschap;
-      uncontrollable u_stopBoodschap;
-      uncontrollable u_buis;
-      uncontrollable u_sectie;
-      controllable c_startLive_klaar;
-      controllable c_stopLive_klaar;
-      controllable c_startBoodschap_klaar;
-      controllable c_stopBoodschap_klaar;
-      controllable c_buis_klaar;
-      controllable c_sectie_klaar;
-      location los:
-        initial;
-        marked;
-        edge u_startLive goto startLive;
-        edge u_stopLive goto stopLive;
-        edge u_startBoodschap goto startBoodschap;
-        edge u_stopBoodschap goto stopBoodschap;
-        edge u_buis goto buis;
-        edge u_sectie goto sectie;
-      location startLive:
-        edge c_startLive_klaar when VB2_Omroep_Modus.live goto los;
-      location stopLive:
-        edge c_stopLive_klaar when VB2_Omroep_Modus.uit goto los;
-      location startBoodschap:
-        edge c_startBoodschap_klaar when VB2_Omroep_Modus.boodschap goto los;
-      location stopBoodschap:
-        edge c_stopBoodschap_klaar when VB2_Omroep_Modus.uit goto los;
-      location buis:
-        edge c_buis_klaar when VB2_Omroep_Gebied.buis goto los;
-      location sectie:
-        edge c_sectie_klaar when VB2_Omroep_Gebied.sectie goto los;
-    end
-    plant automaton VB2_Omroep_Gebied:
-      controllable c_buis;
-      controllable c_sectie;
-      location buis:
-        initial;
-        marked;
-        edge c_sectie goto sectie;
-      location sectie:
-        edge c_buis goto buis;
-    end
-    plant automaton MTK_Omroep_Modus:
-      controllable c_startlive;
-      controllable c_stoplive;
-      controllable c_startboodschap;
-      controllable c_stopboodschap;
-      location uit:
-        initial;
-        marked;
-        edge c_startlive goto live;
-        edge c_startboodschap goto boodschap;
-      location live:
-        edge c_stoplive goto uit;
-        edge c_startboodschap goto boodschap;
-      location boodschap:
-        edge c_startlive goto live;
-        edge c_stopboodschap goto uit;
-    end
-    plant automaton MTK_Omroep_Knoppen:
-      monitor u_startLive, u_stopLive, u_startBoodschap, u_stopBoodschap;
-      uncontrollable u_startLive;
-      uncontrollable u_stopLive;
-      uncontrollable u_startBoodschap;
-      uncontrollable u_stopBoodschap;
-      controllable c_startLive_klaar;
-      controllable c_stopLive_klaar;
-      controllable c_startBoodschap_klaar;
-      controllable c_stopBoodschap_klaar;
-      location los:
-        initial;
-        marked;
-        edge u_startLive goto startLive;
-        edge u_stopLive goto stopLive;
-        edge u_startBoodschap goto startBoodschap;
-        edge u_stopBoodschap goto stopBoodschap;
-      location startLive:
-        edge c_startLive_klaar when MTK_Omroep_Modus.live goto los;
-      location stopLive:
-        edge c_stopLive_klaar when MTK_Omroep_Modus.uit goto los;
-      location startBoodschap:
-        edge c_startBoodschap_klaar when MTK_Omroep_Modus.boodschap goto los;
-      location stopBoodschap:
-        edge c_stopBoodschap_klaar when MTK_Omroep_Modus.uit goto los;
-    end
-    plant automaton BBI_Pomp:
-      controllable c_aan;
-      controllable c_uit;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial;
-        marked uitGemarkeerd;
-        edge c_aan goto aan;
-      location aan:
-        marked aanGemarkeerd;
-        edge c_uit goto uit;
-    end
-    plant automaton KelderSchoon_Sensors:
-      uncontrollable u_S1aan;
-      uncontrollable u_S1uit;
-      uncontrollable u_S2aan;
-      uncontrollable u_S2uit;
-      uncontrollable u_S3aan;
-      uncontrollable u_S3uit;
-      uncontrollable u_S4aan;
-      uncontrollable u_S4uit;
-      uncontrollable u_S5aan;
-      uncontrollable u_S5uit;
-      location Leeg:
-        initial;
-        marked;
-        edge u_S1aan goto Laagwater;
-      location Laagwater:
-        edge u_S1uit when KelderSchoon_Pomp.aan goto Leeg;
-        edge u_S2aan goto Startwater;
-      location Startwater:
-        edge u_S2uit when KelderSchoon_Pomp.aan goto Laagwater;
-        edge u_S3aan goto Maxstartwater;
-      location Maxstartwater:
-        edge u_S3uit when KelderSchoon_Pomp.aan goto Startwater;
-        edge u_S4aan goto Laaghoogwater;
-      location Laaghoogwater:
-        edge u_S4uit when KelderSchoon_Pomp.aan goto Maxstartwater;
-        edge u_S5aan goto Hooghoogwater;
-      location Hooghoogwater:
-        edge u_S5uit when KelderSchoon_Pomp.aan goto Laaghoogwater;
-    end
-    plant automaton KelderSchoon_Pomp:
-      controllable c_aan;
-      controllable c_uit;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial;
-        marked uitGemarkeerd;
-        edge c_aan goto aan;
-      location aan:
-        marked aanGemarkeerd;
-        edge c_uit goto uit;
-    end
-    plant automaton KelderVuil_Pomp:
-      controllable c_aan;
-      controllable c_uit;
-      alg bool uitGemarkeerd = true;
-      alg bool aanGemarkeerd = false;
-      location uit:
-        initial;
-        marked uitGemarkeerd;
-        edge c_aan goto aan;
-      location aan:
-        marked aanGemarkeerd;
-        edge c_uit goto uit;
-    end
 end
-group block5:
+plant automaton VB1_Omroep_Modus:
+  controllable c_startlive;
+  controllable c_stoplive;
+  controllable c_startboodschap;
+  controllable c_stopboodschap;
+  location uit:
+    initial;
+    marked;
+    edge c_startlive goto live;
+    edge c_startboodschap goto boodschap;
+  location live:
+    edge c_stoplive goto uit;
+    edge c_startboodschap goto boodschap;
+  location boodschap:
+    edge c_startlive goto live;
+    edge c_stopboodschap goto uit;
+end
+plant automaton VB1_Omroep_Knoppen:
+  monitor u_startLive, u_stopLive, u_startBoodschap, u_stopBoodschap, u_buis, u_sectie;
+  uncontrollable u_startLive;
+  uncontrollable u_stopLive;
+  uncontrollable u_startBoodschap;
+  uncontrollable u_stopBoodschap;
+  uncontrollable u_buis;
+  uncontrollable u_sectie;
+  controllable c_startLive_klaar;
+  controllable c_stopLive_klaar;
+  controllable c_startBoodschap_klaar;
+  controllable c_stopBoodschap_klaar;
+  controllable c_buis_klaar;
+  controllable c_sectie_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_startLive goto startLive;
+    edge u_stopLive goto stopLive;
+    edge u_startBoodschap goto startBoodschap;
+    edge u_stopBoodschap goto stopBoodschap;
+    edge u_buis goto buis;
+    edge u_sectie goto sectie;
+  location startLive:
+    edge c_startLive_klaar when VB1_Omroep_Modus.live goto los;
+  location stopLive:
+    edge c_stopLive_klaar when VB1_Omroep_Modus.uit goto los;
+  location startBoodschap:
+    edge c_startBoodschap_klaar when VB1_Omroep_Modus.boodschap goto los;
+  location stopBoodschap:
+    edge c_stopBoodschap_klaar when VB1_Omroep_Modus.uit goto los;
+  location buis:
+    edge c_buis_klaar when VB1_Omroep_Gebied.buis goto los;
+  location sectie:
+    edge c_sectie_klaar when VB1_Omroep_Gebied.sectie goto los;
+end
+plant automaton VB1_Omroep_Gebied:
+  controllable c_buis;
+  controllable c_sectie;
+  location buis:
+    initial;
+    marked;
+    edge c_sectie goto sectie;
+  location sectie:
+    edge c_buis goto buis;
+end
+plant automaton VB2_Beeldregistratie:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton VB2_Omroep_Modus:
+  controllable c_startlive;
+  controllable c_stoplive;
+  controllable c_startboodschap;
+  controllable c_stopboodschap;
+  location uit:
+    initial;
+    marked;
+    edge c_startlive goto live;
+    edge c_startboodschap goto boodschap;
+  location live:
+    edge c_stoplive goto uit;
+    edge c_startboodschap goto boodschap;
+  location boodschap:
+    edge c_startlive goto live;
+    edge c_stopboodschap goto uit;
+end
+plant automaton VB2_Omroep_Knoppen:
+  monitor u_startLive, u_stopLive, u_startBoodschap, u_stopBoodschap, u_buis, u_sectie;
+  uncontrollable u_startLive;
+  uncontrollable u_stopLive;
+  uncontrollable u_startBoodschap;
+  uncontrollable u_stopBoodschap;
+  uncontrollable u_buis;
+  uncontrollable u_sectie;
+  controllable c_startLive_klaar;
+  controllable c_stopLive_klaar;
+  controllable c_startBoodschap_klaar;
+  controllable c_stopBoodschap_klaar;
+  controllable c_buis_klaar;
+  controllable c_sectie_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_startLive goto startLive;
+    edge u_stopLive goto stopLive;
+    edge u_startBoodschap goto startBoodschap;
+    edge u_stopBoodschap goto stopBoodschap;
+    edge u_buis goto buis;
+    edge u_sectie goto sectie;
+  location startLive:
+    edge c_startLive_klaar when VB2_Omroep_Modus.live goto los;
+  location stopLive:
+    edge c_stopLive_klaar when VB2_Omroep_Modus.uit goto los;
+  location startBoodschap:
+    edge c_startBoodschap_klaar when VB2_Omroep_Modus.boodschap goto los;
+  location stopBoodschap:
+    edge c_stopBoodschap_klaar when VB2_Omroep_Modus.uit goto los;
+  location buis:
+    edge c_buis_klaar when VB2_Omroep_Gebied.buis goto los;
+  location sectie:
+    edge c_sectie_klaar when VB2_Omroep_Gebied.sectie goto los;
+end
+plant automaton VB2_Omroep_Gebied:
+  controllable c_buis;
+  controllable c_sectie;
+  location buis:
+    initial;
+    marked;
+    edge c_sectie goto sectie;
+  location sectie:
+    edge c_buis goto buis;
+end
+plant automaton MTK_Omroep_Modus:
+  controllable c_startlive;
+  controllable c_stoplive;
+  controllable c_startboodschap;
+  controllable c_stopboodschap;
+  location uit:
+    initial;
+    marked;
+    edge c_startlive goto live;
+    edge c_startboodschap goto boodschap;
+  location live:
+    edge c_stoplive goto uit;
+    edge c_startboodschap goto boodschap;
+  location boodschap:
+    edge c_startlive goto live;
+    edge c_stopboodschap goto uit;
+end
+plant automaton MTK_Omroep_Knoppen:
+  monitor u_startLive, u_stopLive, u_startBoodschap, u_stopBoodschap;
+  uncontrollable u_startLive;
+  uncontrollable u_stopLive;
+  uncontrollable u_startBoodschap;
+  uncontrollable u_stopBoodschap;
+  controllable c_startLive_klaar;
+  controllable c_stopLive_klaar;
+  controllable c_startBoodschap_klaar;
+  controllable c_stopBoodschap_klaar;
+  location los:
+    initial;
+    marked;
+    edge u_startLive goto startLive;
+    edge u_stopLive goto stopLive;
+    edge u_startBoodschap goto startBoodschap;
+    edge u_stopBoodschap goto stopBoodschap;
+  location startLive:
+    edge c_startLive_klaar when MTK_Omroep_Modus.live goto los;
+  location stopLive:
+    edge c_stopLive_klaar when MTK_Omroep_Modus.uit goto los;
+  location startBoodschap:
+    edge c_startBoodschap_klaar when MTK_Omroep_Modus.boodschap goto los;
+  location stopBoodschap:
+    edge c_stopBoodschap_klaar when MTK_Omroep_Modus.uit goto los;
+end
+plant automaton BBI_Pomp:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton KelderSchoon_Sensors:
+  uncontrollable u_S1aan;
+  uncontrollable u_S1uit;
+  uncontrollable u_S2aan;
+  uncontrollable u_S2uit;
+  uncontrollable u_S3aan;
+  uncontrollable u_S3uit;
+  uncontrollable u_S4aan;
+  uncontrollable u_S4uit;
+  uncontrollable u_S5aan;
+  uncontrollable u_S5uit;
+  location Leeg:
+    initial;
+    marked;
+    edge u_S1aan goto Laagwater;
+  location Laagwater:
+    edge u_S1uit when KelderSchoon_Pomp.aan goto Leeg;
+    edge u_S2aan goto Startwater;
+  location Startwater:
+    edge u_S2uit when KelderSchoon_Pomp.aan goto Laagwater;
+    edge u_S3aan goto Maxstartwater;
+  location Maxstartwater:
+    edge u_S3uit when KelderSchoon_Pomp.aan goto Startwater;
+    edge u_S4aan goto Laaghoogwater;
+  location Laaghoogwater:
+    edge u_S4uit when KelderSchoon_Pomp.aan goto Maxstartwater;
+    edge u_S5aan goto Hooghoogwater;
+  location Hooghoogwater:
+    edge u_S5uit when KelderSchoon_Pomp.aan goto Laaghoogwater;
+end
+plant automaton KelderSchoon_Pomp:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+plant automaton KelderVuil_Pomp:
+  controllable c_aan;
+  controllable c_uit;
+  alg bool uitGemarkeerd = true;
+  alg bool aanGemarkeerd = false;
+  location uit:
+    initial;
+    marked uitGemarkeerd;
+    edge c_aan goto aan;
+  location aan:
+    marked aanGemarkeerd;
+    edge c_uit goto uit;
+end
+end
+group partition2:
     plant automaton VB1_HoogteDetectieAdvies_Lampen:
       controllable c_aan;
       controllable c_uit;
@@ -3946,7 +3944,7 @@ group block5:
         edge c_resetAfgelopen goto uit;
     end
 end
-group block6:
+group partition3:
     plant automaton VB1_HoogteDetectieToerit_Lampen:
       controllable c_aan;
       controllable c_uit;
@@ -3974,7 +3972,7 @@ group block6:
         edge c_resetAfgelopen goto uit;
     end
 end
-group block7:
+group partition5:
     plant automaton VB1_VRI_TimerVrijgaveAan:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4084,8 +4082,6 @@ group block7:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
-end
-group block8:
     plant automaton VB1_J32_Stand:
       controllable c_aan;
       controllable c_uit;
@@ -4099,40 +4095,41 @@ group block8:
         marked aanGemarkeerd;
         edge c_uit goto uit;
     end
-    plant automaton VB1_AB_Commando:
-      controllable c_opneer;
-      controllable c_opstop;
-      controllable c_opneeronvoorwaardelijk;
-      controllable c_neerop;
-      controllable c_neerstop;
-      controllable c_neerneeronvoorwaardelijk;
-      controllable c_stopneer;
-      controllable c_stopop;
-      controllable c_stopneeronvoorwaardelijk;
-      controllable c_neeronvoorwaardelijkneer;
-      controllable c_neeronvoorwaardelijkstop;
-      controllable c_neeronvoorwaardelijkop;
-      location op:
-        initial;
-        marked;
-        edge c_opneer goto neer;
-        edge c_opstop goto stop;
-        edge c_opneeronvoorwaardelijk goto neeronvoorwaardelijk;
-      location neer:
-        edge c_neerop goto op;
-        edge c_neerstop goto stop;
-        edge c_neerneeronvoorwaardelijk goto neeronvoorwaardelijk;
-      location stop:
-        edge c_stopneer goto neer;
-        edge c_stopop goto op;
-        edge c_stopneeronvoorwaardelijk goto neeronvoorwaardelijk;
-      location neeronvoorwaardelijk:
-        edge c_neeronvoorwaardelijkneer goto neer;
-        edge c_neeronvoorwaardelijkstop goto stop;
-        edge c_neeronvoorwaardelijkop goto op;
-    end
 end
-group block9:
+plant automaton VB1_AB_Commando:
+  controllable c_opneer;
+  controllable c_opstop;
+  controllable c_opneeronvoorwaardelijk;
+  controllable c_neerop;
+  controllable c_neerstop;
+  controllable c_neerneeronvoorwaardelijk;
+  controllable c_stopneer;
+  controllable c_stopop;
+  controllable c_stopneeronvoorwaardelijk;
+  controllable c_neeronvoorwaardelijkneer;
+  controllable c_neeronvoorwaardelijkstop;
+  controllable c_neeronvoorwaardelijkop;
+  location op:
+    initial;
+    marked;
+    edge c_opneer goto neer;
+    edge c_opstop goto stop;
+    edge c_opneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location neer:
+    edge c_neerop goto op;
+    edge c_neerstop goto stop;
+    edge c_neerneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location stop:
+    edge c_stopneer goto neer;
+    edge c_stopop goto op;
+    edge c_stopneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location neeronvoorwaardelijk:
+    edge c_neeronvoorwaardelijkneer goto neer;
+    edge c_neeronvoorwaardelijkstop goto stop;
+    edge c_neeronvoorwaardelijkop goto op;
+end
+end
+group partition6:
     plant automaton VB2_HoogteDetectieToerit_Lampen:
       controllable c_aan;
       controllable c_uit;
@@ -4160,7 +4157,7 @@ group block9:
         edge c_resetAfgelopen goto uit;
     end
 end
-group block10:
+group partition7:
     plant automaton VB2_VRI_TimerVrijgaveAan:
       controllable c_aan;
       controllable c_resetAfgelopen;
@@ -4270,8 +4267,6 @@ group block10:
       location afgelopen:
         edge c_resetAfgelopen goto uit;
     end
-end
-group block11:
     plant automaton VB2_J32_Stand:
       controllable c_aan;
       controllable c_uit;
@@ -4285,36 +4280,36 @@ group block11:
         marked aanGemarkeerd;
         edge c_uit goto uit;
     end
-    plant automaton VB2_AB_Commando:
-      controllable c_opneer;
-      controllable c_opstop;
-      controllable c_opneeronvoorwaardelijk;
-      controllable c_neerop;
-      controllable c_neerstop;
-      controllable c_neerneeronvoorwaardelijk;
-      controllable c_stopneer;
-      controllable c_stopop;
-      controllable c_stopneeronvoorwaardelijk;
-      controllable c_neeronvoorwaardelijkneer;
-      controllable c_neeronvoorwaardelijkstop;
-      controllable c_neeronvoorwaardelijkop;
-      location op:
-        initial;
-        marked;
-        edge c_opneer goto neer;
-        edge c_opstop goto stop;
-        edge c_opneeronvoorwaardelijk goto neeronvoorwaardelijk;
-      location neer:
-        edge c_neerop goto op;
-        edge c_neerstop goto stop;
-        edge c_neerneeronvoorwaardelijk goto neeronvoorwaardelijk;
-      location stop:
-        edge c_stopneer goto neer;
-        edge c_stopop goto op;
-        edge c_stopneeronvoorwaardelijk goto neeronvoorwaardelijk;
-      location neeronvoorwaardelijk:
-        edge c_neeronvoorwaardelijkneer goto neer;
-        edge c_neeronvoorwaardelijkstop goto stop;
-        edge c_neeronvoorwaardelijkop goto op;
-    end
+end
+plant automaton VB2_AB_Commando:
+  controllable c_opneer;
+  controllable c_opstop;
+  controllable c_opneeronvoorwaardelijk;
+  controllable c_neerop;
+  controllable c_neerstop;
+  controllable c_neerneeronvoorwaardelijk;
+  controllable c_stopneer;
+  controllable c_stopop;
+  controllable c_stopneeronvoorwaardelijk;
+  controllable c_neeronvoorwaardelijkneer;
+  controllable c_neeronvoorwaardelijkstop;
+  controllable c_neeronvoorwaardelijkop;
+  location op:
+    initial;
+    marked;
+    edge c_opneer goto neer;
+    edge c_opstop goto stop;
+    edge c_opneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location neer:
+    edge c_neerop goto op;
+    edge c_neerstop goto stop;
+    edge c_neerneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location stop:
+    edge c_stopneer goto neer;
+    edge c_stopop goto op;
+    edge c_stopneeronvoorwaardelijk goto neeronvoorwaardelijk;
+  location neeronvoorwaardelijk:
+    edge c_neeronvoorwaardelijkneer goto neer;
+    edge c_neeronvoorwaardelijkstop goto stop;
+    edge c_neeronvoorwaardelijkop goto op;
 end

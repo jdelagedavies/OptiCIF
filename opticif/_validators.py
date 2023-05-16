@@ -5,6 +5,7 @@ and DSM matrix conversion processes.
 import csv
 from pathlib import Path
 from typing import Union
+
 from scipy.io import loadmat
 
 
@@ -24,20 +25,20 @@ def validate_node_csv_structure(
     csv_path: Union[str, Path], csv_delimiter: str = ";"
 ) -> None:
     """
-    Checks if the node CSV file structure is valid and contains a non-empty "name" column with no duplicates and no
-    empty values. Additionally, if a "labels" column is present, checks that nodes with the same label are grouped
+    Checks if the node CSV file structure is valid and contains a non-empty 'name' column with no duplicates and no
+    empty values. Additionally, if a 'labels' column is present, checks that nodes with the same label are grouped
     together.
 
     Args:
         csv_path (Union[str, Path]): The path to the node CSV file to validate.
-        csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ";".
+        csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ';'.
 
     Raises:
-        CSVStructureError: If the node CSV file does not contain a "name" column, contains duplicate names,
+        CSVStructureError: If the node CSV file does not contain a 'name' column, contains duplicate names,
         or contains empty values.
-        CSVGroupingError: If a "labels" column is present and nodes with the same label are not grouped together.
+        CSVGroupingError: If a 'labels' column is present and nodes with the same label are not grouped together.
     """
-    # Check if the CSV file contains a "name" column
+    # Check if the CSV file contains a 'name' column
     with open(csv_path, "r") as f:
         reader = csv.DictReader(f, delimiter=csv_delimiter)
         if "name" not in reader.fieldnames:
@@ -49,17 +50,15 @@ def validate_node_csv_structure(
         if "labels" in reader.fieldnames:
             last_label = None
             for row in rows:
-                if row["labels"] == "":
-                    raise CSVStructureError(
-                        f"'{csv_path}' should not have empty values in the 'labels' column."
-                    )
                 if (
                     last_label is not None
                     and last_label != row["labels"]
+                    and last_label != ""
                     and any(r["labels"] == last_label for r in rows[rows.index(row) :])
                 ):
                     raise CSVGroupingError(
-                        f"'{csv_path}' should group nodes of the same label together."
+                        f"'{csv_path}' should group nodes of the same label together. OptiCIF does not yet support "
+                        f"nodes with more than one label."
                     )
                 last_label = row["labels"]
 

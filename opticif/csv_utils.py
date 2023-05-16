@@ -3,10 +3,10 @@ conversion, and plant group sequence handling.
 """
 
 import csv
-import scipy.io as sio
 from pathlib import Path
-from typing import List, Union
+from typing import Dict, List, Union
 
+import scipy.io as sio
 from ragraph.graph import Node
 
 from opticif import validate_node_csv_structure, validate_matrix_file_structure
@@ -27,29 +27,24 @@ def node_to_csv(
             that is a string.
         stem_path (str): The stem path for the CSV file, without the '.csv' extension.
         output_dir (Union[str, Path]): The path to the directory where the output files will be saved.
-                        Defaults to "generated".
-        csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ";".
+                        Defaults to 'generated'.
+        csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ';'.
 
     Returns:
-        None. The CSV file is saved with ".nodes.seq.csv" appended to the stem path in the specified output
+        None. The CSV file is saved with '.nodes.seq.csv' appended to the stem path in the specified output
         directory.
     """
     # Extracting only the names of each node using list comprehension
     node_names = [node.name for node in nodes]
 
     # Create the output directory if it doesn't exist
-    generated_dir = Path(output_dir)
-    generated_dir.mkdir(exist_ok=True)
+    generated_dir = _create_output_directory(output_dir)
 
     # Append "_nodes.csv" to the stem path to create the filename
     filename = generated_dir / f"{stem_path}.nodes.seq.csv"
 
     # Writing the node names to a CSV file
-    with open(filename, mode="w", newline="") as f:
-        writer = csv.writer(f, delimiter=csv_delimiter)
-        writer.writerow(["name"])
-        for name in node_names:
-            writer.writerow([name])
+    _write_csv_file(filename, ["name"], [[name] for name in node_names], csv_delimiter)
 
 
 def mat_to_csv(
@@ -67,22 +62,21 @@ def mat_to_csv(
 
     Args:
         matrix_path (Union[str, Path]): The path to the .mat file containing the binary DSM matrix.
-        node_path (Union[str, Path]): The path to the CSV file containing node names with a header "name".
+        node_path (Union[str, Path]): The path to the CSV file containing node names with a header 'name'.
         stem_path (str): The stem path for the CSV file, without the '.csv' extension.
         output_dir (Union[str, Path]): The path to the directory where the output files will be saved.
-                        Defaults to "generated".
-        csv_delimiter (str): The csv_delimiter used in the CSV files. Defaults to ";".
+                        Defaults to 'generated'.
+        csv_delimiter (str): The csv_delimiter used in the CSV files. Defaults to ';'.
 
     Returns:
-        None. The edge list in CSV format is saved with ".edges.csv" appended to the stem path in the specified output
+        None. The edge list in CSV format is saved with '.edges.csv' appended to the stem path in the specified output
         directory.
     """
     # Validate the node CSV structure
     validate_node_csv_structure(node_path, csv_delimiter)
 
     # Read node names from the CSV file
-    with open(node_path, "r") as f:
-        nodes = [row["name"] for row in csv.DictReader(f, delimiter=csv_delimiter)]
+    nodes = [row["name"] for row in _read_csv_file(node_path, csv_delimiter)]
 
     # Validate the matrix file structure
     validate_matrix_file_structure(matrix_path)
@@ -98,21 +92,20 @@ def mat_to_csv(
         )
 
     # Create the output directory if it doesn't exist
-    generated_dir = Path(output_dir)
-    generated_dir.mkdir(exist_ok=True)
+    generated_dir = _create_output_directory(output_dir)
 
     # Append ".edges.csv" to the stem path to create the filename
     output_file = generated_dir / f"{stem_path}.edges.csv"
 
     # Convert the matrix to edges in CSV format
-    with open(output_file, "w", newline="") as f:
-        writer = csv.writer(f, delimiter=csv_delimiter)
-        writer.writerow(["source", "target"])
+    edges = [
+        [nodes[i], nodes[j]]
+        for i, row in enumerate(matrix)
+        for j, mark in enumerate(row)
+        if mark == 1
+    ]
 
-        for i, row in enumerate(matrix):
-            for j, mark in enumerate(row):
-                if mark == 1:
-                    writer.writerow([nodes[i], nodes[j]])
+    _write_csv_file(output_file, ["source", "target"], edges, csv_delimiter)
 
 
 def plant_groups_to_csv(
@@ -127,8 +120,8 @@ def plant_groups_to_csv(
     Reads plant group information from a product system map, a schedule order, and a partition information output by
     the MATLAB sequencing script from De Jong (2019). Generates two CSV files: one containing the ordered list of
     node names based on the plant group sequence, and another containing the ordered list of plant group IDs. It also
-    appends a "labels" column to both the ordered node and plant groups files with the iteration block they are part of
-    (Delage-Davies, 2023).
+    appends a 'labels' column to both the ordered node and plant groups files with the partition ID they are part of
+    (Delage-Davies, 2023), if they belong to a partition.
 
     Args:
         prod_sys_map_path (Union[str, Path]): The path to a file containing the product system map. Each line should
@@ -142,24 +135,19 @@ def plant_groups_to_csv(
                                                the starting position and the size of each partition.
         stem_path (str): A string used as the base of the output files' names.
         output_dir (Union[str, Path]): The path to the directory where the output files will be saved.
-                                       Defaults to "generated".
-        csv_delimiter (str): The csv_delimiter used in the CSV files. Defaults to ";".
+                                       Defaults to 'generated'.
+        csv_delimiter (str): The csv_delimiter used in the CSV files. Defaults to ';'.
 
     Returns: None. The ordered node names and plant group IDs are saved to two separate CSV files in the specified
-             output directory. The output files' names are created by appending ".nodes.seq.csv" and
-             ".groups.nodes.seq.csv" to the stem_path.
+             output directory. The output files' names are created by appending '.nodes.seq.csv' and
+             '.groups.nodes.seq.csv' to the stem_path.
     """
     # Read the plant group information from the file
     with open(prod_sys_map_path, "r") as f:
         plant_group_lines = f.readlines()
 
     # Process the plant group information to create a dictionary mapping plant group IDs to plant elements
-    plant_group_map = {}
-    for line in plant_group_lines:
-        plant_group_data = line.strip().split(",")
-        plant_group_id = int(plant_group_data[0][1:])
-        plant_elements = [elem.strip() for elem in plant_group_data[1:]]
-        plant_group_map[plant_group_id] = plant_elements
+    plant_group_map = _build_plant_group_map(plant_group_lines)
 
     # Load the plant_group_sequence from the scheduleorder file
     plant_group_sequence = sio.loadmat(schedule_order_path)["scheduleorder"][0]
@@ -180,73 +168,130 @@ def plant_groups_to_csv(
         ordered_node_names.extend(plant_group_map[plant_group_id])
         ordered_plant_group_names.append(plant_group_id)
 
-    # Determine the iteration blocks (labels)
-    plant_group_blocks = _determine_iteration_blocks(
+    # Determine the partition IDs (labels)
+    plant_group_partitions = _assign_partition_ids(
         ordered_plant_group_names, partition_info
     )
 
     # Create the output directory if it doesn't exist
-    generated_dir = Path(output_dir)
-    generated_dir.mkdir(exist_ok=True)
+    generated_dir = _create_output_directory(output_dir)
 
     # Append extension to the stem path to create the filename
     output_file_nodes = generated_dir / f"{stem_path}.nodes.seq.csv"
     output_file_groups = generated_dir / f"{stem_path}.groups.nodes.seq.csv"
 
-    # Write the ordered node names and their iteration blocks to a CSV file with the headers "name;labels"
-    with open(output_file_nodes, "w") as f:
-        writer = csv.writer(f, delimiter=csv_delimiter)
-        writer.writerow(["name", "labels"])
-        for plant_group_id in ordered_plant_group_names:
-            block_id = plant_group_blocks[plant_group_id]
-            for node_name in plant_group_map[plant_group_id]:
-                writer.writerow([node_name, f"block{block_id}"])
+    # Write the ordered node names and their partition IDs (if they belong to a partition) to a CSV file
+    # with the headers "name;labels"
+    node_rows = []
+    for plant_group_id in ordered_plant_group_names:
+        partition_id = plant_group_partitions.get(plant_group_id, "")
+        partition_label = f"partition{partition_id}" if partition_id else ""
+        for node_name in plant_group_map[plant_group_id]:
+            node_rows.append([node_name, partition_label])
 
-    # Write the ordered plant group IDs and their iteration blocks to a CSV file with the headers "name;labels"
-    with open(output_file_groups, "w") as f:
-        writer = csv.writer(f, delimiter=csv_delimiter)
-        writer.writerow(["name", "labels"])
-        for plant_group_id, block_id in plant_group_blocks.items():
-            writer.writerow([f"G{plant_group_id}", f"block{block_id}"])
+    _write_csv_file(output_file_nodes, ["name", "labels"], node_rows, csv_delimiter)
+
+    # Write the ordered plant group IDs and their partition IDs (if they belong to a partition) to a CSV file
+    # with the headers "name;labels"
+    group_rows = []
+    for plant_group_id in ordered_plant_group_names:
+        partition_id = plant_group_partitions.get(plant_group_id, "")
+        partition_label = f"partition{partition_id}" if partition_id else ""
+        group_rows.append([f"G{plant_group_id}", partition_label])
+
+    _write_csv_file(output_file_groups, ["name", "labels"], group_rows, csv_delimiter)
 
 
-def _determine_iteration_blocks(ordered_items, group_info):
+def _assign_partition_ids(ordered_items, group_info):
     """
-    Assigns a block ID (node "label" attribute) to each item in ordered_items, where each block represents a group
-    of items that are processed together in one iteration. Each partition represents a block, and items in the spaces
-    between partitions form blocks.
+    Assigns a partition ID to each item in ordered_items that is part of a partition. Each partition represents
+    a group of items that are processed together in one iteration loop.
 
     Args:
         ordered_items (list): A list of items ordered by the sequence in which they are processed.
         group_info (2D list): A list containing the starting indices and sizes of each partition.
 
     Returns:
-        block_assignments (dict): A dictionary mapping each item in ordered_items to its block ID.
+        partition_assignments (dict): A dictionary mapping each item in a partition to its partition ID.
     """
-    # Convert group_info into a list of (start, end) tuples
+    # Convert group_info into a list of (start, end, partition_id) tuples
     partitions = [
-        (start - 1, start + size - 1)
-        for start, size in zip(group_info[0], group_info[1])
+        (start - 1, start + size - 1, partition_id)
+        for partition_id, (start, size) in enumerate(
+            zip(group_info[0], group_info[1]), start=1
+        )
     ]
 
-    # Sort the partitions by their starting index
-    partitions.sort()
+    # Create a dictionary mapping each item to its partition ID
+    partition_assignments = {
+        item: partition_id
+        for start, end, partition_id in partitions
+        for item in ordered_items[start : end + 1]
+    }
 
-    block_assignments = {}
-    current_block_id = 0  # Start from 0 and increment at the start of the first block
-    partition_end = -1
+    return partition_assignments
 
-    for i, item in enumerate(ordered_items):
-        # Start a new block at the beginning of the sequence, or at the start of each new partition
-        if i == 0 or (partitions and i == partitions[0][0]):
-            current_block_id += 1
-            if partitions and i == partitions[0][0]:  # We've reached a new partition
-                partition_end = partitions[0][1]
-                partitions.pop(0)
-        elif i == partition_end:  # We've moved past the current partition
-            current_block_id += 1
-            partition_end = -1  # Reset partition_end
 
-        block_assignments[item] = current_block_id
+def _write_csv_file(
+    filename: Union[str, Path],
+    headers: List[str],
+    rows: List[List[str]],
+    csv_delimiter: str = ";",
+) -> None:
+    """
+    Writes data to a CSV file.
 
-    return block_assignments
+    Args:
+        filename (Union[str, Path]): The path to the CSV file.
+        headers (List[str]): The column headers for the CSV file.
+        rows (List[List[str]]): The rows of data to write to the CSV file. Each inner list represents a row.
+        csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ';'.
+    """
+    with open(filename, mode="w", newline="") as f:
+        writer = csv.writer(f, delimiter=csv_delimiter)
+        if headers:
+            writer.writerow(headers)
+        writer.writerows(rows)
+
+
+def _read_csv_file(
+    filename: Union[str, Path], csv_delimiter: str = ";"
+) -> List[Dict[str, str]]:
+    """
+    Reads data from a CSV file.
+
+    Args:
+        filename (Union[str, Path]): The path to the CSV file.
+        csv_delimiter (str): The csv_delimiter used in the CSV file. Defaults to ';'.
+
+    Returns:
+        List[Dict[str, str]]: A list of dictionaries representing the rows in the CSV file. Each dictionary has keys
+        corresponding to the column headers and values corresponding to the values in each column.
+    """
+    with open(filename, "r") as f:
+        return list(csv.DictReader(f, delimiter=csv_delimiter))
+
+
+def _create_output_directory(output_dir: Union[str, Path]) -> Path:
+    """
+    Creates the output directory if it doesn't exist.
+
+    Args:
+        output_dir (Union[str, Path]): The path to the directory.
+
+    Returns:
+        Path: The path to the directory.
+    """
+    generated_dir = Path(output_dir)
+    generated_dir.mkdir(exist_ok=True)
+    return generated_dir
+
+
+def _build_plant_group_map(plant_group_lines: List[str]) -> Dict[int, List[str]]:
+    plant_group_map = {}
+    for line in plant_group_lines:
+        plant_group_data = line.strip().split(",")
+        plant_group_id = int(plant_group_data[0][1:])
+        plant_elements = [elem.strip() for elem in plant_group_data[1:]]
+        plant_group_map[plant_group_id] = plant_elements
+    return plant_group_map
