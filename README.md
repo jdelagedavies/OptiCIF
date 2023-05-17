@@ -10,26 +10,13 @@ development process. This package was developed as part of a bachelor thesis at 
 
 Modules:
 
-- `csv_utils`: Utility functions for working with CSV files, including:
-    - converting a list of sequenced RaGraph node objects to a CSV file;
-    - converting a binary DSM matrix in .mat to an edge list in CSV format, using node names from a separate CSV file;
-    - generating CSV files with ordered node and plant group names based on a product system map and a group
-      sequence. It also labels each item in the CSV files with the iteration block it is part of.
-- `validators`: Functions for validating the structure of CSV files containing node sequences and binary DSM matrices.
-- `cif_transformer`: Function for performing global optimization by reordering explicit plant automaton declarations.
+- `csv_utils`: Utility functions for working with CSV files. Used to handle input sequences from other tools, see [Usage](#usage) for more details.
+- `validators`: Functions for validating the structure and grouping of CSV files containing node sequences, and the structure of binary DSM matrices.
+- `cif_transformer`: Function for performing global optimization by reordering explicit plant automaton declarations. Automatons part of a feedback loop are grouped together.
 
 ## Installation
 
 To use OptiCIF, clone the repository:
-Including an example of the output in the README can be helpful to users. It gives them an idea of what to expect after
-running the code, and it can also serve as a form of validation for them to check if the code ran correctly. This is
-especially important if the output is complex or not immediately intuitive.
-
-In the case of your project, since the output is a reordered CIF file based on the node sequence from a CSV file, you
-could include a snippet of the reordered CIF specification in the README. However, keep in mind that showing the entire
-file may not be practical if it's too large. A snippet with a brief explanation should suffice.
-
-Here's an example of how you can present it:
 
 ```bash
 git clone https://github.com/jdelagedavies/opticif.git
@@ -66,7 +53,7 @@ csv_path = "path/to/your/sequence.csv"  # CSV file containing the node sequence
 do_global_optimization(csv_path, cif_path)
 ```
 
-The input CSV file should have a header with a "name" column. If a "labels" column is present, nodes will be grouped
+The input CSV file should have a header with a "name" column. If a "labels" column is present, nodes that have a label will be grouped
 accordingly in the output CIF file. Ensure that the node names in the CSV file match the node names in your CIF
 specification.
 
@@ -74,12 +61,12 @@ For instance:
 
 ```csv
 name,labels
-a,block1
-b,block1
-c,block2
-d,block2
-e,block3
-f,block3
+a,
+b,
+c,partition1
+d,partition1
+e,
+f,partition2
 ```
 
 This tool neither supports instantiations nor groups in the CIF plant model,
