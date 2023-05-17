@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "OptiCIF"
-version = "0.7.0"
-description = "Global optimization of CIF specifications in Python."
+version = "0.8.0"
+description = "Global optimization of CIF specifications in Python"
 authors = ["Jules Delage-Davies <j.r.d.delage.davies@student.tue.nl>"]
 readme = "README.md"
 license = "MIT"
@@ -10,8 +10,6 @@ license = "MIT"
 python = ">=3.10,<3.12"
 ragraph = "^1.17.0"
 scipy = "^1.10.1"
-pandas = "^2.0.1"
-
 
 [build-system]
 requires = ["poetry-core"]
