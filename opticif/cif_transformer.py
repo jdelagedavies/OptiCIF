@@ -118,7 +118,7 @@ def _read_cif_file(
             if node_name in items_dict:
                 duplicates.add(node_name)
         elif match:  # If a new item starts while still capturing the previous one
-            raise SyntaxError(f"Unclosed automaton detected")
+            raise SyntaxError("Unclosed automaton detected")
         elif not capturing_item:  # If it's a non-target line
             non_item_lines.append(line)
         else:  # If it's part of the current item
