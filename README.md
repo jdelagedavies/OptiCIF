@@ -1,4 +1,4 @@
-# OptiCIF
+# OptiCIF: Global optimization of CIF specifications in Python 
 
 OptiCIF is a Python package for performing global optimization on [CIF](https://eclipse.dev/escet/cif/) specifications
 by reordering explicit plant automaton declarations according to a provided input sequence. Global optimization is
