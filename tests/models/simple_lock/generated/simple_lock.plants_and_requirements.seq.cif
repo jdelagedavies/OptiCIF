@@ -40,39 +40,37 @@ requirement invariant EmergencyStop.pushed disables S2_Door_Acc.c_on_open;
 requirement invariant EmergencyStop.pushed disables S2_Door_Acc.c_on_close;
 requirement invariant EmergencyStop.pushed disables S2_Sewer_Acc.c_open;
 requirement invariant EmergencyStop.pushed disables S2_Sewer_Acc.c_close;
-group block1:
-    plant automaton S1_EqualWater:
-      uncontrollable u_on;
-      uncontrollable u_off;
-      location Off:
-        initial;
-        marked;
-        edge u_on goto On;
-      location On:
-        edge u_off goto Off;
-    end
-    plant automaton S2_EqualWater:
-      uncontrollable u_on;
-      uncontrollable u_off;
-      location Off:
-        initial;
-        marked;
-        edge u_on goto On;
-      location On:
-        edge u_off goto Off;
-    end
-    plant automaton EmergencyStop:
-      uncontrollable u_pushed;
-      uncontrollable u_released;
-      location released:
-        initial;
-        marked;
-        edge u_pushed goto pushed;
-      location pushed:
-        edge u_released goto released;
-    end
+plant automaton S1_EqualWater:
+  uncontrollable u_on;
+  uncontrollable u_off;
+  location Off:
+    initial;
+    marked;
+    edge u_on goto On;
+  location On:
+    edge u_off goto Off;
 end
-group block2:
+plant automaton S2_EqualWater:
+  uncontrollable u_on;
+  uncontrollable u_off;
+  location Off:
+    initial;
+    marked;
+    edge u_on goto On;
+  location On:
+    edge u_off goto Off;
+end
+plant automaton EmergencyStop:
+  uncontrollable u_pushed;
+  uncontrollable u_released;
+  location released:
+    initial;
+    marked;
+    edge u_pushed goto pushed;
+  location pushed:
+    edge u_released goto released;
+end
+group partition1:
     plant automaton S1_LampEntering:
       controllable c_green;
       controllable c_red;

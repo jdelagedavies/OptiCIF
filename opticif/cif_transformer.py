@@ -147,21 +147,25 @@ def _reorder_and_group_nodes(
         )
 
     output_lines = []
+    in_group = False  # Boolean flag to track whether we are currently in a group
+
     if label_sequence:
         last_label = None
         for node_name, label in zip(node_sequence, label_sequence):
             # If the label is not empty and has changed from the previous label, start a new group
             if label and label != last_label:
-                if last_label is not None:  # Close the previous group
+                if in_group:  # Close the previous group
                     output_lines.append("end\n")
                 output_lines.append(f"group {label}:\n")
+                in_group = True
 
             # If the current label is empty but the last label was not, close the previous group
-            if not label and last_label:
+            elif not label and last_label:
                 output_lines.append("end\n")
+                in_group = False
 
             # Add the node lines to the output, with indentation if it's in a group
-            if label:
+            if in_group:
                 output_lines.extend(["    " + line for line in items_dict[node_name]])
             else:
                 output_lines.extend(items_dict[node_name])
@@ -169,11 +173,12 @@ def _reorder_and_group_nodes(
             last_label = label
 
         # If the last node was in a group, close the group
-        if last_label:
+        if in_group:
             output_lines.append("end\n")
-    else:
+
+    else:  # In case no labels are provided
         for node_name in node_sequence:
-            output_lines += items_dict[node_name]
+            output_lines.extend(items_dict[node_name])
 
     return output_lines
 
