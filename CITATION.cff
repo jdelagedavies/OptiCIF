@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+title: OptiCIF
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: "Jules Roger Daniel"
+    family-names: Delage-Davies
+    email: j.r.d.delage.davies@student.tue.nl
+    affiliation: Eindhoven University of Technology
+repository-code: 'https://github.com/jdelagedavies/opticif'
+abstract: Global optimization of CIF specifications in Python
+license: MIT
+commit: 9fc798b9f401b9ed8c3b5ef3e854f7018ce78e3b
+version: 0.8.2
+date-released: '2023-06-15'
