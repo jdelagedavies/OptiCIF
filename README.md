@@ -12,7 +12,7 @@ Modules:
 
 - `csv_utils`: Utility functions for working with CSV files. Used to handle input sequences from other tools, see [Usage](#usage) for more details.
 - `validators`: Functions for validating the structure and grouping of CSV files containing node sequences, and the structure of binary DSM matrices.
-- `cif_transformer`: Function for performing global optimization by reordering explicit plant automaton declarations. Automatons part of a feedback loop are grouped together.
+- `cif_transformer`: Function for performing global optimization by reordering explicit plant automaton declarations. Automatons part of a feedback loop are grouped.
 
 ## Installation
 
@@ -30,7 +30,7 @@ cd opticif
 poetry install
 ```
 
-Alternatively, install the dependencies manually. You can find the list of dependencies in the `pyproject.toml file`,
+Alternatively, install the dependencies manually. You can find the list of dependencies in the `pyproject.toml` file,
 under the `[tool.poetry.dependencies]` section.
 
 ## Usage
@@ -53,8 +53,8 @@ csv_path = "path/to/your/sequence.csv"  # CSV file containing the node sequence
 do_global_optimization(csv_path, cif_path)
 ```
 
-The input CSV file should have a header with a "name" column. If a "labels" column is present, nodes that have a label will be grouped
-accordingly in the output CIF file. Ensure that the node names in the CSV file match the node names in your CIF
+The input CSV file should have a "name" column header. If a "labels" column is present, nodes that have a label will be grouped
+accordingly in the output CIF file. Ensure that the CSV file's node names match those in your CIF
 specification.
 
 For instance:
@@ -73,7 +73,7 @@ This tool neither supports instantiations nor groups in the CIF plant model,
 see [CIF to CIF transformer](https://www.eclipse.org/escet/cif/tools/cif2cif/) for information on how to eliminate them
 as a preprocessing step.
 
-Example CIF models and corresponding input files can be found in the tests/models directory of the repository. For more
+Example CIF models and corresponding input files can be found in the repository's `tests/models` directory. For more
 advanced usage, see the test scripts provided in the repository.
 
 For detailed information on the functions and their parameters, refer to the function documentation (docstrings) in the
